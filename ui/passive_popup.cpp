@@ -168,6 +168,7 @@ void tPassivePopup::timer()
 	Widget->hide();
 	deleteLater();
     }
+    elapsed = 0;
   }
   switch (State)
   {       

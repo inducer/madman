@@ -79,6 +79,11 @@ class tXMMSPlayer : public tPlayer
       {
 	return xmms_remote_is_running(Session);
       }
+    void ensureValidStatus()
+      {
+	ensureRunning();
+      }
+
     bool isPlaying()
       {
 	return xmms_remote_is_playing(Session);

@@ -128,6 +128,13 @@ bool tPlayerFacade::canGetValidStatus()
   if (Backend.get()) return Backend->canGetValidStatus();
   else return false;
 }
+void tPlayerFacade::ensureValidStatus()
+{
+  if (Backend.get()) Backend->ensureValidStatus();
+  else throw tRuntimeError(tr("Failed to ensure that "
+                              "valid player status "
+                              "information can be obtained."));
+}
 bool tPlayerFacade::isPlaying()
 {
   if (Backend.get()) return Backend->isPlaying();

@@ -49,6 +49,8 @@ class tPlayer : public QObject
     virtual void clearPlaylist() = 0;
 
     virtual bool canGetValidStatus() = 0;
+    virtual void ensureValidStatus() = 0;
+
     virtual bool isPlaying() = 0;
     virtual bool isPaused() = 0;
     virtual float currentTime() = 0;
@@ -93,6 +95,8 @@ class tPlayerFacade : public tPlayer
     void clearPlaylist();
 
     bool canGetValidStatus();
+    void ensureValidStatus();
+
     bool isPlaying();
     bool isPaused();
     float currentTime();

@@ -872,6 +872,7 @@ void tMainWindow::doAutoDJ()
 void tMainWindow::clearPlaylist()
 {
   ProgramBase.preferences().Player.clearPlaylist();
+  doContinuousAutoDJ();
 }
 
 
@@ -985,6 +986,11 @@ void tMainWindow::playSearchResultNow()
 {
   tSongList songs;
   SearchSongSet.render(songs);
+
+  // don't let people add their whole database--takes too long
+  if (songs.size() > 200)
+    songs.erase(songs.begin()+200, songs.end());
+
   ProgramBase.preferences().Player.playNow(songs);
 }
 
@@ -995,6 +1001,11 @@ void tMainWindow::playSearchResultNext()
 {
   tSongList songs;
   SearchSongSet.render(songs);
+
+  // don't let people add their whole database--takes too long
+  if (songs.size() > 200)
+    songs.erase(songs.begin()+200, songs.end());
+
   ProgramBase.preferences().Player.playNext(songs);
 }
 
@@ -1005,6 +1016,11 @@ void tMainWindow::playSearchResultEventually()
 {
   tSongList songs;
   SearchSongSet.render(songs);
+
+  // don't let people add their whole database--takes too long
+  if (songs.size() > 200)
+    songs.erase(songs.begin()+200, songs.end());
+
   ProgramBase.preferences().Player.playEventually(songs);
 }
 
@@ -1530,10 +1546,41 @@ void tMainWindow::highlightSong(tSong *song)
 
 void tMainWindow::playPause()
 {
-  if (ProgramBase.preferences().Player.isPaused() || !ProgramBase.preferences().Player.isPlaying())
-    ProgramBase.preferences().Player.play();
+  tPlayer &player = ProgramBase.preferences().Player;
+  player.ensureValidStatus();
+  if (player.isPaused() || !player.isPlaying())
+  {
+    if (player.getPlayListLength() == 0)
+    {
+      // OK, we have a bad case of stupid user.^W^Wnew user.
+      tSongList songs;
+      SearchSongSet.render(songs);
+
+      if (songs.size() != 0)
+      {
+        // Phew. There's something we can do as a last resort.
+        playSearchResultNow();
+      }
+      else
+      {
+        // Not very smooth.
+        QMessageBox::information(this,
+                                 tr("madman"),
+                                 tr("madman presently doesn't "
+                                    "know what it is supposed to "
+                                    "play since there is no "
+                                    "search result.\nMaybe you "
+                                    "need to add songs to the "
+                                    "database or try a different "
+                                    "search."),
+                                 QMessageBox::Ok);
+      }
+    }
+    else
+      player.play();
+  }
   else
-    ProgramBase.preferences().Player.pause();
+    player.pause();
 }
 void tMainWindow::stop()
 {

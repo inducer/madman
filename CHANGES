@@ -90,10 +90,6 @@ future ------------------------------------------------------------------------
   (document on web site)
 * Convey the killer features: Web server, remote control, AutoDJ.
 
-* Play button usability:
-  If XMMS is not running or the playlist is empty, nothing happens in response to 
-  the play button.
-
 * Add AutoDJ presets versioning.
 
 * Fixed GNOME 2 docking.
@@ -167,6 +163,9 @@ MINOR IMPROVEMENTS:
   [done]
 * Save database after web server is done. (sugg. by Brian Lopes)
   [done]
+* Play button usability:
+  If XMMS is not running or the playlist is empty, nothing happens in response to 
+  the play button. [done]
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
