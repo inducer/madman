@@ -57,10 +57,17 @@ namespace
 
 // tSongSet -------------------------------------------------------------------
 tSongSet::tSongSet()
-    : SongCollection(NULL), ParsedCriterion(NULL),
-    BulkChangeLevel(0)
 {
-  setCriterion("~none");
+  initialize();
+}
+
+
+
+
+tSongSet::tSongSet(const tSongSet &src)
+{
+  initialize();
+  assign(src);
 }
 
 
@@ -68,6 +75,36 @@ tSongSet::tSongSet()
 
 tSongSet::~tSongSet()
 { 
+}
+
+
+
+
+void tSongSet::initialize()
+{
+  SongCollection = NULL;
+  BulkChangeLevel = 0;
+  setCriterion("~none");
+}
+
+
+
+
+void tSongSet::assign(const tSongSet &src)
+{
+  SongCollection = src.SongCollection;
+
+  setCriterion(src.Criterion);
+  hasChanged(true);
+}
+
+
+
+
+tSongSet &tSongSet::operator=(const tSongSet &src)
+{
+  assign(src);
+  return *this;
 }
 
 
@@ -99,18 +136,6 @@ void tSongSet::setSongCollection(tSongCollection *collection)
     reevaluateCriterion();
   }
   noticeCollectionSwitched();
-}
-
-
-
-
-tSongSet &tSongSet::operator=(const tSongSet &src)
-{
-  SongCollection = src.SongCollection;
-
-  setCriterion(src.Criterion);
-  hasChanged(true);
-  return *this;
 }
 
 
@@ -219,9 +244,49 @@ void tSongSet::hasChanged(bool substantial_change, tProgress *progress)
 // tSearchSongSet -------------------------------------------------------------
 tSearchSongSet::tSearchSongSet()
 {
+  initialize();
+}
+
+
+
+
+tSearchSongSet::tSearchSongSet(const tSearchSongSet &src)
+  : tSongSet(src)
+{
+  initialize();
+  assign(src);
+}
+
+
+
+
+void tSearchSongSet::initialize()
+{
   DoSort = false;
   SAUDirty = true;
   CollectionBulkChangeLevel = 0;
+}
+
+
+
+
+void tSearchSongSet::assign(const tSearchSongSet &src)
+{
+  setSort(src.DoSort,
+          src.Ascending,
+          src.SortField,
+          src.SecondarySortField,
+          src.TertiarySortField);
+}
+
+
+
+
+tSearchSongSet &tSearchSongSet::operator=(const tSearchSongSet &src)
+{
+  tSongSet::operator=(src);
+  assign(src);
+  return *this;
 }
 
 
@@ -436,7 +501,23 @@ void tSearchSongSet::noticeSongModified(const tSong *song, tSongField field)
 
 
 // tPlaylist ------------------------------------------------------------------
-tPlaylist &tPlaylist::operator=(const tPlaylist &src)
+tPlaylist::tPlaylist()
+{
+}
+
+
+
+
+tPlaylist::tPlaylist(const tPlaylist &src)
+  : tSongSet(src)
+{
+  assign(src);
+}
+
+
+
+
+void tPlaylist::assign(const tPlaylist &src)
 {
   Rendering = src.Rendering;
   RenderingSet = src.RenderingSet;
@@ -444,6 +525,13 @@ tPlaylist &tPlaylist::operator=(const tPlaylist &src)
   NegativeSet = src.NegativeSet;
 
   hasChanged(true);
+}
+
+
+
+tPlaylist &tPlaylist::operator=(const tPlaylist &src)
+{
+  assign(src);
   tSongSet::operator=(src);
   return *this;
 }

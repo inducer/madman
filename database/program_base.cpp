@@ -32,7 +32,7 @@ tProgramBase *tSingleton<tProgramBase>::instance_m = NULL;
 
 
 tProgramBase::tProgramBase()
-  : AutoDJ(tProgramBase::preferences().AutoDJPreferences, &AllSongSet)
+  : AutoDJ(tProgramBase::preferences().AutoDJPreferences, NULL)
 {
   setDatabase(new tDatabase());
 
@@ -43,10 +43,6 @@ tProgramBase::tProgramBase()
 
   WasPlaying = false;
   AccumulatedPlayTime = 0;
-
-  AllSongSet.setSongCollection(&tProgramBase::database().SongCollection);
-  AllSongSet.setCriterion("~all");
-  AllSongSet.reevaluateCriterion();
 }
 
 
@@ -61,9 +57,10 @@ tProgramBase::~tProgramBase()
 
 void tProgramBase::setDatabase(tDatabase *db)
 {
+  AutoDJ.setSongSet(NULL);
+
   auto_ptr<tDatabase> new_db(db);
   Database = new_db;
-  AllSongSet.setSongCollection(&Database->SongCollection);
 
   emit songChanged();
 }

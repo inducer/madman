@@ -18,8 +18,8 @@
  * USA
  */
 
-#ifndef Noncopyable_h
-#define Noncopyable_h
+#ifndef _HEADER_SEEN_NONCOPYABLE_H
+#define _HEADER_SEEN_NONCOPYABLE_H
 
 /**
  * Derive your class from Noncopyable in order to make it noncopyable.
@@ -38,7 +38,7 @@ class tNoncopyable
 
 
 
-#endif // Noncopyable_h
+#endif // _HEADER_SEEN_NONCOPYABLE_H
 
 
 

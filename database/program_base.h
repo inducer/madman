@@ -50,7 +50,6 @@ class tProgramBase : public QObject, public tSingleton<tProgramBase>
     time_t PlayStartTime;
     bool WasPlaying;
 
-    tSearchSongSet AllSongSet;
     tAutoDJ AutoDJ;
 
   public:

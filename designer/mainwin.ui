@@ -1360,6 +1360,53 @@
             <string>AutoDJ 20 songs</string>
         </property>
     </action>
+    <actiongroup>
+        <property name="name">
+            <cstring>agAutoDJSource</cstring>
+        </property>
+        <property name="text">
+            <string>AutoDJ Source</string>
+        </property>
+        <property name="exclusive">
+            <bool>true</bool>
+        </property>
+        <property name="usesDropDown">
+            <bool>true</bool>
+        </property>
+        <action>
+            <property name="name">
+                <cstring>actionAutoDJSourceAll</cstring>
+            </property>
+            <property name="toggleAction">
+                <bool>true</bool>
+            </property>
+            <property name="text">
+                <string>All songs</string>
+            </property>
+        </action>
+        <action>
+            <property name="name">
+                <cstring>actionAutoDJSourceSearch</cstring>
+            </property>
+            <property name="toggleAction">
+                <bool>true</bool>
+            </property>
+            <property name="text">
+                <string>From Search...</string>
+            </property>
+        </action>
+        <action>
+            <property name="name">
+                <cstring>actionAutoDJSourcePlaylist</cstring>
+            </property>
+            <property name="toggleAction">
+                <bool>true</bool>
+            </property>
+            <property name="text">
+                <string>From Selected Playlist</string>
+            </property>
+        </action>
+    </actiongroup>
 </actions>
 <images>
     <image name="image0">

@@ -85,6 +85,7 @@ future ------------------------------------------------------------------------
 + ~duration
 + Integrate MPD (musicpd.org)
 * Mood/CustomN/... reflection in songs?
+* Mail this MP3 plugin (suggested by "oi man")
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -106,8 +107,6 @@ future ------------------------------------------------------------------------
 * ~pathname, ~filename_without_path
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
-* Continuous AutoDJ from any source.
-  (sugg. by Johan Forsberg)
 * Show count after letter in overview.
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
@@ -132,6 +131,8 @@ MAJOR CHANGES:
 + Added a fully-fledged path browser. [done]
 * New icons by Felipe Rivera. [done]
 + Added mood, tempo, custom1-3 fields. (Guido Schlabitz) [done]
++ Continuous AutoDJ from any source.
+  (sugg. by Johan Forsberg) [done]
 
 MINOR IMPROVEMENTS:
 + Show configurable string in title bar. [done]

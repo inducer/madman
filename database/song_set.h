@@ -52,7 +52,16 @@ class tSongSet : public QObject
 
   public:
     tSongSet();
+    tSongSet(const tSongSet &src);
     virtual ~tSongSet();
+
+  private:
+    void initialize();
+    void assign(const tSongSet &src);
+
+  public:
+    virtual tSongSet &operator=(const tSongSet &src);
+    virtual tSongSet *duplicate() = 0;
 
     /** This subroutine first clears the content of this song
      * set, then switches over to the new collection, then
@@ -60,7 +69,6 @@ class tSongSet : public QObject
      */
     void setSongCollection(tSongCollection *collection);
 
-    virtual tSongSet &operator=(const tSongSet &src);
 
     virtual void render(tSongList &rendering, tProgress *progess = NULL ) const = 0;
     void render(tConstSongList &rendering, tProgress *progess = NULL ) const;
@@ -76,7 +84,8 @@ class tSongSet : public QObject
     {
       return Criterion;
     }
-    /// will free the criterion when destroyed
+
+    /// This object assumes ownership of \c crit.
     void setCriterion(tCriterion *crit);
     void setCriterion(const QString &crit);
     virtual void reevaluateCriterion(tProgress *progess = NULL) = 0;
@@ -101,10 +110,6 @@ class tSongSet : public QObject
 
   protected:
     void hasChanged(bool substantial_change, tProgress *progress = NULL);
-
-  private:
-    // disabled
-    tSongSet(const tSongSet &src);
 };
 
 
@@ -123,6 +128,16 @@ class tSearchSongSet : public tSongSet
 
   public:
     tSearchSongSet();
+    tSearchSongSet(const tSearchSongSet &src);
+
+  private:
+    void initialize();
+    void assign(const tSearchSongSet &src);
+
+  public:
+    virtual tSearchSongSet &operator=(const tSearchSongSet &src);
+    tSearchSongSet *duplicate()
+      { return new tSearchSongSet(*this); }
 
     void reevaluateCriterion(tProgress *progess = NULL);
     void render(tSongList &rendering, tProgress *progess = NULL ) const;
@@ -157,7 +172,17 @@ class tPlaylist : public tSongSet
     tUniqueIdSet RenderingSet,PositiveSet,NegativeSet;
 
   public:
+    tPlaylist();
+    tPlaylist(const tPlaylist &src);
+
+  private:
+    void assign(const tPlaylist &src);
+
+  public:
     tPlaylist &operator=(const tPlaylist &src);
+    tPlaylist *duplicate()
+      { return new tPlaylist(*this); }
+      
 
     void sortBy(tSongField field, tSongField secondary, tSongField tertiary, bool ascending = true);
     void jumble();

@@ -97,6 +97,7 @@ class tMainWindow : public tMainWindowBase
     bool PreviouslyPaused, IgnoreRatingChanges, EnableAutoDJ;
 
     QPopupMenu *PlaylistButtonPopup;
+    QAction *PreviousAutoDJSourceAction;
 
   public:
     tMainWindow();
@@ -133,7 +134,12 @@ class tMainWindow : public tMainWindowBase
 
     void enableAutoDJ(bool on);
     void doAutoDJ();
+    void setAutoDJSourceAll(bool on);
+    void setAutoDJSourceSearch(bool on);
+    void setAutoDJSourcePlaylist(bool on);
     void clearPlaylist();
+    void disconnectAutoDJSourceSignals();
+    void connectAutoDJSourceSignals();
     
     void helpAbout();
     void help();

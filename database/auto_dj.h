@@ -34,11 +34,16 @@ class tSongSet;
 class tAutoDJ
 {
   public:
-    tAutoDJ(const tAutoDJPreferences& prefs, const tSongSet* song_set);
+    tAutoDJ(const tAutoDJPreferences& prefs, tSongSet* song_set);
     ~tAutoDJ();
 
-    // Change the songs or preferences used by this DJ
-    void setSongs(const tSongSet *song_set);
+    /** Change the songs used by this DJ.
+     * \c tAutoDJ will assume ownership.
+     */
+    void setSongSet(tSongSet *song_set);
+    /** Change the preferences used by this DJ.
+     * \c tAutoDJ will keep a refrence.
+     */
     void setPreferences(const tAutoDJPreferences& prefs);
 
     // Select one song, or a set of songs

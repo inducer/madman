@@ -42,7 +42,7 @@
 #include "utility/refcnt_ptr.h"
 
 
-namespace			// To make these types local to this file.
+namespace
 {
   class tCompiledScoringRule
   {
@@ -59,12 +59,12 @@ class tAutoDJImpl
 {
   public:
     tAutoDJImpl() 
-      : SongSet(NULL), TotalScoreSum(-1) 
+      : TotalScoreSum(-1) 
       { 
 	RNG.sgenrand(time(NULL));
       }
 
-    const tSongSet *SongSet;
+    auto_ptr<tSongSet>     SongSet;
 
     tCompiledScoringRuleList CompiledScoringRules;
 
@@ -89,11 +89,11 @@ class tAutoDJImpl
     mutable mtRand	   RNG;
 };
 
-tAutoDJ::tAutoDJ(const tAutoDJPreferences& prefs, const tSongSet *song_set)
+tAutoDJ::tAutoDJ(const tAutoDJPreferences& prefs, tSongSet *song_set)
 : pimpl(new tAutoDJImpl)
 {
   setPreferences(prefs);
-  setSongs(song_set);
+  setSongSet(song_set);
 }
 
 tAutoDJ::~tAutoDJ()
@@ -102,9 +102,10 @@ tAutoDJ::~tAutoDJ()
   delete pimpl;
 }
 
-void tAutoDJ::setSongs(const tSongSet *song_set)
+void tAutoDJ::setSongSet(tSongSet *song_set)
 {
-  pimpl->SongSet = song_set;
+  auto_ptr<tSongSet> ssautoptr(song_set);
+  pimpl->SongSet = ssautoptr;
 
   clearScores();
 }
@@ -136,15 +137,15 @@ void tAutoDJ::selectSongs(tSongList &result, unsigned count)
 {
   try
   {
-  while (count-- > 0)
-  {
-    const tSong* song = selectSong();
-    if (!song)
-      break;
-
-    result.push_back(const_cast<tSong*>(song));
+    while (count-- > 0)
+    {
+      const tSong* song = selectSong();
+      if (!song)
+        break;
+      
+      result.push_back(const_cast<tSong*>(song));
+    }
   }
-}
   catch (tRuntimeError& t)
   {
     // Got an error?  If we have some songs, take them.
@@ -204,9 +205,9 @@ void tAutoDJ::calculateScores()
   // We have at least attempted to calculate some ratings.
   pimpl->TotalScoreSum = 0;
 
-  if (pimpl->SongSet == 0 ||
+  if (pimpl->SongSet.get() == 0 ||
       pimpl->CompiledScoringRules.size() == 0)
-    // We have no song map, or we have no adjustments.  Give up.
+    // We have no song set, or we have no adjustments.  Give up.
     return;
 
   tConstSongList list;
@@ -259,7 +260,7 @@ void tAutoDJ::calculateScores()
     cout 
       << "autodj score calculation statistics" << endl
       << "-----------------------------------" << endl
-      << "songs eliminated  from selection list: " 
+      << "songs eliminated from selection list: " 
       << dropouts << " out of " << list.size() << endl
       << "maximum score: " << max_score << endl
       << "minimum score: " << min_score << endl

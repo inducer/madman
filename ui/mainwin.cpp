@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qaction.h>
 #include <qsplitter.h>
 #include <qslider.h>
+#include <qinputdialog.h>
 
 #include "mainwin.h"
 #include "utility/player.h"
@@ -268,6 +269,8 @@ void tMainWindow::initialize(const QString &filename_to_open)
   connect(actionRestoreWindow, SIGNAL(activated()), this, SLOT(showNormal()));
   connect(actionHideWindow, SIGNAL(activated()), this, SLOT(hide()));
 
+  connectAutoDJSourceSignals();
+
   // player control -----------------------------------------------------------
   connect(actionPlaybackPlayPause, SIGNAL(activated()), this, SLOT(playPause()));
   connect(actionPlaybackStop, SIGNAL(activated()), this, SLOT(stop()));
@@ -425,6 +428,8 @@ void tMainWindow::setDatabase(tDatabase *db)
 	  this, SLOT(noticeSongModified(const tSong*, tSongField)));
   connect(&ProgramBase.database(), SIGNAL(notifyPlaylistTreeChanged()),
 	  this, SLOT(updatePlaylistTree()));
+
+  actionAutoDJSourceAll->setOn(true);
 }
 
 
@@ -871,6 +876,139 @@ void tMainWindow::doAutoDJ()
 
 
 
+void tMainWindow::setAutoDJSourceAll(bool on)
+{
+  auto_ptr<tSearchSongSet> adjss(new tSearchSongSet());
+  adjss->setSongCollection(&ProgramBase.database().SongCollection);
+  adjss->setCriterion("~all");
+  adjss->reevaluateCriterion();
+  ProgramBase.autoDJ().setSongSet(adjss.get());
+  adjss.release();
+
+  PreviousAutoDJSourceAction = actionAutoDJSourceAll;
+}
+
+
+
+
+void tMainWindow::setAutoDJSourceSearch(bool on)
+{
+  if (!on)
+    return;
+
+  bool ok;
+
+  auto_ptr<tSearchSongSet> adjss(new tSearchSongSet());
+  adjss->setSongCollection(&ProgramBase.database().SongCollection);
+
+  while (true) 
+  {
+    try
+    {
+      QString search_str = QInputDialog::getText(
+        tr("madman AutoDJ"),
+        tr("Search expression"),
+        QLineEdit::Normal,
+        editSearch->text(),
+        &ok);
+      if (!ok)
+      {
+        // revert UI
+        disconnectAutoDJSourceSignals();
+        PreviousAutoDJSourceAction->setOn(true);
+        connectAutoDJSourceSignals();
+        return;
+      }
+      adjss->setCriterion(search_str);
+      break;
+    }
+    catch (runtime_error &ex)
+    {
+      QMessageBox::warning(this, tr("madman"),
+                           tr("Error in search expression:\n%1")
+                           .arg(string2QString(ex.what())),
+                           QMessageBox::Ok, 0);
+    }
+  }
+
+  adjss->reevaluateCriterion();
+  ProgramBase.autoDJ().setSongSet(adjss.get());
+  adjss.release();
+
+  PreviousAutoDJSourceAction = actionAutoDJSourceSearch;
+}
+
+
+
+
+void tMainWindow::setAutoDJSourcePlaylist(bool on)
+{
+  if (!on)
+    return;
+
+  tPlaylistNode *node = currentNode();
+  if (!node)
+  {
+    QMessageBox::warning(this, tr("madman"),
+                         tr("There is no currently selected playlist."),
+                         QMessageBox::Ok, 0);
+
+    // revert UI
+    disconnectAutoDJSourceSignals();
+    PreviousAutoDJSourceAction->setOn(true);
+    connectAutoDJSourceSignals();
+    return;
+  }
+
+  tSongList sl;
+  node->data()->render(sl);
+  if (sl.size() == 0)
+  {
+    QMessageBox::warning(this, tr("madman"),
+                         tr("Can't pick an empty playlist as AutoDJ source."),
+                         QMessageBox::Ok, 0);
+    
+    // revert UI
+    disconnectAutoDJSourceSignals();
+    PreviousAutoDJSourceAction->setOn(true);
+    connectAutoDJSourceSignals();
+    return;
+  }
+
+  ProgramBase.autoDJ().setSongSet(node->data()->duplicate());
+
+  PreviousAutoDJSourceAction = actionAutoDJSourcePlaylist;
+}
+
+
+
+
+void tMainWindow::disconnectAutoDJSourceSignals()
+{
+  disconnect(actionAutoDJSourceAll, NULL, 
+             this, NULL);
+  disconnect(actionAutoDJSourceSearch, NULL, 
+             this, NULL);
+  disconnect(actionAutoDJSourcePlaylist, NULL, 
+             this, NULL);
+}
+
+
+
+
+void tMainWindow::connectAutoDJSourceSignals()
+{
+  connect(actionAutoDJSourceAll, SIGNAL(toggled(bool)), 
+          this, SLOT(setAutoDJSourceAll(bool)));
+  connect(actionAutoDJSourceSearch, SIGNAL(toggled(bool)), 
+          this, SLOT(setAutoDJSourceSearch(bool)));
+  connect(actionAutoDJSourcePlaylist, SIGNAL(toggled(bool)), 
+          this, SLOT(setAutoDJSourcePlaylist(bool)));
+}
+
+
+
+
 void tMainWindow::clearPlaylist()
 {
   ProgramBase.preferences().Player.clearPlaylist();
@@ -1094,7 +1232,8 @@ void tMainWindow::addPlaylist()
   catch (exception &ex)
   {
     QMessageBox::warning(this, tr("madman"),
-	tr("Can't create playlist:\n%1").arg(ex.what()), QMessageBox::Ok, QMessageBox::NoButton);
+                         tr("Can't create playlist:\n%1").arg(ex.what()), 
+                         QMessageBox::Ok, QMessageBox::NoButton);
   }
 }
 
@@ -1133,7 +1272,8 @@ void tMainWindow::bookmarkCurrentSearch()
   catch (exception &ex)
   {
     QMessageBox::warning(this, tr("madman"),
-	tr("Can't create playlist from search:\n%1").arg(ex.what()), QMessageBox::Ok, QMessageBox::NoButton);
+                         tr("Can't create playlist from search:\n%1").arg(ex.what()), 
+                         QMessageBox::Ok, QMessageBox::NoButton);
   }
 }
 
@@ -1168,7 +1308,8 @@ void tMainWindow::importPlaylist()
   catch (exception &ex)
   {
     QMessageBox::warning(this, tr("madman"),
-	tr("Can't import playlist:\n%1").arg(ex.what()), QMessageBox::Ok, QMessageBox::NoButton);
+                         tr("Can't import playlist:\n%1").arg(ex.what()), 
+                         QMessageBox::Ok, QMessageBox::NoButton);
   }
 }
 
@@ -1181,8 +1322,13 @@ void tMainWindow::duplicatePlaylist()
     return;
 
   tPlaylistNode *current_node = currentNode();
-  if (current_node == NULL)
+  if (!current_node)
+  {
+    QMessageBox::warning(this, tr("madman"),
+                         tr("There is no currently selected playlist."),
+                         QMessageBox::Ok, 0);
     return;
+  }
 
   try 
   {
@@ -1197,7 +1343,8 @@ void tMainWindow::duplicatePlaylist()
   catch (exception &ex)
   {
     QMessageBox::warning(this, tr("madman"),
-	tr("Can't duplicate playlist:\n%1").arg(ex.what()), QMessageBox::Ok, QMessageBox::NoButton);
+                         tr("Can't duplicate playlist:\n%1").arg(ex.what()), 
+                         QMessageBox::Ok, QMessageBox::NoButton);
   }
 }
 
@@ -1209,15 +1356,21 @@ void tMainWindow::removePlaylist()
   if (lstSets->isRenaming())
     return;
 
-  if (!lstSets->currentItem())
-    return ;
-
   tPlaylistNode *node = currentNode();
+  if (!node)
+  {
+    QMessageBox::warning(this, tr("madman"),
+                         tr("There is no currently selected playlist."),
+                         QMessageBox::Ok, 0);
+    return;
+  }
+
   if (node->begin() != node->end())
   {
     if (QMessageBox::warning(this, tr("Warning"), 
-	  tr("This playlist has children. Do you still want to delete it?"), 
-	  QMessageBox::Yes, QMessageBox::No | QMessageBox::Default) == QMessageBox::No)
+                             tr("This playlist has children. Do you still want to delete it?"), 
+                             QMessageBox::Yes, 
+                             QMessageBox::No | QMessageBox::Default) == QMessageBox::No)
       return ;
   }
 
@@ -1271,8 +1424,8 @@ void tMainWindow::editMultilinePlaylistCriterion()
     catch (exception &ex)
     {
       QMessageBox::warning(this, tr("madman"),
-	tr("Error in Criterion: %1").arg(string2QString(ex.what())),
-	QMessageBox::Ok, 0);
+                           tr("Error in Criterion: %1").arg(string2QString(ex.what())),
+                           QMessageBox::Ok, 0);
     }
   }
 }
@@ -1878,6 +2031,13 @@ void tMainWindow::updatePlaylistButtonMenu()
 
   QPopupMenu *menu = PlaylistButtonPopup;
 
+  actionPlaybackEnableAutoDJ->addTo(menu);
+  agAutoDJSource->addTo(menu);
+  actionPlaybackDoAutoDJ->addTo(menu);
+  actionPlaybackClearPlaylist->addTo(menu);
+
+  menu->insertSeparator();
+
   for (int i = start_index; i < end_index; i++)
   {
     tSong *song = ProgramBase.database().SongCollection.getByFilename(
@@ -1913,11 +2073,6 @@ void tMainWindow::updatePlaylistButtonMenu()
       menu->insertItem(text, submenu);
   }
   
-  menu->insertSeparator();
-  actionPlaybackEnableAutoDJ->addTo(menu);
-  actionPlaybackDoAutoDJ->addTo(menu);
-  actionPlaybackClearPlaylist->addTo(menu);
-
   btnPlaylist->setPopup(menu);
 }
 
@@ -2103,25 +2258,34 @@ void tMainWindow::doContinuousAutoDJ()
 {
   tPlayer &player = ProgramBase.preferences().Player;
 
-  if (EnableAutoDJ && player.canGetValidStatus())
+  try
   {
-    while (true)
+    if (EnableAutoDJ && player.canGetValidStatus())
     {
-      int playlist_index = player.getPlayListIndex();
-      unsigned playlist_length = player.getPlayListLength();
+      while (true)
+      {
+        int playlist_index = player.getPlayListIndex();
+        unsigned playlist_length = player.getPlayListLength();
       
-      int songs_needed = 6;
-      int have_songs = playlist_length - playlist_index;
-      if (have_songs >= songs_needed)
-        break;
-      songs_needed -= have_songs;
+        int songs_needed = 6;
+        int have_songs = playlist_length - playlist_index;
+        if (have_songs >= songs_needed)
+          break;
+        songs_needed -= have_songs;
+        
+        tSongList slist;
+        ProgramBase.autoDJ().reEvaluateScores();
+        ProgramBase.autoDJ().selectSongs(slist, songs_needed);
 
-      tSongList slist;
-      ProgramBase.autoDJ().reEvaluateScores();
-      ProgramBase.autoDJ().selectSongs(slist, songs_needed);
-
-      player.playEventually(slist);
+        player.playEventually(slist);
+      }
     }
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(tr("AutoDJ error: %1")
+                         .arg(string2QString(ex.what())),
+                         10000);
   }
 }
 
