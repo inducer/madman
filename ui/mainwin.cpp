@@ -1443,6 +1443,8 @@ void tMainWindow::followCurrentSongLink(const QString &href)
   {
     lstOverview->ensureItemVisible(item_to_select);
     lstOverview->setCurrentItem(item_to_select);
+    if (editSearch->text() != item_to_select->criterion())
+      editSearch->setText(item_to_select->criterion());
   }
 }
 
@@ -1453,9 +1455,6 @@ void tMainWindow::searchChanged()
 {
   try 
   {
-    // Workaround for Qt 3.2
-    editSearch->repaint();
-
     QString new_crit = editSearch->text();
     if (SearchSongSet.criterion() != new_crit)
     {

@@ -110,7 +110,6 @@ future ------------------------------------------------------------------------
   Passing of ext. character filenames to plugins? (?? instead of char)
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Highlight current song leaves another marked song also selected.
-* Fix annoyance with clicking artist link twice.
 * Continuous AutoDJ from any source.
   (sugg. by Johan Forsberg)
 * Show count after letter in overview.
