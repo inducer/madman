@@ -119,6 +119,7 @@ void tMainWindow::initialize(const QString &filename_to_open)
   setStockIcon(btnBookmarkSet, "bookmark.png");
   setStockIcon(btnImportSet, "import.png");
   setStockIcon(btnRemoveSet, "remove.png");
+  setStockIcon(btnPlaySet, "play.png");
 
   setStockIcon(btnBack, "back.png");
   setStockIcon(btnPlayPause, "play.png");
@@ -184,6 +185,8 @@ void tMainWindow::initialize(const QString &filename_to_open)
   connect(btnImportSet, SIGNAL(clicked()), this, SLOT(importPlaylist()));
   connect(btnCopySet, SIGNAL(clicked()), this, SLOT(duplicatePlaylist()));
   connect(btnRemoveSet, SIGNAL(clicked()), this, SLOT(removePlaylist()));
+  connect(btnPlaySet, SIGNAL(clicked()), this, SLOT(playPlaylist()));
+
   connect(btnEditSetCriterion, SIGNAL(clicked()), this, SLOT(editMultilinePlaylistCriterion()));
 
   connect(btnHelpAll, SIGNAL(clicked()), this, SLOT(help()));
@@ -230,6 +233,11 @@ void tMainWindow::initialize(const QString &filename_to_open)
       this, SLOT(followCurrentSongLink(const QString &)));
   connect(checkHideLists, SIGNAL(toggled(bool)),
       this, SLOT(hideLists(bool)));
+
+  editSearch->addShortCut(new tKeyboardShortCut(Key_F9, this, SLOT(playSearchResultNow())));
+  editSearch->addShortCut(new tKeyboardShortCut(Key_F10, this, SLOT(playSearchResultNext())));
+  editSearch->addShortCut(new tKeyboardShortCut(Key_F11, this, SLOT(playSearchResultEventually())));
+  connect(editSearch, SIGNAL(returnPressed()), lstAllSongs, SLOT(setFocus()));
 
   // menu ---------------------------------------------------------------------
   connect(actionFileNew, SIGNAL(activated()), this, SLOT(fileNew()));
@@ -971,6 +979,36 @@ void tMainWindow::help()
 
 
 
+void tMainWindow::playSearchResultNow()
+{
+  tSongList songs;
+  SearchSongSet.render(songs);
+  ProgramBase.preferences().Player.playNow(songs);
+}
+
+
+
+
+void tMainWindow::playSearchResultNext()
+{
+  tSongList songs;
+  SearchSongSet.render(songs);
+  ProgramBase.preferences().Player.playNext(songs);
+}
+
+
+
+
+void tMainWindow::playSearchResultEventually()
+{
+  tSongList songs;
+  SearchSongSet.render(songs);
+  ProgramBase.preferences().Player.playEventually(songs);
+}
+
+
+
+
 void tMainWindow::rateCurrentSong(int rating)
 {
   tFilename song_file = ProgramBase.preferences().Player.currentFilename();
@@ -1173,6 +1211,19 @@ void tMainWindow::removePlaylist()
   PlaylistEditor.setSongSet(NULL);
 
   updatePlaylistTree(false, true);
+}
+
+
+
+
+void tMainWindow::playPlaylist()
+{
+  if (PlaylistEditor.songSet())
+  {
+    tSongList songs;
+    PlaylistEditor.songSet()->render(songs);
+    ProgramBase.preferences().Player.playNow(songs);
+  }
 }
 
 

@@ -20,11 +20,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
-#include "accel_list_view.h"
+#include "ui/accel_widgets.h"
 #include "utility/base.h"
 
 
-
+  
 
 tKeyboardShortCut::tKeyboardShortCut(const QKeySequence &keys)
   : Keys(keys)
@@ -67,6 +67,36 @@ bool tKeyboardShortCut::processKeyEvent(QKeyEvent *e)
 
 
 
+// tWidgetWithAcceleratorBase ------------------------------------------------
+tWidgetWithAcceleratorBase::~tWidgetWithAcceleratorBase()
+{
+  FOREACH(first, KeysList, tKeysList)
+    delete *first;
+}
+
+
+
+
+void tWidgetWithAcceleratorBase::addShortCut(tKeyboardShortCut *sc)
+{
+  KeysList.push_back(sc);
+}
+
+
+
+
+
+bool tWidgetWithAcceleratorBase::keyPressEvent(QKeyEvent *e)
+{
+  FOREACH(first, KeysList, tKeysList)
+    if ((*first)->processKeyEvent(e))
+      return true;
+  return false;
+}
+
+
+
+
 // tAcceleratorListView -------------------------------------------------------
 tAcceleratorListView::tAcceleratorListView(QWidget *parent, const char *name, WFlags f)
   : super(parent, name, f)
@@ -76,34 +106,10 @@ tAcceleratorListView::tAcceleratorListView(QWidget *parent, const char *name, WF
 
 
 
-tAcceleratorListView::~tAcceleratorListView()
+void tAcceleratorListView::keyPressEvent(QKeyEvent *e)
 {
-  FOREACH(first, KeysList, tKeysList)
-    delete *first;
-}
-
-
-
-
-void tAcceleratorListView::addShortCut(tKeyboardShortCut *sc)
-{
-  KeysList.push_back(sc);
-}
-
-
-
-
-
-void tAcceleratorListView::keyPressEvent (QKeyEvent * e)
-{
-  if (hasFocus())
-  {
-    FOREACH(first, KeysList, tKeysList)
-      if ((*first)->processKeyEvent(e))
-	return;
-  }
-
-  super::keyPressEvent(e);
+  if (!hasFocus() || !tWidgetWithAcceleratorBase::keyPressEvent(e))
+    super::keyPressEvent(e);
 }
 
 
@@ -118,34 +124,27 @@ tAcceleratorTable::tAcceleratorTable(QWidget *parent, const char *name)
 
 
 
-tAcceleratorTable::~tAcceleratorTable()
+void tAcceleratorTable::keyPressEvent(QKeyEvent *e)
 {
-  FOREACH(first, KeysList, tKeysList)
-    delete *first;
+  if (!hasFocus() || !tWidgetWithAcceleratorBase::keyPressEvent(e))
+    super::keyPressEvent(e);
 }
 
 
 
 
-void tAcceleratorTable::addShortCut(tKeyboardShortCut *sc)
+// tAcceleratorLineEdit -------------------------------------------------------
+tAcceleratorLineEdit::tAcceleratorLineEdit(QWidget *parent, const char *name)
+  : super(parent, name)
 {
-  KeysList.push_back(sc);
 }
 
 
 
 
-
-void tAcceleratorTable::keyPressEvent(QKeyEvent * e)
-{
-  if (hasFocus())
-  {
-    FOREACH(first, KeysList, tKeysList)
-      if ((*first)->processKeyEvent(e))
-	return;
-  }
-
-  super::keyPressEvent(e);
+void tAcceleratorLineEdit::keyPressEvent(QKeyEvent *e)
+{  if (!hasFocus() || !tWidgetWithAcceleratorBase::keyPressEvent(e))
+    super::keyPressEvent(e);
 }
 
 

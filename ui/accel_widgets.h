@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qkeysequence.h>
 #include <qlistview.h>
 #include <qtable.h>
+#include <qlineedit.h>
 #include <vector>
 #include "utility/base.h"
 
@@ -54,34 +55,54 @@ class tKeyboardShortCut : public QObject
 
 
 
-class tAcceleratorListView : public QListView
+class tWidgetWithAcceleratorBase
 {
-    typedef QListView			super;
+  protected:
     typedef vector<tKeyboardShortCut *>	tKeysList;
     tKeysList				KeysList;
 
   public:
-    tAcceleratorListView(QWidget *parent = 0, const char *name = "", WFlags f = 0 );
-    ~tAcceleratorListView();
-
+    ~tWidgetWithAcceleratorBase();
     void addShortCut(tKeyboardShortCut *sc);
+    bool keyPressEvent(QKeyEvent * e);
+};
+
+
+
+
+class tAcceleratorListView : public QListView, 
+                             public tWidgetWithAcceleratorBase
+{
+    typedef QListView			super;
+
+  public:
+    tAcceleratorListView(QWidget *parent = 0, const char *name = "", WFlags f = 0 );
     void keyPressEvent(QKeyEvent * e);
 };
 
 
 
 
-class tAcceleratorTable : public QTable
+class tAcceleratorTable : public QTable,
+                          public tWidgetWithAcceleratorBase
 {
     typedef QTable			super;
-    typedef vector<tKeyboardShortCut *>	tKeysList;
-    tKeysList				KeysList;
 
   public:
     tAcceleratorTable(QWidget *parent = 0, const char *name = "");
-    ~tAcceleratorTable();
+    void keyPressEvent(QKeyEvent * e);
+};
 
-    void addShortCut(tKeyboardShortCut *sc);
+
+
+
+class tAcceleratorLineEdit : public QLineEdit,
+                          public tWidgetWithAcceleratorBase
+{
+    typedef QLineEdit			super;
+
+  public:
+    tAcceleratorLineEdit(QWidget *parent = 0, const char *name = "");
     void keyPressEvent(QKeyEvent * e);
 };
 

@@ -131,6 +131,8 @@ struct tPreferences
 
   tID3ReadPreference ID3ReadPreference;
 
+  QStringList TaglessExtensions;
+
   void save(QSettings &settings);
   void load(QSettings &settings);
 

@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qpopupmenu.h>
 #include <qlistview.h>
 #include <qdir.h>
+#include <qregexp.h>
 #include <qtextcodec.h>
 #include <algorithm>
 
@@ -359,13 +360,17 @@ void tGenreOverviewItem::addExpansion()
 // tPathOverviewItem -----------------------------------------------------------
 tPathOverviewItem::tPathOverviewItem(const QString &path,
 		      QListViewItem *parent, QListViewItem *after, bool show_full_path)
-  : tExpandableOverviewItem(parent, NULL, "", 
-			    QString("~filename(startswith:%1)").arg(quoteString(path+"/"))),
+  : tExpandableOverviewItem(parent, after, "", 
+			    QString("~filename(startswith:%1)").arg(quoteString(path))),
     Path(path),
     ShowFullPath(show_full_path)
 {
   if (show_full_path)
-    setText(0, path);
+  {
+    QString display_name = path;
+    display_name.replace(QRegExp("/+$"), "");
+    setText(0, display_name);
+  }
   else
   {
     QDir dir(path);
@@ -379,8 +384,8 @@ tPathOverviewItem::tPathOverviewItem(const QString &path,
 void tPathOverviewItem::addExpansion()
 {
   QDir dir(Path);
-  dir.setSorting(QDir::DirsFirst | QDir::Name);
-  QStringList entries = dir.entryList();
+  QStringList entries = dir.entryList(QDir::Dirs | QDir::Readable | QDir::Executable,
+                                      QDir::Name | QDir::IgnoreCase);
 
   QListViewItem *last_item = NULL;
   FOREACH(first, entries, QStringList)
@@ -389,7 +394,7 @@ void tPathOverviewItem::addExpansion()
     QDir subdir(full_path);
     if (!subdir.exists() || *first == "." || *first == "..")
       continue;
-    last_item = new tPathOverviewItem(subdir.absPath(), this, last_item);
+    last_item = new tPathOverviewItem(subdir.absPath()+"/", this, last_item);
   }
 }
 

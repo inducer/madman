@@ -2010,7 +2010,6 @@ void  tM4ASong::setFieldText(tSongField field, QString const &value)
   }
   MP4Close(mp4_file);
   readInfo();
-  
 }
 
 
@@ -2023,6 +2022,32 @@ void  tM4ASong::stripTagInternal()
   MP4Close(mp4_file);
 }
 #endif
+
+
+
+
+//tTaglessSong ---------------------------------------------------------------
+class tTaglessSong : public tSong
+{
+  public:
+    QString mimeType() const 
+      { return "audio/unknown";}
+    void stripTagInternal() { }
+    void readInfo() const;
+};
+
+
+
+
+void tTaglessSong::readInfo() const
+{
+  tFilename::size_type slash_pos = filename().rfind("/");
+  QString name = string2QString(filename().substr(slash_pos+1));
+  assignAndCheckForModification(this,SongCollection,
+                                const_cast<tTaglessSong *>(this)->Title,
+                                name, FIELD_TITLE);
+  tSong::readInfo();
+}
 
 
 
@@ -2065,6 +2090,20 @@ tSong *makeSong(tFilename const &filename)
     return song;
   }
 #endif
+  else 
+  {
+    QStringList::iterator it = tProgramBase::preferences().TaglessExtensions.begin();
+    while (it != tProgramBase::preferences().TaglessExtensions.end())
+    {
+      if(extension == *it)
+      {
+        tSong *song = new tTaglessSong;
+        song->setFilename(filename);
+        return song;
+      }
+      ++it;
+    }
+  }
   throw tRuntimeError(
       qApp->translate("ErrorMessages", "Unknown file type: %1")
       .arg(string2QString(filename)));

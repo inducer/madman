@@ -81,6 +81,7 @@ future ------------------------------------------------------------------------
 + Playlist maintenance on disk. (sugg. by Pavel Avgustinov)
 + Grouping threshold in overview -> don't show group below 3 entries. 
   (sugg. by Michael Bueker)
+* Mood and tempo extraction from songs?
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -108,34 +109,30 @@ future ------------------------------------------------------------------------
 * ~pathname, ~filename_without_path
 * Mousewheel on tray icon allows forward/back.
 
-* Play albums in the right order. (Joshua Hutchins)
 * Extended characters in filenames?
   Passing of ext. character filenames to plugins? (?? instead of char)
 * Problems with doubly drawn list content
 * Fixed BadMatch X errors.
-* Mood and tempo extraction from songs?
 * Highlight current song leaves another marked song also selected.
 * Fix annoyance with clicking artist link twice.
 * Continuous AutoDJ from any source.
   (sugg. by Johan Forsberg)
 * Show count after letter in overview.
-* Allow immediate play of first song in search result from search line by
-  Enter, f9, f10, f11. (sugg. by Hendrik Wouters)
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
 * Save database after web server is done. (sugg. by Brian Lopes)
 * See why AutoDJ was wrong with multiple selections from the same score set.
-* Directory sort order in overview path tree.
-* Click on /mnt/win_c yields /mnt/win_c//.
 * Locking. (sugg. by Christian Hammers)
 * gcc 3.4 compatibility. (sugg. by Shawn Sharpe)
-* Big "play all" button. (sugg by "Mozai" and many others)
++ %title_or_filename% (sugg. by Kyoshiro)
+* passive popup ending up blank?
+* Make sure XMMS doesn't get started automatically.
 
 MAJOR CHANGES:
 * Playlist management button. [done]
 * Continuous AutoDJ. (Shawn, Adam Ward) [done]
 + Support FLAC. [done]
-+ Support M4A. [done] (Walt)
++ Support M4A. [done] (Walter King)
 * Switched to Scott Wheeler's Taglib. [done]
 + New UI for current song, imitating Rhythmbox.
   I guess imitation is the sincerest form of flattery. [done]
@@ -164,6 +161,9 @@ MINOR IMPROVEMENTS:
 * Have separate build tree, one for maintenance mode and 
   one for release. [done]
 * Preserve AutoDJ-on status across runs. [done]
++ Big "play all" button. (sugg by "Mozai" and many others) [done]
++ Allow immediate play of first song in search result from search line by
+  Enter, f9, f10, f11. (sugg. by Hendrik Wouters) [done]
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
@@ -210,6 +210,7 @@ BUGS FIXED:
 * Fix AutoDJ score generation. (Shawn, patch-5) [done]
 * Made the main window use a stock icon, using proper alpha channel. [done]
 * Fixed out-of-order insertion for Ctrl-A-marked selections. [done]
+* Play albums in the right order. (Joshua Hutchins) [done]
 
 0.93 --------------------------------------------------------------------------
 

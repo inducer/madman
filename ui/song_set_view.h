@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qlistview.h>
 #include <qsettings.h>
 #include "database/song_set.h"
-#include "ui/accel_list_view.h"
+#include "ui/accel_widgets.h"
 
 
 

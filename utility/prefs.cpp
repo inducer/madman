@@ -160,6 +160,7 @@ void tPreferences::save(QSettings &settings)
   }
 
   settings.writeEntry("/madman/id3/read_preference" , (int) ID3ReadPreference);
+  settings.writeEntry("/madman/tagless_extensions", TaglessExtensions);
 }
 
 
@@ -188,6 +189,7 @@ void tPreferences::load(QSettings &settings)
     PluginDirectories.clear();
     PluginDirectories.push_back(STRINGIFY(MADMAN_LIBDIR) "/madman/plugins");
   }
+
 #define READ_BOOL(SETTING, VARIABLE, DEFAULT) \
   VARIABLE = settings.readNumEntry("/madman/" SETTING, DEFAULT);
 
@@ -264,6 +266,13 @@ void tPreferences::load(QSettings &settings)
   }
 
   ID3ReadPreference = (tID3ReadPreference) settings.readNumEntry("/madman/id3/read_preference" , ID3_READ_PREFER_V2);
+  TaglessExtensions = settings.readListEntry("/madman/tagless_extensions",&ok);
+  if (!ok)
+  {
+    TaglessExtensions.clear();
+    TaglessExtensions.push_back("wma");
+    TaglessExtensions.push_back("fmr");
+  }
 }
 
 

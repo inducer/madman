@@ -138,6 +138,10 @@ class tMainWindow : public tMainWindowBase
     void helpAbout();
     void help();
 
+    void playSearchResultNow();
+    void playSearchResultNext();
+    void playSearchResultEventually();
+
     void rateCurrentSong(int rating);
     void ratingBoxChanged(int index) { if (!IgnoreRatingChanges) rateCurrentSong(index-1); }
     void rateNone() { rateCurrentSong(-1); }
@@ -154,6 +158,8 @@ class tMainWindow : public tMainWindowBase
     void importPlaylist();
     void duplicatePlaylist();
     void removePlaylist();
+    void playPlaylist();
+
     void editMultilinePlaylistCriterion();
     void slotDropPlaylistNode(const QString &node, tPlaylistNode *onto);
     void renamePlaylist(QListViewItem *item, int col, const QString &text);
