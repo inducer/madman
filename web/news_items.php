@@ -1,4 +1,12 @@
 <?
+madman_news_item("October 19, 2004",
+  "<b>Giving CVS the boot.</b>".
+  "Work on 0.94 is continuing nicely, with Guido as a notable addition to the ".
+  "development team. Shawn is considering a rewrite of the criteria language. ".
+  "And you'll probably miss all this new development if you only check the ".
+  "SourceForge CVS--it is out of use as of today. The code is now maintained ".
+  "in my public arch repository. See <a href=\"download.php\">the download page</a>".
+  "for details on how to get the tree.");
 madman_news_item("June 9, 2004",
   "<b>Package frenzy.</b> ".
   "Within minutes of each other, both Christian Hammers and Jaako H Kyro made ".

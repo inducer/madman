@@ -4,20 +4,27 @@ import glob
 opts = Options(	"my_options.py")
 
 opts.Add("qt_directory", "Path to Qt directory", "not specified")
+
 opts.Add("xmms_config_program", "Path to xmms-config", "not specified")
 opts.Add("glib_config_program", "Path to glib-config", "not specified")
+
 opts.Add("taglib_include", "Include path for taglib", "/usr/include/taglib")
 opts.Add("taglib_library", "Library path for taglib", "not specified")
-opts.Add("my_cc", "The C Compiler you want to use", "not specified")
-opts.Add("my_cxx", "The C++ Compiler you want to use", "not specified")
-opts.Add("prefix", "The root installation path", "/usr/local")
-opts.Add("install_to", "Where to actually install to", "$prefix")
-opts.Add("add_c_include_dirs", "A comma-separated list of include paths", "not specified")
-opts.Add("add_lib_dirs", "A comma-separated list of library paths", "not specified")
-opts.Add(BoolOption("maintainer_mode", "Whether you want to use some special ingredients", 0))
+
 opts.Add(BoolOption("with_m4a","Enable m4a support.  Requires mp4v2/faac",1))
 opts.Add("mp4_include", "Include path for mp4.h", "not specified")
 opts.Add("mp4_library", "Library path for mp4v2", "not specified")
+
+opts.Add("my_cc", "The C Compiler you want to use", "not specified")
+opts.Add("my_cxx", "The C++ Compiler you want to use", "not specified")
+
+opts.Add("prefix", "The root installation path", "/usr/local")
+opts.Add("install_to", "Where to actually install to", "$prefix")
+
+opts.Add("add_c_include_dirs", "A comma-separated list of include paths", "not specified")
+opts.Add("add_lib_dirs", "A comma-separated list of library paths", "not specified")
+
+opts.Add(BoolOption("maintainer_mode", "Whether you want to use some special ingredients", 0))
 
 env = Environment(
     ENV = {
@@ -112,17 +119,18 @@ def SplitLibs(lstring):
 
 
 # My personal checks ----------------------------------------------------------
-def CheckForQtAt(context, qtdir, variant):
-  context.Message('Checking for %s at %s... ' % (variant, qtdir))
+def CheckForQtAt(context, qtdir, variant, libdir):
+  context.Message("Checking for %s at %s (with %s) " % (variant, qtdir, libdir))
   result = AttemptLinkWithVariables(context,
-      { "LIBS": variant, "LIBPATH": qtdir + '/lib', "CPPPATH": qtdir + '/include' },
-      """
-#include <qapplication.h>
-int main(int argc, char **argv) { 
-  QApplication qapp(argc, argv);
-  return 0;
-}
-""",".cpp","QT_")
+      { "LIBS": variant, "LIBPATH": libdir, 
+        "CPPPATH": qtdir + '/include' },
+                                    """
+                                    #include <qapplication.h>
+                                    int main(int argc, char **argv) { 
+                                    QApplication qapp(argc, argv);
+                                    return 0;
+                                    }
+                                    """, ".cpp", "QT_")
   context.Result(result)
   return result
 
@@ -144,12 +152,14 @@ def CheckForQt(context):
   if env[ 'qt_directory' ] != "not specified":
     potential_qt_dirs.insert(0, env[ 'qt_directory' ])
 
-  for i in potential_qt_dirs:
-    for variant in ["qt", "qt-mt"]:
-      if CheckForQtAt(context, i, variant):
-        context.env.Replace(QTDIR = i)
-        context.env.Replace(QT_LIBRARY_NAME = variant)
-        return 1
+  for libdir in ["$QTDIR/lib", "$QTDIR/lib64"]:
+    for qtdir in potential_qt_dirs:
+      for variant in ["qt", "qt-mt"]:
+        if CheckForQtAt(context, qtdir, variant, libdir):
+          context.env.Replace(QTDIR = qtdir)
+          context.env.Replace(QT_LIBPATH = libdir)
+          context.env.Replace(QT_LIBRARY_NAME = variant)
+          return 1
   return 0
 
 

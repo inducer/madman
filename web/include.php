@@ -31,7 +31,6 @@ function madman_menu()
   echo "<a href=\"screenshots.php\">Screenshots</a><br>";
   echo "<a href=\"http://sourceforge.net/projects/madman/\">Project page</a><br>";
   echo "<a href=\"http://sourceforge.net/mail/?group_id=59086\">Lists</a><br>";
-  echo "<a href=\"http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/madman/madman2\">CVSWeb</a><p>";
   echo "<a href=\"http://sourceforge.net/donate/index.php?group_id=59086\"><img src=\"http://images.sourceforge.net/images/project-support.jpg\" width=\"88\" height=\"32\" border=\"0\" alt=\"Support This Project\" /> </a><p>";
   echo "<a href=\"http://sourceforge.net\"> ";
   echo "<img src=\"http://sourceforge.net/sflogo.php?group_id=59086&amp;type=1\" width=\"88\" height=\"31\" border=\"0\" alt=\"SourceForge Logo\"></a><p>";

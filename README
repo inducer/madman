@@ -62,7 +62,8 @@ Here's how it works:
      You don't need to do anything in this step. In the following steps, whenever
      I say "./scons.py", you should replace that by "scons". So if you're told to
      type "./scons.py install", you'd really type "scons install", because your
-     SCons install is system-wide. Also make sure that you have at least SCons 0.95.
+     SCons install is system-wide. Also make sure that you have at least 
+     SCons 0.96.1.
 
 2) CONFIGURE AND BUILD MADMAN
    
@@ -72,7 +73,7 @@ Here's how it works:
 
    should build madman, if the build script manages to find all the dependencies
    mentioned above, so make sure you have them installed. It does work out of the box 
-   on Debian systems.
+   on Debian systems, if the right packages are installed.
 
    In case something doesn't work or you want to install somewhere other than 
    "/usr/local", which is the default, you'll need to pass some options to
@@ -109,7 +110,7 @@ Here's how it works:
 
    If you'd like, you can test your madman build by saying
 
-   ./main/madman
+   ,,build/main/madman
 
    madman will run just fine from the build directory, it may however be unable to find
    its plugins, which have not been installed yet.

@@ -40,14 +40,29 @@
   <div class="separator">
     Building from source
   </div>
-  The current stable release is 
-  <a href="http://prdownloads.sourceforge.net/madman/madman-<? echo $madman_current_version; ?>.tar.gz?download">madman-<? echo $madman_current_version; ?>.tar.gz</a>.<br>
+  You have the following options:
+  <ul>
+    <li> The current stable release is 
+    <a href="http://prdownloads.sourceforge.net/madman/madman-<? echo $madman_current_version; ?>.tar.gz?download">madman-<? echo $madman_current_version; ?>.tar.gz</a>.<br>
 
-  The current development release is 
-  <a href="http://prdownloads.sourceforge.net/madman/madman-<? echo $madman_development_version; ?>.tar.gz?download">madman-<? echo $madman_development_version; ?>.tar.gz</a>.<br>
+    <li>The current development release is 
+    <a href="http://prdownloads.sourceforge.net/madman/madman-<? echo $madman_development_version; ?>.tar.gz?download">madman-<? echo $madman_development_version; ?>.tar.gz</a>.<br>
 
-  Older releases may be obtained from the 
-  <a href="http://sourceforge.net/project/showfiles.php?group_id=59086">SourceForge download page</a>.<p>
+    <li> The code as it is being developed can be obtained from my arch repository. 
+    These three commands suffice to get you a version:
+    <pre>
+      $ tla my-id "I. R. Baboon &lt;irbaboon@cow-n-chicken.net&gt;"
+      $ tla register-archive http://tiker.net/archives/2004-public
+      $ tla get inform@tiker.net--2004-public/madman--production--1.0 madman
+    </pre>
+    A simple
+    <pre>
+      $ tla update
+    </pre>
+    gets you updated. Of course, you need <a href="http://gnuarch.org/">tla</a> installed.
+    <li> Older releases may be obtained from the 
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=59086">SourceForge download page</a>.<p>
+  </ul>
 
   In order to successfully build madman, you'll need the following packages,
   including their corresponding development components:
