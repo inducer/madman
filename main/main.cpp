@@ -50,10 +50,12 @@ int main(int argc, char **argv)
 
   try
   {
-    if (argc >= 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0 ))
+    if (argc >= 2 
+        && (strcmp(argv[1], "--help") == 0 
+            || strcmp(argv[1], "-h") == 0 ))
     {
       cout << "madman " << STRINGIFY(MADMAN_VERSION) << endl;
-      cout << "usage: " << argv[0] << " [--nogui] [filename_to_open]" << endl << endl;
+      cout << "usage: " << argv[0] << " [--nogui [--readonly]] [filename_to_open]" << endl << endl;
       cout << "options:" << endl;
       cout << "  --nogui: run without GUI" << endl;
       return 1;
@@ -61,6 +63,12 @@ int main(int argc, char **argv)
     if (argc >= 2 && strcmp(argv[1], "--nogui") == 0)
     {
       QApplication app(argc, argv, /* GUIEnabled */ false);
+
+      int file_index = 2;
+      bool readonly = argc >= 3 
+        && strcmp(argv[2], "--readonly") == 0;
+      if (readonly)
+        file_index++;
 
       QTranslator translator(0);
       translator.load(QString("madman_") + QTextCodec::locale(), ".");
@@ -75,9 +83,9 @@ int main(int argc, char **argv)
       bool filename_valid = false;
       QString filename;
       
-      if (!filename_valid && argc >= 3)
+      if (argc > file_index)
       {
-	filename = argv[ 2 ];
+	filename = argv[file_index];
 	filename_valid = true;
       }
       if (!filename_valid) 
@@ -91,7 +99,15 @@ int main(int argc, char **argv)
       prog.setDatabase(db.release());
       cout << "done." <<endl;
       cout << "running..." <<endl;
-      return app.exec();
+      int result = app.exec();
+      if (!readonly)
+      {
+        cout << "saving " << filename << "..." << flush;
+        prog.database().save(filename, 0);
+        cout << "done." <<endl;
+      }
+
+      return result;
     }
     else
     {
@@ -116,6 +132,7 @@ int main(int argc, char **argv)
     cerr << "*** terminated by fatal exception:" << endl;
     cerr << "*** " << ex.what() << endl;
   }
+}
 
 
 
@@ -130,4 +147,3 @@ int main(int argc, char **argv)
 // c-basic-offset: 2
 // tab-width: 8
 // End:
-}

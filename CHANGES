@@ -119,7 +119,6 @@ future ------------------------------------------------------------------------
 * Show count after letter in overview.
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
-* Save database after web server is done. (sugg. by Brian Lopes)
 * See why AutoDJ was wrong with multiple selections from the same score set.
 * Locking. (sugg. by Christian Hammers)
 + %title_or_filename% (sugg. by Kyoshiro)
@@ -165,6 +164,8 @@ MINOR IMPROVEMENTS:
 + Allow immediate play of first song in search result from search line by
   Enter, f9, f10, f11. (sugg. by Hendrik Wouters) [done]
 + Add a better diagnostic for expat errors, including line number.
+  [done]
+* Save database after web server is done. (sugg. by Brian Lopes)
   [done]
 
 BUGS FIXED:
