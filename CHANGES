@@ -126,6 +126,7 @@ Patch credits (if not mentioned above):
 * Mood/CustomN/... reflection in songs?
 + Customize time for song popup. (sugg. by Dave Sailer)
   (via .rc)
+* Back button does not work.
 
 MAJOR CHANGES:
 * Playlist management button. [done]

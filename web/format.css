@@ -71,3 +71,22 @@
   margin:10px;
   float:Left;
 }
+.NewsHead
+{
+  font-weight:bold;
+  font-family:sans-serif;
+  margin-bottom:0.2cm;
+}
+.NewsHead a
+{
+  text-decoration:none;
+  color:black;
+}
+.NewsHead a:hover
+{
+  text-decoration:underline;
+}
+.NewsBody
+{
+  margin-bottom:0.2cm;
+}

@@ -33,14 +33,8 @@
       <span style="font-size:x-large;font-weight:bold;">News&nbsp;&nbsp;&nbsp;</span>
     </td>
     <td>
-      <?
-        $max_news_items = 3;
-	include( "news_items.php" );
-	if ( $more_news_items )
-	{
-	  echo "<a href=\"news.php\">more news...</a>";
-	}
-      ?>
+      <? include("news-items.html"); ?>
+      <a href="http://news.tiker.net/taxonomy/term/1">more news...</a>
     </td>
     </tr></table>
   </div><p/>

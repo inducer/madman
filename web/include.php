@@ -57,21 +57,6 @@ function madman_end_main()
 {
   echo "</div>";
 }
-$news_item_count = 0;
-$more_news_items = 0;
-function madman_news_item( $date, $news )
-{
-  global $news_item_count, $max_news_items, $more_news_items;
-  $news_item_count++;
-  if ( $news_item_count <= $max_news_items )
-  {
-    echo "<b>$date:</b><p>$news<p>";
-  }
-  else
-  {
-    $more_news_items = 1;
-  }
-}
 function madman_shot( $caption, $name )
 {
   $full_name = "shot_$name"."_full.png";
