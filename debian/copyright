@@ -1,0 +1,16 @@
+This package was debianized by Andreas Kloeckner <ak@ixion.net> on
+Tue, 17 Jun 2003 18:16:47 +0200.
+
+It was downloaded from http://madman.sourceforge.net.
+
+Upstream Author: Andreas Kloeckner <ak@ixion.net>
+
+Copyright:
+
+madman is licensed under the GNU General Public License version 2 or
+higher. Exceptions are mikmod and parts of irman plugins which are
+licensed under GNU Library General Public License version 2 or higher.
+
+On Debian systems the full text of these two licences can be found
+in /usr/share/common-licenses/{GPL,LGPL} files.
+

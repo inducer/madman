@@ -1,0 +1,1294 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>tPreferencesDialogBase</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>tPreferencesDialogBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>569</width>
+            <height>608</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Preferences</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget">
+            <property name="name">
+                <cstring>tabMain</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;General</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout15</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>TextLabel6_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Player</string>
+                                </property>
+                                <property name="textFormat">
+                                    <enum>PlainText</enum>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>comboPlayer</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox">
+                                <property name="name">
+                                    <cstring>comboPlayer</cstring>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout16</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer7</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>btnConfigurePlayer</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Configure Player...</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout7</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Number of Backups to keep of database files</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>spinBackupCount</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QSpinBox">
+                                <property name="name">
+                                    <cstring>spinBackupCount</cstring>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>checkRememberGeometry</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Remember main window geometry</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>checkScanAtStartup</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Automatically scan for new songs at startup</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+A</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>This will automatically find newly added songs when madman starts. However, it slows startup by a few seconds.</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>checkCollectHistory</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable Play History collection</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>This controls whether madman will remember all the songs you played, and when, and for how long.</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>checkEnableSystemTrayIcon</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable System Tray Icon</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout15</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer8</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Fixed</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>25</width>
+                                        <height>10</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>checkMinimizeToSystemTray</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Minimize To System Tray</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+M</string>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout26</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel1_6</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Passive Popup song announcements</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>comboPassivePopupMode</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox">
+                                <item>
+                                    <property name="text">
+                                        <string>Disabled</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Top Left Corner</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Top Center</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Top Right Corner</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bottom Left Corner</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bottom Center</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Bottom Right Corner</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>comboPassivePopupMode</cstring>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel1_5</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;b&gt;MP3 tag standard&lt;/b&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout25</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer10_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Fixed</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>25</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout24</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout23</cstring>
+                                        </property>
+                                        <hbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QLabel">
+                                                <property name="name">
+                                                    <cstring>textLabel3_3</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>When reading, prefer</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="QComboBox">
+                                                <item>
+                                                    <property name="text">
+                                                        <string>ID3v2</string>
+                                                    </property>
+                                                </item>
+                                                <item>
+                                                    <property name="text">
+                                                        <string>ID3v1</string>
+                                                    </property>
+                                                </item>
+                                                <property name="name">
+                                                    <cstring>comboID3ReadPreference</cstring>
+                                                </property>
+                                            </widget>
+                                        </hbox>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer6</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>180</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Auto &amp;DJ</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel6</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;b&gt;Auto DJ scoring rules&lt;/b&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout18</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout17</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnNewAutoDJScoringRule</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image0</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Create a new AutoDJ scoring rule</string>
+                                        </property>
+                                        <property name="whatsThis" stdset="0">
+                                            <string></string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnDeleteAutoDJScoringRule</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image1</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Delete the highlighted scoring rule</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnMoveUpAutoDJScoringRule</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image2</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Move the highlighted scoring rule up one position</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnMoveDownAutoDJScoringRule</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image3</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Move the highlighted scoring rule down one position</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnResetAutoDJScoringRules</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image4</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Reset AutoDJ scoring rules back to default</string>
+                                        </property>
+                                    </widget>
+                                    <spacer>
+                                        <property name="name">
+                                            <cstring>spacer10</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Vertical</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>20</width>
+                                                <height>40</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                </vbox>
+                            </widget>
+                            <widget class="QTable">
+                                <column>
+                                    <property name="text">
+                                        <string>Comment</string>
+                                    </property>
+                                </column>
+                                <column>
+                                    <property name="text">
+                                        <string>Adjustment</string>
+                                    </property>
+                                </column>
+                                <column>
+                                    <property name="text">
+                                        <string>Criterion</string>
+                                    </property>
+                                </column>
+                                <property name="name">
+                                    <cstring>tblAutoDJScoringRules</cstring>
+                                </property>
+                                <property name="numRows">
+                                    <number>0</number>
+                                </property>
+                                <property name="numCols">
+                                    <number>3</number>
+                                </property>
+                                <property name="selectionMode">
+                                    <enum>SingleRow</enum>
+                                </property>
+                                <property name="focusStyle">
+                                    <enum>SpreadSheet</enum>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>labelAutoDJStatus</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel4_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>On this screen, you can set up which songs you would like AutoDJ to play. 
+Each song is assigned a score that is a sum of the above score adjustments whose criterion the song matches. The higher a song's score, the more often it will be played.</string>
+                        </property>
+                        <property name="textFormat">
+                            <enum>RichText</enum>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Media Directories</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QListBox">
+                        <property name="name">
+                            <cstring>lstMediaDirectories</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>Layout10_3</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>0</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>btnAddMediaDirectory</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Add</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>btnRemoveMediaDirectory</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Remove</string>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Plugin Directories</string>
+                </attribute>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout25</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QListBox">
+                                <property name="name">
+                                    <cstring>lstPluginDirectories</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>Layout10_3_3</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>0</number>
+                                    </property>
+                                    <property name="spacing">
+                                        <number>6</number>
+                                    </property>
+                                    <widget class="QPushButton">
+                                        <property name="name">
+                                            <cstring>btnAddPluginDirectory</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Add</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QPushButton">
+                                        <property name="name">
+                                            <cstring>btnRemovePluginDirectory</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Remove</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout11</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Plugins found:</string>
+                                </property>
+                            </widget>
+                            <widget class="QListBox">
+                                <property name="name">
+                                    <cstring>lstPlugins</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QGroupBox">
+                                <property name="name">
+                                    <cstring>groupBox2</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>Plugin Properties</string>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout8</cstring>
+                                        </property>
+                                        <grid>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QLabel" row="0" column="0">
+                                                <property name="name">
+                                                    <cstring>textLabel3</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Name</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="QLabel" row="0" column="1">
+                                                <property name="name">
+                                                    <cstring>lblPluginName</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>&lt;none&gt;</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="QLabel" row="1" column="0">
+                                                <property name="name">
+                                                    <cstring>textLabel4</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Description</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="QLabel" row="1" column="1">
+                                                <property name="name">
+                                                    <cstring>lblPluginDescription</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>&lt;none&gt;</string>
+                                                </property>
+                                            </widget>
+                                        </grid>
+                                    </widget>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout9</cstring>
+                                        </property>
+                                        <hbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <spacer>
+                                                <property name="name">
+                                                    <cstring>spacer2_2</cstring>
+                                                </property>
+                                                <property name="orientation">
+                                                    <enum>Horizontal</enum>
+                                                </property>
+                                                <property name="sizeType">
+                                                    <enum>Expanding</enum>
+                                                </property>
+                                                <property name="sizeHint">
+                                                    <size>
+                                                        <width>40</width>
+                                                        <height>20</height>
+                                                    </size>
+                                                </property>
+                                            </spacer>
+                                            <widget class="QPushButton">
+                                                <property name="name">
+                                                    <cstring>btnConfigurePlugin</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Co&amp;nfigure</string>
+                                                </property>
+                                            </widget>
+                                        </hbox>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                        </vbox>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;HTTP server</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>checkHttpDaemonEnabled</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable HTTP server</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout24</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer3</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Fixed</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>25</width>
+                                        <height>31</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout23</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout13</cstring>
+                                        </property>
+                                        <hbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QLabel">
+                                                <property name="name">
+                                                    <cstring>textLabel1_2</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Listen on Port Number</string>
+                                                </property>
+                                                <property name="textFormat">
+                                                    <enum>PlainText</enum>
+                                                </property>
+                                                <property name="buddy" stdset="0">
+                                                    <cstring>spinHttpDaemonPort</cstring>
+                                                </property>
+                                            </widget>
+                                            <widget class="QSpinBox">
+                                                <property name="name">
+                                                    <cstring>spinHttpDaemonPort</cstring>
+                                                </property>
+                                                <property name="maxValue">
+                                                    <number>65535</number>
+                                                </property>
+                                                <property name="toolTip" stdset="0">
+                                                    <string></string>
+                                                </property>
+                                            </widget>
+                                        </hbox>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>checkHttpRestrictToLocalhost</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Restrict access to localhost</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string></string>
+                                        </property>
+                                    </widget>
+                                    <spacer>
+                                        <property name="name">
+                                            <cstring>spacer11_2</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Vertical</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Fixed</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>20</width>
+                                                <height>10</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>checkHttpDownloadsEnabled</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow streaming/downloading of music</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string></string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>checkHttpScriptingEnabled</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow scripting through web interface</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string></string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>checkHttpWriteScriptingEnabled</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow write-access scripting through web interface</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string></string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>checkHttpLocalPlayEnabled</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow control of local player through web interface</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string></string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>checkHttpBrowsingEnabled</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow browsing of local song database through web interface</string>
+                                        </property>
+                                        <property name="accel">
+                                            <string></string>
+                                        </property>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>160</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel1_3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;b&gt;WARNING:&lt;/b&gt; Running the web server on a computer connected to the 
+Internet without proper access restriction and/or firewalling may pose a 
+security risk.</string>
+                        </property>
+                        <property name="textFormat">
+                            <enum>RichText</enum>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Sorting</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout20</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout19</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel1_4</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;1. When sorting by...</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>listWhenSorting</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QListBox">
+                                        <property name="name">
+                                            <cstring>listWhenSorting</cstring>
+                                        </property>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel4_3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>On this screen, you can tell madman details about your sorting preferences.&lt;p&gt;
+
+&lt;b&gt;Example:&lt;/b&gt; You may want to see your songs arranged by artist, and within each artist's section, by album, and finally by track number.&lt;p&gt;
+
+In order to achieve this, click "&lt;i&gt;Artist&lt;/i&gt;" in field number 1, then "&lt;i&gt;Album&lt;/i&gt;" in field number 2 and "&lt;i&gt;Track Number&lt;/i&gt;" in field number 3.&lt;p&gt;
+
+Note that multi-level sorting takes a bit longer than regular single-level sorting.</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>WordBreak|AlignTop</set>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout21</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout18</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel2_2</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;2. sort by... after that</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>listSort2</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QListBox">
+                                        <property name="name">
+                                            <cstring>listSort2</cstring>
+                                        </property>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout17</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel3_2</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;3. and finally by...</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>listSort3</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QListBox">
+                                        <property name="name">
+                                            <cstring>listSort3</cstring>
+                                        </property>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                </vbox>
+            </widget>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout11</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>40</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnOK</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;OK</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+O</string>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Cancel</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+C</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="742">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000002ad49444154789cb596cf6a23471087bf0e61d792dc33d5addce615f402d60b18143f811f708f090463328765099831812ce4a0904b0884e0d3ae3cb666fa8f4260f6306aad16c6f28a6575695452d7afbefa554f8faaaa8aaff9f9e6ab6607be1d0a9e9f9f774dd3a0b5e673d6aaaad4530283044dd3d0751d77777707d724329bcdbaa30852653f5dfd8d732d792ef8b6251721848048cec5f7d94ea4280acab23c8e406b8d770e1121788731861823c60a9b18d05a7373f3b14d67676783148302699388e09d478c25c48035420c01638457afdeb25814dcdcf4ed546ad886c304c163ad651302d61862f41811bcf75863f8f1873f76224f797190c0ca36a91542f488083178aceddb35b5869fafff62b128b8bebea3288ae308e226608c2184bef21803d69a9e686af0c1234678f3fa1f168b62d08bc304a637d88a1063c41adb1b3db544efb1b6ff3dcb737e79f3ef6edfe77be01341efc126f6dfe3b672ef02799ed3340de3f164b7ef0802430c81e9d4103711638418dc76ba1c59a659afd78c4763eafa7e9060f0a07df4a0e6bba9c5058f3139c179440cceb56459c6e3e39af1644cfdf89b4241599668ad8ff1c0f6ed1121fafe04bbb6456bcdbbd5afeabfffff540f8f6f15c07c3eef006e6f6fd5b3023b82b01d51efc925a36d5b4ef529f5c303fb495351e91cecc70f121863f0ce93494edbb49c4efae427272300aaaa5229592a6a3e9f775555a924f6cc1439f23ceba76432e1beae797932a275bfefda9044d2e322255f2e970a9e799a6659c67abd66329950dfd78cc66356ab7b46a3be0de97f29f9764df1aeaa2a7590208de0fb555ff9fb772b5ebc78b9ab3cdd0b7bc93f89cf66b3ee4982abab2b2e2f2f9fbac9bab22cd572b954a9e74aa92eb56bff861b2428cb525d5c5c1cbcd1804f0c4d53b46f3c80fad2b78a6468323a9d8314ff628121b1fdd8078bde18f4484b4ee70000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="239">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000000b649444154789ced953b0e0421088671b337d2460f64e769e83c90367226b672330f663413cd34fe0d6a081f884195528299fa4c8d0e00df5e47e71cd7754a490d0538e7b894f2df1b63b817a28e3d0821f0856f538878828a1594528088c420d23911011181b59673ce3b880830c6f424dca51300115508817baba8d96f7bb4d5ed33ad81aa8d318ab6ea783d4dc0082dc0022cc0db00adf5ce7aef457ba7cb0f67d444150188a8acb58f3f9e2600409e8c4f34bdc93fceb94f8eec121b970000000049454e44ae426082</data>
+    </image>
+    <image name="image2">
+        <data format="PNG" length="424">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df80000016f49444154789cedd53f6bc24018c7f1dfd92e7d098eb6b46bcc4d7787155f85ef22d8c5357ba78ee2e69b70750a2748c83f30d696d449d2ad83d84948879220e969125028b4373f7c3f77b73c444a89739eda59ebffc0c90121447236400891bcbec4959152401a8fdf638cc76e25a410d88f6f3604beef55428e02aa78a3715d093908ecc7d7eb0d7cdf83a635b15abd41d39af07d0f93c9a2105102f99ba751d31c40d72996cb6730cee1791e2c2b3a8a5c16c5d39b9be600b63d042104961561369b81310ecf73e1383128ad27524a72f405aa38632c8b03809492b45a37e8743a08c3108c31388e8bf9fc43f9929a2abedd5e7c7f0363e8f79fb2f8743a252942691d94eaf0fd009c73b8ae8b28fa84618c122520a524b77775ec7657582c4234755d19df9fa7b48e76fb1e41108073866ef701b63d04e73c43487e1f082112cb8ad0eb3d1e8ce7e7a3e8338be7e77f00006018a3a44cbcccbc120000ce7952265e347f1038d5f95dfbe06f025ffe980cc3bc3ba88c0000000049454e44ae426082</data>
+    </image>
+    <image name="image3">
+        <data format="PNG" length="462">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df80000019549444154789cedd43f4b033118c7f1df150737c14d375da4742939a1c9f3168a2efe998ab8391527c1f7d1a99b6fa2b8754c2d5c4c8abd9c5dec648f2e8283e01617afd6fe4fc1cd677ef87e920c09a494f8cbc9fd69fd1f581b2022e71359b43f051091ebf5062b2344e4944ae7eee726977bbd01d2748046e3712992c58d31d07a38733f37be9cc53f3e72d05ae3febe3317198f33c660ad451cbfa15abdfbb53f02a494c1c1c1ee284e44e8769fd06c2653081139ad8730c680f312acb5608ce1e2e21651548710c24d0119522e331011945208c310dd388694fd1192c5adb5e0bc04633ae082a352b94114d50100ad562bc89a1b9357975206447927651f9152380c4324c933944a11863b2e8edf604c078c3168adc105c7f9d9f5ccf84ce007d91bbd71b158843106599c0b8ef6431b82044e4faa73e300102cfaec8868eac4255e82d1065c701c1f5d2d8ccfbdc1f84d0a856d9724efb0d67ac797021992cf6fb9fecb271ebfdf7cd5f84a4086eced6fbad781f38a031e9f9d9432f08d7b010050ab5d063e716fc037be16e03bffc0d2f90224de09888b9655130000000049454e44ae426082</data>
+    </image>
+    <image name="image4">
+        <data format="PNG" length="458">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df80000019149444154789cb5952d72c33010859f3aa17b02c3f80286f14c4c054c7b81f400a121863e477041a940683ae34013c304ea047b802d895d5996ff3a8d886664cdfb76f7ed5aaaaa2abc72bdadb97c3a7dca4b01cc0cadf52ac82a0011c118bb0ab299fa98a6a9101198194484edf61d4484b234d05acbe572517f0268ad859951d7d289fbfb5288f2bb486b2dc6581011aed7efa0b8bb17450e6b2d9aa609823621f1fbfd3129ba54bc0718132f8abce7c1f1781c88fb5e31334404b7db4d755d3415a188c05a3b1a79ebc9f95ca32d2f33ff6690a6a9d4b5f46a1e4a9f9965e43c5846e039074b6b4b44a3e7214807988ac0f5889907e25a6b294bb32e0337025f644a3ccbf64812d519dc79c0ccc8f32818812fd266d21a3b179caaaa0abbdd4e4297a2289a1471f738de22cfa381471b005d3a4b6bebee59b6ef2a106a80d19f9db5b697411c6f83902451a3dd3509689a46596bc5851c0e1f783cbe06131beaae59800f6927d49d68220a967731c087b4efc19ca8bb16bd684fc8a005ff0dd0428c2907c336b7664be44356a903f80128a1d8270cdbdf7a0000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>btnOK</sender>
+        <signal>clicked()</signal>
+        <receiver>tPreferencesDialogBase</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>btnCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>tPreferencesDialogBase</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>checkEnableSystemTrayIcon</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkMinimizeToSystemTray</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>spinHttpDaemonPort</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkHttpDownloadsEnabled</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkHttpScriptingEnabled</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkHttpWriteScriptingEnabled</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkHttpLocalPlayEnabled</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkHttpBrowsingEnabled</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>textLabel1_2</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkHttpDaemonEnabled</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>checkHttpRestrictToLocalhost</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>tabMain</tabstop>
+    <tabstop>comboPlayer</tabstop>
+    <tabstop>spinBackupCount</tabstop>
+    <tabstop>checkRememberGeometry</tabstop>
+    <tabstop>checkScanAtStartup</tabstop>
+    <tabstop>checkCollectHistory</tabstop>
+    <tabstop>lstMediaDirectories</tabstop>
+    <tabstop>btnAddMediaDirectory</tabstop>
+    <tabstop>btnRemoveMediaDirectory</tabstop>
+    <tabstop>lstPluginDirectories</tabstop>
+    <tabstop>btnAddPluginDirectory</tabstop>
+    <tabstop>btnRemovePluginDirectory</tabstop>
+    <tabstop>lstPlugins</tabstop>
+    <tabstop>btnConfigurePlugin</tabstop>
+    <tabstop>checkHttpDaemonEnabled</tabstop>
+    <tabstop>spinHttpDaemonPort</tabstop>
+    <tabstop>checkHttpDownloadsEnabled</tabstop>
+    <tabstop>checkHttpScriptingEnabled</tabstop>
+    <tabstop>checkHttpWriteScriptingEnabled</tabstop>
+    <tabstop>checkHttpLocalPlayEnabled</tabstop>
+    <tabstop>checkHttpBrowsingEnabled</tabstop>
+    <tabstop>btnOK</tabstop>
+    <tabstop>btnCancel</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="6"/>
+</UI>

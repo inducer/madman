@@ -1,0 +1,27 @@
+import os
+import os.path
+
+Import("env")
+myenv = env.Copy()
+myenv.Tool("qt")
+
+myenv.Append(CPPPATH = "#")
+
+for i in [ "XMMS", "GLIB", "TAGLIB" ]:
+  myenv.Append(LIBS = myenv[ "%s_LIBS" % i ])
+  myenv.Append(LIBPATH = myenv[ "%s_LIBPATH" % i ])
+
+# myenv.Append(LIBPATH = os.path.join("#", "libapetag"))
+
+if myenv[ 'with_m4a' ]:
+  myenv.Append(LIBS = 'mp4v2')
+
+for component in [ "ui", "designer", "ui", "httpd",  "database", "expat", "utility" ]:
+  myenv.Append(LIBPATH = os.path.join("#", component))
+  myenv.Append(LIBS = "madman" + component)
+
+myenv.Replace(QT_LIB = myenv["QT_LIBRARY_NAME"])
+
+madman_prog = myenv.Program(target = "madman",
+  source = [ "main.cpp" ])
+myenv.Install("$install_to/bin", madman_prog)

@@ -1,0 +1,211 @@
+From: Shawn Willden <shawn-madman@willden.org>
+To: madman discussion list <madman-discuss@lists.sf.net>
+Subject: [madman-discuss] More AutoDJ thoughts
+
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+After being home for a couple of days (and having access to my music=20
+library), I'm really quite happy with how AutoDJ is working.  However,=20
+it's not yet perfect ( :-) ) so here are some more ideas I'm experimenting=
+=20
+with.  I think it's worth posting to get feedback/ideas.
+
+I'd like my AutoDJ preferences to make much heavier use of the play ratio=20
+than it does.  In fact, I think that a really good set of AutoDJ=20
+preferences can be made with four principles:
+
+1.  Play songs that are rated highly and don't play songs that have low=20
+ratings.  Call this the "Specified Preferences" principle.
+
+2.  Play songs that are allowed to complete and don't play songs that are=20
+skipped.  Call this the "Observed Preferences" principle.
+
+3.  Play songs that have recently been added to the database.  Call this=20
+the "Newness" principle.
+
+4.  Play songs that haven't been played for a while and don't play songs=20
+that have been played recently.  Call this the "Freshness" principle.
+
+Clear?  Why don't you get busy and code that up, Andreas ;-)
+
+Allow me to elaborate a bit.  Actually, I'm going to belabor the points=20
+badly, but only because I want to make all of my thinking clear so that=20
+people can argue with it more effectively.
+
+=46irst, note that if the user doesn't rate any of her music, specified=20
+preferences should have no effect.  I'd like AutoDJ to work well for this=20
+case, making ratings an optional feature that can give an extra=20
+adjustment, but one that is not really necessary to get good automatic=20
+playlists.  So I'm going to ignore specified preferences here.
+
+The freshness principle is pretty clear, and I really like Andreas idea=20
+about having a criterion that provides an exponentially decaying curve=20
+based on last play -- particularly if the half-life is configurable.  We=20
+may or may not need two curves, one that decreases and is multiplied by a=20
+negative weighting to reduce the score of recently-played songs and=20
+another that increases and is multiplied by a positive weighting to=20
+increase the score of songs that haven't been heard for a long time.
+
+However, I think it's also clear that freshness is a strictly second-order=
+=20
+principle.  That is, I want fresh play lists, but I would rather have=20
+repetitive play lists of music that I like than fresh play lists of music=20
+that I hate.  So the observed/specified preferences need more weight than=20
+freshness.  The exception to this statement is that songs that have been=20
+played very recently should absolutely not be played again, so there is a=20
+case where freshness becomes the overriding principle.
+
+Newness is also pretty clear.  Newness can only boost a song's score, and=20
+should probably decline exponentially with a default half-life of a week=20
+or so.  It should also provide a rather large boost to make sure that the=20
+song gets played frequently at first (unless overridden by negative=20
+adjustments from the other principles).
+
+The hard one is observed preferences.  So, how to implement that?  I don't=
+=20
+know, but here is a long exposition of some ideas.
+
+The first question is whether or not play counts and full play ratios are=20
+adequate.  I think they are, and will assume so until I see a reason why=20
+they're not (actually, I wonder if knowing how *much* of a song was=20
+allowed to play before the user skipped it might not be useful... but I'll=
+=20
+save that question).
+
+Under that assumption, the first thing I notice is that there are two sides=
+=20
+to the issue.  On the one hand, we want songs that have high full play=20
+ratios to get score increases.  On the other hand we want songs that have=20
+low play ratios to get score decreases.  At the extreme, if a song has=20
+been played 100 times and *never* allowed finish, we can take that as an=20
+indicator that that song should probably never be played, i.e. a=20
+maximally-negative score adjustment, or close to it.
+
+Based on our score adjustment approach, giving increases to high-full-play=
+=20
+songs and decreases to low-full-play songs means we need at least two=20
+rules.  What should they look like?
+
+There's another notion that needs to be considered and is highlighted by my=
+=20
+example above: reliability of full play ratios.  Obviously, if a song has=20
+never been played, the full play ratio is meaningless, and if a song has=20
+only been played once or twice, it's meaning is weak.  Clearly, as play=20
+count increases, full play ratio becomes increasingly reliable.  The=20
+current default AutoDJ rules implement something like this, but they do it=
+=20
+with a cutoff, rather than a smooth curve (play ratio is considered=20
+completely unreliable until the song has been played 4 times).  I think a=20
+curve is better.
+
+Okay, so let's look at the positive side.  First, I think songs that have=20
+never been played should get a very large increase, so that we can begin=20
+collecting statistics.  In some cases, the newness principle will take=20
+care of this, but not always.  A new madman user that has a large=20
+pre-existing collection, for example, may not get around to playing a=20
+given song for a long time.
+
+Assuming we have some play information about a song, I think we want the=20
+impact of the observed preferences to depend on the full play ratio value=20
+and reliability.  Full play ratio is well-defined, and if we could also=20
+express reliability as a value between 0 and 1, we could use the product=20
+of the two values to get a "reliable full play ratio".
+
+How to compute reliability?  This is harder.  I vaguely recall some=20
+statistical techniques exist for estimating the representativeness of a=20
+sample, but I'm not sure if they're applicable so until I do a little=20
+research I'll stick with simple stuff.  Someone with a fresher memory can=20
+chime in, perhaps.
+
+One way to do it would be to arbitrarily pick some "reliable" play count,=20
+say 10 plays, and to implement reliability as min(10,play count) / 10.  A=20
+non-linear curve could also be used, if it had some advantage.  The=20
+problem with this idea is the choice of the parameter.  What is reasonable=
+=20
+is really hard to know.  For large collections, it could take a very long=20
+time to get to 10 plays, for example.
+
+What seems nicer is to somehow calibrate the reliable play count parameter=
+=20
+against the number of plays other songs have.  If nothing in the database=20
+has been played more than three times, for example, songs with a play=20
+count of three should probably be considered to have a very reliable play=20
+ratio.  However, songs that have been in the database a long time will=20
+generally have much higher play counts than newly-added songs, which would=
+=20
+tend to penalize new songs.  Perhaps that penalty could be counteracted by=
+=20
+rule(s) that implement the newness principle, but I find that distasteful=20
+for reasons I can't yet articulate.
+
+The next thing that comes to mind is, maybe it would work well to use the=20
+play count of songs that are the same "age" (in terms of time since being=20
+added to the DB).  Coupled with the idea that unplayed songs get a large=20
+increase, this might actually give a lot of the newness principle for=20
+free.
+
+The downside of that approach is obviously complexity.  It also raises some=
+=20
+new questions such as "How do we decide if two songs are the same age?",=20
+but I think I can see reasonable answers to those.  The more I think about=
+=20
+it, though, the more I like the idea that "young" songs should need fewer=20
+plays to have "reliable" play ratios.
+
+Looking at the other side, decreasing the scores of songs with low play=20
+ratios, the issues are similar.  One difference is the question of whether=
+=20
+or not a song should ever get a maximally-negative score adjustment from=20
+observed preferences (i.e. a "never play" adjustment).  On the positive=20
+side, we don't really care about the maximum adjustment.  I see two=20
+reasonable positions on this issue:
+
+1.  If I've told the program many, many times to skip a given song, it's a=
+=20
+reasonable conclusion that I do *not* want to hear that song, so it should=
+=20
+never be played.
+
+2.  But *never* is awfully strong, and musical tastes change over time. =20
+Maybe the result should just be "almost never".  So that once in a blue=20
+moon AutoDJ gives me the opportunity to reaffirm my hatred for that song.
+
+I'm leaning towards "almost never".  If you really never want to hear that=
+=20
+song, you can rate it as '-' and let specified preferences do the work. =20
+So, I want to make sure that the "reliable low play ratio" criterion never=
+=20
+quite makes it to the endpoint.
+
+I think reliability can work the same as for positive observed preferences=
+=20
+adjustments, and I think the same arguments about need for considering=20
+"age group" play counts make sense.
+
+Actually, I think observed preferences could be implemented with a single=20
+"criterion" that produced values in the range (-1, 1] and had a weighting=20
+of 20, but we won't go there ;-)
+
+Comments?
+
+	Shawn.
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQFAABvPp1Ep1JptinARApx6AJ4mz/vLV0zP02MdhKZeCcRPGAAOZgCePXbN
+Lj7V3pUQbWo/BaiCTAJMtdU=3D
+=3Di9GA
+=2D----END PGP SIGNATURE-----
+
+
+-------------------------------------------------------
+This SF.net email is sponsored by: Perforce Software.
+Perforce is the Fast Software Configuration Management System offering
+advanced branching capabilities and atomic changes on 50+ platforms.
+Free Eval! http://www.perforce.com/perforce/loadprog.html
+_______________________________________________
+madman-discuss mailing list
+madman-discuss@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/madman-discuss
+

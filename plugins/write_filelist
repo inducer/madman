@@ -1,0 +1,16 @@
+#! /bin/bash
+# MADMAN-PLUGIN-VERSION: 2
+# MADMAN-NAME: Write list of file names
+# MADMAN-DESCRIPTION: Creates a text file with all file names.
+# MADMAN-ARGUMENTS: %askfile_save:Save file list as% %repeat% %path%/%file% %endrepeat%
+# MADMAN-MENUSTRING: &Write filelist
+# MADMAN-CONFIRM: 0
+# MADMAN-RESCANAFTER: 0
+
+fname="$1"
+shift
+
+cat /dev/null > $fname
+for i in "$@"; do
+  echo "$i" >> $fname
+done

@@ -1,0 +1,17 @@
+#! /bin/bash
+# MADMAN-PLUGIN-VERSION: 2
+# MADMAN-NAME: Burn to an Audio CD
+# MADMAN-DESCRIPTION: Creates an audio CD containing the songs in K3b.
+# MADMAN-ARGUMENTS: %repeat% %path%/%file% %endrepeat%
+# MADMAN-MENUSTRING: Burn to &Audio CD
+
+if which k3b > /dev/null ; then
+  if k3b --version | grep "K3b: 0.9"; then
+    k3b --audio "$@" &
+  else
+    # 0.10 onwards
+    k3b --audiocd "$@" &
+  fi
+else
+  xmessage "K3b was not found. Please install from http://k3b.sourceforge.net" &
+fi

@@ -1,0 +1,208 @@
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = RANDOM
+    config = ~/bin/madmancontrol play_eventually auto_dj 20; echo AUTO DJ | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = INDEX
+    config = ( ~/bin/madmancontrol get_field 0 artist current_song; ~/bin/madmancontrol get_field 0 title current_song) | ~/bin/big_osd
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = CLEAR
+    config = ~/bin/madmancontrol clear_playlist ; echo PLAYLIST CLEARED | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = PLAY
+    config = ~/bin/madmancontrol play ; echo PLAY | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = PAUSE
+    config = ~/bin/madmancontrol pause ; echo PAUSE | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = STOP 
+    config = ~/bin/madmancontrol stop; echo STOP | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = SKIP_FWD 
+    config = ~/bin/madmancontrol next; echo ">|" | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = SKIP_BACK 
+    config = ~/bin/madmancontrol previous; echo "|<" | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = SEARCH_FWD 
+    config = CURRENT=`~/bin/madmancontrol current_time --integer` ; ~/bin/madmancontrol skip_to $((CURRENT+10)); echo ">>" | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = SEARCH_BACK
+    config = CURRENT=`~/bin/madmancontrol current_time --integer` ; ~/bin/madmancontrol skip_to $((CURRENT-10)) ; echo "<<" | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = REPEAT
+    button = 0
+    config = ( RATING=0 ; echo rated $RATING; ~/bin/madmancontrol set_field `~/bin/madmancontrol get_field 0 uniqueid current_song` rating $RATING ) | ~/bin/big_osd &
+    flags = quit
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = REPEAT
+    button = 1
+    config = ( RATING=1 ; echo rated $RATING; ~/bin/madmancontrol set_field `~/bin/madmancontrol get_field 0 uniqueid current_song` rating $RATING ) | ~/bin/big_osd &
+    flags = quit
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = REPEAT
+    button = 2
+    config = ( RATING=2 ; echo rated $RATING; ~/bin/madmancontrol set_field `~/bin/madmancontrol get_field 0 uniqueid current_song` rating $RATING ) | ~/bin/big_osd &
+    flags = quit
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = REPEAT
+    button = 3
+    config = ( RATING=3 ; echo rated $RATING; ~/bin/madmancontrol set_field `~/bin/madmancontrol get_field 0 uniqueid current_song` rating $RATING ) | ~/bin/big_osd &
+    flags = quit
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = REPEAT
+    button = 4
+    config = ( RATING=4 ; echo rated $RATING; ~/bin/madmancontrol set_field `~/bin/madmancontrol get_field 0 uniqueid current_song` rating $RATING ) | ~/bin/big_osd &
+    flags = quit
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = REPEAT
+    button = 5
+    config = ( RATING=5 ; echo rated $RATING; ~/bin/madmancontrol set_field `~/bin/madmancontrol get_field 0 uniqueid current_song` rating $RATING ) | ~/bin/big_osd &
+    flags = quit
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = REPEAT
+    button = REPEAT
+    config = ( echo -n "rated " ; ~/bin/madmancontrol get_field 0 rating current_song ) | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 1
+    config = ~/bin/madmansearch 1 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 2
+    config = ~/bin/madmansearch 2 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 3
+    config = ~/bin/madmansearch 3 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 4
+    config = ~/bin/madmansearch 4 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 5
+    config = ~/bin/madmansearch 5 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 6
+    config = ~/bin/madmansearch 6 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 7
+    config = ~/bin/madmansearch 7 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 8
+    config = ~/bin/madmansearch 8 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 9
+    config = ~/bin/madmansearch 9 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = 0
+    config = ~/bin/madmansearch 0 | ~/bin/big_osd &
+  end
+
+  begin
+    prog = irexec
+    remote = cdx-493
+    button = PLUS10
+    config = ~/bin/madmansearch enter | ~/bin/big_osd --delay 5 &
+  end

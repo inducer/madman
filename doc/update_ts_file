@@ -1,0 +1,8 @@
+#! /bin/bash
+pwd
+mkdir temp_translation_files
+
+cp main/*.cpp ui/*.{h,cpp} designer/*.ui database/*.{h,cpp} \
+  utility/*.{h,cpp} temp_translation_files
+cd temp_translation_files 
+lupdate * -ts "../$1"

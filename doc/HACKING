@@ -1,0 +1,33 @@
+This is the directory/module layout of madman:
+
+utility/
+	Miscellaneous generic helpers that don't have anything 
+	to do with managing music.
+
+expat/
+	A release drop of the expat XML parser.
+
+database/
+	The music database code along with most of the non-UI 
+	functionality, like AutoDJ.
+
+httpd/
+	The http server and web UI.
+
+ui/
+	The Qt UI.
+
+main/
+	The main program.
+
+---------------------------------------
+Non-source directories:
+
+remote/
+	Client code for madman's remote control interface.
+
+debian/
+	(Old) debian package information.
+
+web/
+	The web site

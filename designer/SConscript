@@ -1,0 +1,21 @@
+import os
+import glob
+
+Import( "env" )
+
+imagedata_builder = Builder(action = "./designer/make_imagedata $SOURCES > $TARGET",
+    suffix = "$CXXSUFFIX")
+
+myenv = env.Copy()
+myenv.Tool( "qt" )
+
+myenv.Append( CPPPATH = "#" )
+
+myenv.Append(BUILDERS = { "ImageData": imagedata_builder })
+
+files = glob.glob( "images/*.*" )
+myenv.ImageData( "image_data.cpp", files )
+
+myenv.StaticLibrary( target = "madmandesigner",
+  source = [ "image_data.cpp", "mainwin.ui", "prefs.ui", "helpbrowser.ui", 
+  "multiline_edit.ui", "about.ui", "auto_tag.ui" ] )

@@ -1,0 +1,20 @@
+#!/bin/bash
+# MADMAN-PLUGIN-VERSION: 2
+# MADMAN-NAME: Export to Playlist (m3u)
+# MADMAN-DESCRIPTION: Exports files to a m3u (WinAMP) playlist.
+# MADMAN-ARGUMENTS: %ask:Save playlist as:% %repeat% %duration% %artist% %title% %path%/%file% %endrepeat%
+# MADMAN-MENUSTRING: E&xport to Playlist (m3u)
+
+if [ ! -e "$1" ]; then
+  FILENAME=$1
+  shift 1
+
+  echo "#EXTM3U" > $FILENAME
+  while [ "$4" != "" ]; do
+    echo "#EXTINF:"$1","$2" - "$3 >> $FILENAME
+    echo "$4" >> $FILENAME
+    shift 4
+  done
+else
+  xmessage "File already exists, will not overwrite" &
+fi

@@ -1,0 +1,13 @@
+Import( "env" )
+myenv = env.Copy()
+myenv.Tool( "qt" )
+
+myenv.Append( CPPPATH = "#" )
+myenv.Append( CPPPATH = myenv[ 'QT_CPPPATH' ] )
+myenv.Append( CPPPATH = myenv[ 'GLIB_CPPPATH' ] )
+
+myenv.StaticLibrary( target = "madmanui",
+  source = [ "accel_list_view.cpp", "dirlist.cpp", "mainwin.cpp", "multiline.cpp",
+    "overview.cpp", "passive_popup.cpp", "prefs_dialog.cpp", "set_list_view.cpp",
+    "song_set_view.cpp", "trayicon.cpp", "trayicon_x11.cpp",
+    "auto_tag.cpp", "clickable_label.cpp", "song_actions.cpp" ] )

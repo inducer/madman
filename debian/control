@@ -1,0 +1,17 @@
+Source: madman
+Section: sound
+Priority: optional
+Maintainer: Andreas Kloeckner <ak@ixion.net>
+Build-Depends: debhelper (>> 4.0.0)
+Standards-Version: 3.5.8
+
+Package: madman
+Architecture: any
+Depends: ${shlibs:Depends} ${misc:Depends}
+Description:An advanced music manager application
+  madman is a tool to help you manage your music collection. It reads 
+  and writes tags for you, organizes, searches, deletes, plays, and 
+  enqueues in XMMS. A powerful expression syntax and a streamlined 
+  one-window GUI allow you to listen to better music all the time. 
+  The "Play 20 random songs" feature lets you discover music you 
+  didn't even know you owned.

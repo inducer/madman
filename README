@@ -1,0 +1,147 @@
+-------------------------------------------------------------------------------
+madman administrates digital music archives neatly
+-------------------------------------------------------------------------------
+
+[see below for build instructions]
+
+-------------------------------------------------------------------------------
+I. Welcome to madman.
+-------------------------------------------------------------------------------
+
+madman is a music manager application that allows you to easily keep your
+music database organized and tidy, and it helps you listen to better music,
+be happier, brighten your teeth and quickly restore world peace.
+
+Hope you enjoy madman
+- Andreas <inducer@users.sf.net>
+
+madman's homepage is at http://madman.sf.net.
+
+-------------------------------------------------------------------------------
+II. Building and installing
+-------------------------------------------------------------------------------
+
+To build madman, you need
+
+- XMMS. [http://www.xmms.org]
+  Version 1.2.10 and above.
+  IMPORTANT: Version 1.2.9 causes random crashes. Do not use it.
+  [Debian package: xmms-dev]
+
+- Qt. [http://www.trolltech.com]
+  Version 3.2.x tested, others might work, too. (patches welcome)
+  [Debian pacakge: libqt3-mt-dev, NOT libqt3-dev]
+  
+- TagLib [http://developer.kde.org/~wheeler/taglib.html]
+  Current CVS TagLib. (TagLib's CVS is within KDE's kdesupport
+  module)
+  [Debian package: libtag1-dev]
+  *** Plain TagLib 1.1 will appear to compile, but give you 
+      relocation errors later on. 
+
+First, you need to know that madman does not use the common autoconf/automake 
+build system that many other projects use, mostly for technical reasons.
+That means that building madman is different from just typing "configure;
+make; make install".
+
+Here's how it works:
+
+1) GET SCONS
+
+   First, you need to have a copy of the SCons build system. If you don't have 
+   it installed already, don't hurry to the web yet. madman comes with a local
+   version of SCons that you may use.
+
+   IF YOU DON'T HAVE SCONS:
+     Go to the madman source directory and type "./configure".
+     This will tell you again that you're not building using autoconf and offer
+     to extract a local version of SCons. Hit Enter and say "y" when it asks 
+     whether to extract a local version of SCons.
+
+   IF YOU DO HAVE SCONS ALREADY:
+     You don't need to do anything in this step. In the following steps, whenever
+     I say "./scons.py", you should replace that by "scons". So if you're told to
+     type "./scons.py install", you'd really type "scons install", because your
+     SCons install is system-wide. Also make sure that you have at least SCons 0.95.
+
+2) CONFIGURE AND BUILD MADMAN
+   
+   Theoretically, just typing
+     
+     ./scons.py
+
+   should build madman, if the build script manages to find all the dependencies
+   mentioned above, so make sure you have them installed. It does work out of the box 
+   on Debian systems.
+
+   In case something doesn't work or you want to install somewhere other than 
+   "/usr/local", which is the default, you'll need to pass some options to
+   the build script. Typing
+
+     ./scons.py -h
+
+   will tell you what options exist. For example, you may type
+
+     ./scons.py prefix=/opt/madman qt_directory=/opt/qt3
+
+   to install to /opt/madman and have the build process use the Qt library at
+   /opt/qt3.
+
+   The build system will perform a few checks for the needed components and begin
+   building, which would look something like this:
+
+   scons: Reading SConscript files ...
+   Checking for Qt at /usr/share/qt3... ok
+   Checking for xmms... ok
+   Checking for glib... ok
+   Checking for C++ header file taglib.h... yes
+   Checking for main() in C++ library tag... yes
+   scons: done reading SConscript files.
+   scons: Building targets ...
+
+   Once you get this far, everything *should* build just fine. You just need to wait
+   for
+   
+   scons: done building targets.
+
+   to show up and the command line to show up again. Once you get this far, you're ready
+   to install madman.
+
+   If you'd like, you can test your madman build by saying
+
+   ./main/madman
+
+   madman will run just fine from the build directory, it may however be unable to find
+   its plugins, which have not been installed yet.
+
+3) INSTALLING MADMAN SYSTEM-WIDE
+
+   Type
+
+     su -c "./scons.py <SAME OPTIONS AS YOU USED ABOVE> install"
+
+   to become root and install madman system-wide. It is important that you use the 
+   exact same options as you used above, otherwise SCons may detect a build-significant
+   change and try to rebuild madman from scratch, which is not what you want.
+
+   Once this goes through, madman is installed. Have fun!
+
+Cheat sheet for people used to Autoconf:
+
+  ./configure --help
+  BECOMES
+  ./scons.py -h
+
+  ./configure --prefix=/here/there --with-taglib-include=/usr/local/include
+  BECOMES
+  ./scons.py prefix=/here/there taglib_include=/usr/local/include
+  
+  make
+  IS DONE AUTOMATICALLY upon successful configuration.
+
+  make clean
+  BECOMES
+  ./scons.py -c
+
+  Note that SCons does not honor the CC, C_INCLUDE_PATH or other compiler-related
+  environment variables, in order to assure build environment consistency.

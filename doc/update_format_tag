@@ -1,0 +1,52 @@
+#! /usr/bin/env python
+
+import os
+import os.path
+import glob
+
+tag = file("doc/EMACS_FORMAT_TAG", "r").readlines()
+tag = ["\n"] * 4 + tag
+
+def startsWith(string, beginning):
+    return string[:len(beginning)] == beginning
+
+files = glob.glob("*/*.h") + glob.glob("*/*.cpp") 
+for name in files:
+    if startsWith(name, "designer"):
+        continue
+    if startsWith(name, "libapetag"):
+        continue
+    if startsWith(name, "expat"):
+        continue
+
+    lines = file(name, "r").readlines()
+    lines.reverse()
+
+    comment_lines = 0
+    blank_lines = 0
+    for line in lines:
+        line = line.strip()
+        if line == "":
+            blank_lines += 1
+            continue
+        if line[:2] == "//":
+            comment_lines += 1
+        else:
+            break
+    lines.reverse()
+    
+    if comment_lines == 0:
+        lines += tag
+    else:
+        total_lines = blank_lines + comment_lines
+        lines[-total_lines:] = tag
+
+    f = file(name, "w")
+    for i in lines:
+        f.write(i)
+    
+
+    
+
+
+

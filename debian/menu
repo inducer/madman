@@ -1,0 +1,2 @@
+?package(madman):needs=X11|wm section=Apps/Sound\
+  title="madman" command="/usr/bin/madman"

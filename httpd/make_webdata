@@ -1,0 +1,67 @@
+#! /usr/bin/env python
+
+import os
+import os.path
+import stat
+import re
+import sys
+
+print "#include <cstring>"
+
+def print_array( filename, basename ):
+  myfile = file( filename, "r" )
+  data = myfile.read()
+  print "static char %s[] = {" % basename
+  counter = 0
+  for byte in data:
+    print "0x%02x," % ord(byte),
+    counter = counter + 1
+    if counter == 12:
+      counter = 0
+      print
+  print "};"
+
+class tFileDescription:
+  pass
+
+filelist = [];
+
+for real_filename in sys.argv[1:]:
+  filename = os.path.basename( real_filename )
+  statbuf = os.stat( real_filename )
+  if stat.S_ISREG( statbuf.st_mode ):
+    c_name = filename.replace( ".", "_" )
+    print_array( real_filename, c_name )
+    
+    if re.search( "\\.css$", filename ) is not None:
+      mime_type = "text/css"
+    else:
+      mime_type = os.popen( "file -i %s" % real_filename, "r" ).read()
+      mime_type = mime_type[ mime_type.find( ": " ) + 2: ].strip()
+      mime_type = re.sub( "charset=.+$", "charset=UTF-8", mime_type )
+
+    description = tFileDescription()
+    description.c_name = c_name
+    description.filename = filename
+    description.mime_type = mime_type
+    description.size = statbuf.st_size
+
+    filelist.append( description )
+
+print "const char *getFile( const char *name )\n{"
+for description in filelist:
+  print "  if ( strcmp( name, \"%s\" ) == 0 ) return %s;" % ( description.filename, description.c_name );
+print "  return NULL;"
+print "}"
+
+print "const char *getFileType( const char *name )\n{"
+for description in filelist:
+  print "  if ( strcmp( name, \"%s\" ) == 0 ) return \"%s\";" % ( description.filename, description.mime_type );
+print "  return NULL;"
+print "}"
+
+print "int getFileSize( const char *name )\n{"
+for description in filelist:
+  print "  if ( strcmp( name, \"%s\" ) == 0 ) return %d;" % ( description.filename, description.size );
+print "  return -1;"
+print "}"

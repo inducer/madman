@@ -1,0 +1,14 @@
+Import( "env" )
+myenv = env.Copy()
+myenv.Tool( "qt" )
+
+myenv.Append( CPPPATH = "#" )
+myenv.Append( CPPPATH = myenv[ 'QT_CPPPATH' ] )
+myenv.Append( CPPPATH = myenv[ 'GLIB_CPPPATH' ] )
+myenv.Append( CPPPATH = myenv[ 'TAGLIB_CPPPATH' ] )
+
+myenv.StaticLibrary( target = "madmandatabase",
+  source = [ "database.cpp", "history.cpp", "song.cpp", 
+    "song_collection.cpp", "song_set.cpp", "song_set_tree.cpp", 
+    "auto_dj.cpp", "song_list_tools.cpp", "criterion.cpp",
+    "program_base.cpp" ] )

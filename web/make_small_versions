@@ -1,0 +1,6 @@
+#! /bin/bash
+
+for i in *_full.png; do
+    echo $i
+    convert -geometry 50% -antialias $i ${i%_full.png}_small.png
+done

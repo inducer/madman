@@ -1,0 +1,123 @@
+-------------------------------------------------------------------------------
+Writing plugins for madman
+-------------------------------------------------------------------------------
+
+Before we start, we need to tell madman that this README file is not a
+plugin, even though it looks like one:
+
+MADMAN-THIS-IS-NOT-A-PLUGIN
+
+This file documents how to write plugins for madman. madman's plugins are
+simple executable files (i.e. they may be shell scripts, perl or python
+scripts or even C programs) that lie around somewhere in madman's plugin
+path, as set in the preferences dialog.
+
+madman's plugins contain their own metadata, i.e. they contain information
+on how to execute them and all that, so they do not require the user to know 
+what their specific arguments are. Once madman has found them on the path,
+it knows how to call them from their built-in metadata.
+
+In order to find its plugins, madman scans through the plugin path. 
+Each file is opened in turn, and read as a text file. If it is found 
+to contain a line that is of the form
+
+  ... MADMAN-PLUGIN-VERSION: 2\n 
+
+  (the \n is the end of the line, i.e. the newline character, and 
+  both instances of "..." may be any text),
+
+it assumes that the file is a plugin and will continue parsing it.
+Note that madman also checks for executability, if your script is 
+not executable, it will not appear in the menu.
+
+The leading ... may be any text. Ususally, it will be the shell/perl/python
+comment character (#) to hide the metadata from the interpreter. The second
+instance of ... will be parsed as the name for the plugin shown in the
+configuration dialog. All in all, the following tags exist that may be used
+analogously to the above:
+
+MADMAN-PLUGIN-VERSION: 2
+
+  specifies that this is a madman plugin that conforms to version 2
+  specifications. The previous version did not have a version identifier
+  and used upper case substitution variables.
+
+MADMAN-NAME: ...
+
+  specifies the "name" of the plugin as shown in lists within madman.
+  This should be a brief description. [required]
+
+MADMAN-DESCRIPTION: ...
+
+  is a lengthier description, shown in the preferences dialog
+  once the plugin has been clicked on. [optional]
+
+MADMAN-ARGUMENTS: ...
+
+  specifies the commandline used to call the plugin. [required]
+
+  madman knows two modes of plugin invocation, "repeat" mode
+  and "single" mode.
+
+  In repeat mode, the plugin is executed just once for the
+  whole selection. Use of this mode is indicated by specifying
+  a %repeat%...%endrepeat% section that delimits that will be
+  included in the commandline once for every song the plugin
+  is executed on. All regular substitutions (described
+  below) work inside the repeat section, too.
+
+  In single mode, the plugin is executed once for every song
+  in the selection.
+
+  Within this commandline, the following symbols have special
+  meaning and will be replaced by their respective values:
+
+  %ask:Prompt%
+    interactively asks the user for a value that will be substituted
+    into the command line in place of this symbol.
+
+  %askfile_save:Prompt%
+    interactively asks the user for a file name that will be substituted
+    into the command line in place of this symbol. The file dialog behaves
+    like a "save as" dialog.
+
+  %askfile_open:Prompt%
+    interactively asks the user for a file name that will be substituted
+    into the command line in place of this symbol. The file dialog behaves
+    like an "open" dialog.
+
+  %config:Prompt%
+    These values can be configured in the madman preferences dialog.
+    (By selecting a plugin and clicking "Configure" - madman will 
+    ask the user for a value for each %CONFIG:...% item and store
+    it in its configuration file.)
+    The configured values are substituted into the command line in
+    place of this symbol.
+
+  %artist%, %performer%, %title%, %album%, %duration%,
+  %genre%, %file% etc.
+    obvious, see song.cpp (getFieldIdentifier()) for full
+    list.
+
+  madman takes care of proper quoting so that one %...% argument always
+  corresponds to one argument in the executed plugin.
+
+MADMAN-MENUSTRING: ...
+
+  specifes the descriptive string used in the menu. May contain & characters
+  to specify hotkeys. [defaults to MADMAN-NAME]
+
+MADMAN-KEYBOARDSHORTCUT: ...
+
+  [currently unimplemented]
+
+MADMAN-CONFIRM: 0 or 1
+
+  specifies whether madman should ask for confirmation before it executes
+  the plugin. [optional, defaults to 0]
+
+MADMAN-RESCANAFTER: 0 or 1
+
+  specifies whether madman should rescan the media directories for new or
+  deleted songs after the plugin finishes executing. [optional, defaults
+  to 0]

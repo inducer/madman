@@ -1,0 +1,14 @@
+Import( "env" )
+myenv = env.Copy()
+myenv.Tool( "qt" )
+
+myenv[ "CPPDEFINES" ].append( ( "MADMAN_LIBDIR", "$prefix/lib" ) )
+
+myenv.Append( CPPPATH = "#" )
+myenv.Append( CPPPATH = myenv[ 'QT_CPPPATH' ] )
+myenv.Append( CPPPATH = myenv[ 'XMMS_CPPPATH' ] )
+
+myenv.StaticLibrary( target = "madmanutility",
+  source = [ "base.cpp", "player.cpp", "player_xmms.cpp",
+  "prefs.cpp", "plugin.cpp", "scanner.cpp", 
+  "mt_random.cpp" ] )

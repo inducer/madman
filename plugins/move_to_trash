@@ -1,0 +1,10 @@
+#! /bin/bash
+# MADMAN-PLUGIN-VERSION: 2
+# MADMAN-NAME: Move to Trash
+# MADMAN-DESCRIPTION: Move files to a configurable trash folder
+# MADMAN-ARGUMENTS: %path%/%file% %config:Trash folder%
+# MADMAN-MENUSTRING: &Move to Trash
+# MADMAN-CONFIRM: 1
+# MADMAN-RESCANAFTER: 1
+
+mv "$1" "$2"

@@ -1,0 +1,47 @@
+#! /bin/bash
+# MADMAN-PLUGIN-VERSION: 2
+# MADMAN-NAME: Example
+
+# MADMAN-DESCRIPTION: Simply demonstrates most usable tags in the ARGUMENTS tag
+
+# MADMAN-ARGUMENTS: %ask:What do you think?% %askfile_open:Which file should we use?% %config:Configure me% %path%/%file% %artist% %performer% %title% %album% %duration% %genre% %uniqueid%
+# MADMAN-MENUSTRING: &Example
+# MADMAN-CONFIRM: 0
+# MADMAN-RESCANAFTER: 0
+
+ASK="$1"
+shift
+ASKFILE="$1"
+shift
+CONFIG="$1"
+shift
+FILENAME="$1"
+shift
+ARTIST="$1"
+shift
+PERFORMER="$1"
+shift
+TITLE="$1"
+shift
+ALBUM="$1"
+shift
+DURATION="$1"
+shift
+GENRE="$1"
+shift
+UNIQUE_ID="$1"
+
+echo "----------------------------------------------"
+echo "SONG: $FILENAME"
+echo "----------------------------------------------"
+echo " ASK: $ASK"
+echo " ASKFILE: $ASKFILE"
+echo " CONFIG: $CONFIG"
+echo " ARTIST: $ARTIST"
+echo " PERFORMER: $PERFORMER"
+echo " TITLE: $TITLE"
+echo " ALBUM: $ALBUM"
+echo " DURATION: $DURATION"
+echo " GENRE: $GENRE"
+echo " UNIQUE ID: $UNIQUE_ID"
+

@@ -1,0 +1,86 @@
+0. Example
+-------------------------------------------------------------------------------
+
+class tMySomething : public tMySomethingElse
+{
+  private:
+    tObject	*MyObject;
+
+  public:
+    void doThis( argument1, argument2 );
+};
+
+
+
+
+int doThat()
+{
+  int my_local_variable;
+  
+  if ( something > 17 )
+  {
+    doThis( argument );
+    doThat();
+  }
+  else
+    doThis( argument );
+}
+
+
+
+
+int doThis( arg )
+{
+  // ...
+}
+
+
+
+
+I. Indentation 
+-------------------------------------------------------------------------------
+
+Basic offset is two spaces. Don't use tabs in source files.
+Braces are on a line by themselves at the level of the outer block.
+Use braces only if they contain more than one statement.
+Class access specifiers are indented one step from the class, 
+members two steps (4 spaces).
+
+II. Naming
+-------------------------------------------------------------------------------
+Macros are written MY_MACRO, i.e. all capitals, underscores to separate words.
+
+Types are written tMyType. Note: this applies to *all* type names, not just 
+classes. 
+
+Functions are named doThis(), i.e. they *have* to have to start with a
+verb in lower case, and then use run-together capitals for the rest of
+their name. Accessor functions are written myDataElement() and 
+setMyDataElement().
+
+Local variables are written my_local_variable, i.e. all-lowercase,
+words separated by underscores. Non-local variables (globals, members)
+are spelled MyGlobalVariable. pimpl is allowed as an exception to this
+rule.
+
+III. Spacing
+-------------------------------------------------------------------------------
+Top-level constructs enclosed by braces (classes, functions) should be
+4 lines apart each.
+
+There is a space inside each parenthesis (opening and closing) and 
+around each infix operator (+,-,*,&& etc.)
+
+IV. Conventions
+-------------------------------------------------------------------------------
+Use real declarator, not faux pointer type syntax. 
+(YES: int *a NO: int* a)
+
+Header order should match implementation order.
+
+Headers are enclosed in
+
+#ifndef HEADER_SEEN_MYHEADER_H
+#define HEADER_SEEN_MYHEADER_H
+
+It's const int *, not int const *.

@@ -1,0 +1,74 @@
+img
+{
+  border:none;
+}
+
+#MadmanLogo
+{
+  position:absolute;
+  top:10px;
+  left:20px;
+}
+#MadmanLettering
+{
+  position:absolute;
+  top:10px;
+  left:100px;
+}
+
+#MadmanMenu 
+{
+  position: absolute;
+  top:47px;
+  left:300px;
+  right:20px;
+  text-align:right;
+  font-size:small;
+}
+
+#MadmanMenu a 
+{
+  color:black;
+}
+
+#MadmanBody
+{
+  position: absolute;
+  top:100px;
+  left:20px;
+  right:20px;
+  height:auto;
+}
+
+#MadmanMenu a img
+{
+  border: none
+}
+
+tr.darkline td
+{
+  background-color:#e0e0e0;
+}
+tr.brightline td
+{
+  background-color:#f0f0f0;
+}
+
+table.songtable tr th
+{
+  text-align: left;
+  background-color:#c0c0c0;
+}
+
+table.songtable
+{
+  width:100%;
+  border-spacing: 0px;
+}
+
+table.infotable
+{
+  border-spacing: 0px;
+}
+
+

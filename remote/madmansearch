@@ -1,0 +1,150 @@
+#! /usr/bin/python
+
+import madmanremote
+import os
+import sys
+import pwd
+import time
+import string
+
+class tReference:
+  def __init__( self, value ):
+    self.V = value
+  def get( self ):
+    return self.V
+  def set( self, value ):
+    self.V = value
+
+HOMEDIR = pwd.getpwuid( os.getuid() )[ 5 ]
+CONFIG_FILENAME = HOMEDIR + "/.madmansearch"
+NUMBERS_TO_LETTERS = [ "", " ", "abc", "def", "ghi", "jkl", "mno",
+  "pqrs", "tuv", "wxyz" ]
+LETTERS_TO_NUMBERS = {}
+for i in range(0, 10 ):
+  for letter in NUMBERS_TO_LETTERS[ i ]:
+    LETTERS_TO_NUMBERS[ letter ] = i
+NOW = time.time()
+
+def writeConfigFile( mode, data ):
+  config_file = file( CONFIG_FILENAME, "w" )
+  config_file.write ( "%f\n%s\n%s\n" % ( NOW, mode, data ) )
+
+def typeMode( data = "", lastcall = 0 ):
+  if sys.argv[ 1 ] == "enter":
+    selectMode( data, 0 )
+    return
+
+  number = int( sys.argv[ 1 ] )
+  available_letters = NUMBERS_TO_LETTERS[ number ]
+  if available_letters == "":
+    data = data[ :-1 ]
+  else:
+    if data:
+      last_letter = data[-1]
+      last_number = LETTERS_TO_NUMBERS[ last_letter ]
+      if number == last_number and NOW - lastcall < 2:
+	last_index = available_letters.index( last_letter )
+	index = (last_index + 1) % len( available_letters )
+	data = data[:-1] + available_letters[ index ]
+      else:
+	data += available_letters[ 0 ]
+    else:
+      data += available_letters[ 0 ]
+  print "%s_" % data.upper()
+  writeConfigFile( "type", data )
+
+def selectMode( criterion_string, index ):
+  if len( criterion_string ) < 2:
+    print "TOO SHORT"
+    writeConfigFile( "type", criterion_string )
+    return
+
+  remote = madmanremote.tRemote()
+  words = criterion_string.split();
+  words = map( lambda s : "(~performer(%s)|~title(%s)|~artist(%s))" % ( s, s, s ), words )
+  complete_crit_string = string.join( words, "&" )
+  selection = madmanremote.tCriterionSelection( complete_crit_string )
+  result = remote.getInfo( selection )
+
+  if index >= len( result ):
+    index = 0
+
+  if len( result ) == 0:
+    print "NO MATCHES"
+    writeConfigFile( "type", criterion_string )
+    return
+
+  command = sys.argv[ 1 ]
+  if command == "0":
+    writeConfigFile( "type", criterion_string )
+    print "EXIT"
+    return
+  if command == "4":
+    print "PLAYING NOW"
+    uid = int( result[ index ][ "uniqueid" ] )
+    remote.playNow( madmanremote.tUniqueIdSelection( uid ) )
+    return
+  if command == "5":
+    print "PLAYING NEXT"
+    uid = int( result[ index ][ "uniqueid" ] )
+    remote.playNext( madmanremote.tUniqueIdSelection( uid ) )
+    return
+  if command == "6":
+    print "PLAYING EVENTUALLY"
+    uid = int( result[ index ][ "uniqueid" ] )
+    remote.playEventually( madmanremote.tUniqueIdSelection( uid ) )
+    return
+  if command == "1":
+    if index > 0:
+      index -= 1
+    else:
+      print "FIRST ENTRY"
+      return
+  if command == "7":
+    if index < len( result ) - 1:
+      index += 1
+    else:
+      print "LAST ENTRY"
+      return
+
+  print "4:NOW 5:NEXT 6:EVTL"
+  print "1:UP 7:DOWN 0:EXIT"
+  print "%i/%i: %s\n   by %s" % ( index + 1, len(result), result[ index ][ "title" ], result[ index ][ "artist" ] )
+  writeConfigFile( "select", "%s\n%d" % ( criterion_string, index ) );
+
+def main():
+  if len( sys.argv ) != 2:
+    print "usage: %s [0-9]|enter" % sys.argv[ 0 ]
+    sys.exit(1)
+
+  try:
+    config_file = file( CONFIG_FILENAME )
+  except IOError:
+    typeMode()
+    sys.exit( 0 )
+
+  config_data = config_file.readlines()
+  del config_file
+
+  last_timestamp = float( string.strip( config_data[ 0 ] ) )
+  now = time.time()
+
+  if now - last_timestamp > 3*60:
+    typeMode()
+    sys.exit(0)
+  
+  mode = config_data[ 1 ].strip()
+  read_data = config_data[ 2: ]
+
+  data = []
+  for i in read_data:
+    data.append( i[ :-1 ] )
+
+  if mode == "type":
+    typeMode( data[ 0 ], last_timestamp )
+  elif mode == "select":
+    selectMode( data[ 0 ], int( data[ 1 ] ) )
+  else:
+    raise Exception, "Invalid mode"
+
+main()

@@ -1,0 +1,231 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>tAutoTagDialogBase</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>tAutoTagDialogBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>673</width>
+            <height>431</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Automatic tagging</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Tagging method</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>comboAlgorithm</cstring>
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboAlgorithm</cstring>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout6</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout5</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QToolButton">
+                            <property name="name">
+                                <cstring>btnEditTag</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>true</bool>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="iconSet">
+                                <iconset>image0</iconset>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Edit highlighted tag</string>
+                            </property>
+                        </widget>
+                        <widget class="QToolButton">
+                            <property name="name">
+                                <cstring>btnRemoveTag</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>true</bool>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="iconSet">
+                                <iconset>image1</iconset>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Delete highlighted tag</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer2</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Vertical</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>20</width>
+                                    <height>160</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </vbox>
+                </widget>
+                <widget class="QListView">
+                    <column>
+                        <property name="text">
+                            <string>Tag</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <property name="name">
+                        <cstring>listPreview</cstring>
+                    </property>
+                    <property name="resizeMode">
+                        <enum>AllColumns</enum>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout6</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>86</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnPreview</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Preview</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+P</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnApply</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Apply</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+A</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnClear</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Clear &amp;list</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+L</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnClose</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Close</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+C</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="3534">789c95d65953dc461007f0773ec516fde64ab5751f95ca03069bfb588c6d209587d18c048b390c2ce648e5bb67f4efd60496c55541de879f7b7a5a33ead1eefb77a3c3bdedd1bbf70bb753339dd8913d3537a377eeeee2e2f1cfbffef87b6131c946fe5f9c45a364f1b785c5f17464473b57976d0f361e14e10f26d8f517dcf48e9bfe826defa4ea2f781f6e7293487cb5775a15658ab8c1f82aadd234477cd2bbaeebc666f00fd8784bfc3bdcd6ad95f96fe0ce44b6869f820dbcd6db4426b152ff02ce4c6e3bf8545d3859df14ce833fc08529d51b70652a87cde233b57172bf0770ed2df16b75a3f10c36de29fc182ceb7b809b2a2ab1ffe4605b4599d4ff093be374fc8aba75057c1e2cfbb30577a6d3f86db0ecd7577113b9125e52c74ef6abe8dd44de988ff03c9a388b73ac874ec4439cd7d589b378bed8df26f1463dba0e96e7f33958c6633f9bb4bf10ff3458c7efc05993e9fd5daa7327fd7a07e74de9e4f91ec2858f637eaee0d2c7a57f9707b7b2bf1d5c55aec2fc34113795ceb739b88de1315c572ec37c742b0ee3bfa84d8b7e20f453639a5aebe5eaa6c57a8dd4b77ebcccbfa76e347f5d6d254e5db0ecd731ec061b523b31b5709bb585ccff51dcb4adf4d37630fa8518ee427ea56e5be9e76fea4ec7e37cdac85be62bc5366ad15f84f5dad81b71c2f3b289b7e49faae356fa6d459da86f82d14f06cfc7a656fb853607cb7873122cfd733fb8c37e1aec87cd7c5cfa732958fa2b86f31037ea4cccbbc1186f8678aef989bac8647dd82f5b84fc2375d1a23f09ef275bfa7cdc2fc9fe553e2efd78af2e75fe3a58fa0fe7c5d6439c5275a5f39f05a33f09cfdbfa178ce61fab6bf57470877e259c57df6e752bef27bc3fac0db66aa3de0b967acbea46e7c3fbd93adb68fc71b0c60bb555e33cd936c477d5437c2358cecb58ed3a391f11dc0d2652771dfad9a0df5d14dc88fdffc8fce7833be95fbc8f5dec2dcf17ef7797b858cca93acda51ece9b4b87386da9d34ece07eecfbf4c128de3fbd3e53e2efddfa8b34efa11ef3757b85c6cf07de1ca108fd57927fd74a92e34fe102c71f493ab8257d56527fd86f3e46aff0d22fdb123f671e92ff4bbff7a1a7ca0aed447ea5a7d152cf3e1fbdbbfaed48c785bf46f4418e7b54bfa0bc67a3bfcf51e4fffdf25394c6ce67dfe1bc70d5bff71cf720c3b6e673e7d561b323a3ef11f64853a2d9ff284cff83b9ff3055fea2ca439d6675cf98fed677956e7075ff30ddff294eff8a79fe51eb51c321e90f1bace233ff1127fe0655ee18ffc69c8c29dad22ebe1559d355ee70ddee42ddee61ddee53d6491cf18f3becfda978c17753ef3017fe1affc8d0ff9888f39e2185996134e91f17adf32ceb9e0922bae8989c85043962d394ec9513b643caf431d9dd0294de88cbed3395dd02559baf223535f674c3f863b7b5e87aee9866e694a77f493eee9811ee9096b99c9785167893ed032add047fa44abb4464fb4266b7979672feaacd3066dd2166dd30eedfa8cbd796b99a933e698f6e9331dd0179ff195f6e7ad65a6ce373af4238f7c8d033aa668fe5a66eac4b447573e23a19432cae7af65a64ebfeac2afbef43b5dbdb596993a7e9fa8a60bc3c6ff9e65ff93c6d87977f6b24eff4b95c6fe6d72624ed99a896924e3ad3ae66ce68cf67526c8a0f9757cd6ec39b59ae1deaaf3fac2f96fe7457e91f366c6db39bfba16fff97de15fed787c7b</data>
+    </image>
+    <image name="image1">
+        <data format="XPM.GZ" length="821">789ced924b0ac2301040f739c5d0d915b1fe50443c82e25210179349441755d0ba10f1ee7606174943ab07f091451e8f49a06991c376b382bc30b78aaa13031fe90ab9bb97e563b75f3e4d369a40bd6630cc7a26eb03c3fa72f6b2c77a8f0345d48a8e15512f3a55449de85c112551564459f4a0e82d2dfcde10b1ad211161da6c4cdc98142778cb1d73510b07ebb16673e4c89375f673e4bf7d6fe1f76cb4e4198277e790f49f68d0d95e0bf3061d0ccaf3</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>btnClose</sender>
+        <signal>clicked()</signal>
+        <receiver>tAutoTagDialogBase</receiver>
+        <slot>close()</slot>
+    </connection>
+</connections>
+<layoutdefaults spacing="6" margin="6"/>
+</UI>

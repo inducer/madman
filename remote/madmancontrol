@@ -1,0 +1,194 @@
+#! /usr/bin/python
+import madmanremote
+import time
+import sys
+
+def printUsage():
+  print "--------------------------------------------------------------"
+  print "madman remote control script v0.90"
+  print "--------------------------------------------------------------"
+  print "(C) Andreas Kloeckner 2003, released under the GNU GPL."
+  print "See file COPYING for details."
+  print
+  print "  %s <command> [parameters]" % sys.argv[ 0 ]
+  print 
+  print "where <command> can be any of the following:"
+  print "  version"
+  print "  quit"
+  print "  play"
+  print "  pause"
+  print "  stop"
+  print "  next"
+  print "  previous"
+  print "  skip_to <seconds>"
+  print "  set_field <unique_id> <field_name> <value>"
+  print "  count_songs <selection>"
+  print "  get_field <result_set_index> <field_name> <selection>"
+  print "  get_info <selection>"
+  print "  play_now <selection>"
+  print "  play_next <selection>"
+  print "  play_eventually <selection>"
+  print "  total_time"
+  print "  current_time"
+  print "  is_playing"
+  print "  is_paused"
+  print "  clear_playlist"
+  print "  get_playlist_tree_xml [<root> [<depth>]]"
+  print "  set_playlist_name <fully_qualified_name> <new_name>"
+  print "  set_playlist_criterion <fully_qualified_name> <new_criterion>"
+  print "  create_playlist <fully_qualified_parent> <new_name>"
+  print "  delete_playlist <fully_qualified_name>"
+  print "  add_song_to_playlist <fully_qualified_name>"
+  print "  remove_song_from_playlist <fully_qualified_name>"
+  print
+  print "where <selection> can be any of the following:"
+  print "  criterion <criterion_text> [<sort_field>]"
+  print "  uniqueid <unique_id>"
+  print "  current_playlist"
+  print "  playlist <fully_qualified_name>"
+  print "  current_song"
+  print "  auto_dj [<song_count>]"
+  print
+  print "where <fully_qualified_name> is a slash-separated playlist"
+  print "  path, like so: 'Systematic Playlists/Never been listened to'"
+
+
+def parseSelection( arguments ):
+  if len( arguments ) < 1:
+    raise Exception, "Empty selection expression"
+
+  seltype = arguments[ 0 ]
+  if seltype == "criterion":
+    if len( arguments ) == 2:
+      return madmanremote.tCriterionSelection( arguments[ 1 ] )
+    elif len( arguments ) == 3:
+      return madmanremote.tCriterionSelection( arguments[ 1 ], arguments[ 3 ] )
+    else:
+      raise Exception, "Invalid number of parameters for criterion selection"
+  elif seltype == "uniqueid":
+    if len( arguments ) == 2:
+      return madmanremote.tUniqueIdSelection( int( arguments[ 1 ] ) )
+    else:
+      raise Exception, "Invalid number of parameters for unique_id selection"
+  elif seltype == "current_playlist":
+    if len( arguments ) == 1:
+      return madmanremote.tCurrentPlaylistSelection()
+    else:
+      raise Exception, "Invalid number of parameters for current_playlist selection"
+  elif seltype == "playlist":
+    if len( arguments ) == 2:
+      return madmanremote.tPlaylistSelection( arguments[ 1 ] )
+    else:
+      raise Exception, "Invalid number of parameters for playlist selection"
+  elif seltype == "current_song":
+    if len( arguments ) == 1:
+      return madmanremote.tCurrentSongSelection()
+    else:
+      raise Exception, "Invalid number of parameters for current_song selection"
+  elif seltype == "auto_dj":
+    if len( arguments ) == 1:
+      return madmanremote.tAutoDJSelection()
+    elif len( arguments ) == 2:
+      return madmanremote.tAutoDJSelection( int( arguments[ 1 ] ) )
+    else:
+      raise Exception, "Invalid number of parameters for auto_dj selection"
+  else:
+    raise Exception, "Invalid selection expression"
+
+
+
+
+if len( sys.argv ) == 1:
+  printUsage()
+  sys.exit(1)
+
+remote = madmanremote.tRemote()
+command = sys.argv[1]
+arguments = sys.argv[2:]
+
+if command == "version":
+  print remote.getVersion()
+elif command == "quit":
+  remote.quit()
+elif command == "play":
+  remote.play()
+elif command == "pause":
+  remote.pause()
+elif command == "stop":
+  remote.stop()
+elif command == "next":
+  remote.next()
+elif command == "previous":
+  remote.previous()
+elif command == "skip_to":
+  remote.skipTo( float( arguments[ 0 ] ) )
+
+elif command == "set_field":
+  remote.setField( int( arguments[ 0 ] ), arguments[ 1 ], arguments[ 2 ] )
+
+elif command == "count_songs":
+  selection = parseSelection( arguments[ 0: ] )
+  info = remote.getInfo( selection )
+  print len( info )
+elif command == "get_info":
+  selection = parseSelection( arguments[ 0: ] )
+  print remote.request( "/madman/scripting/get_complete_record?%s" % selection.getURLFields() )
+elif command == "get_field":
+  selection = parseSelection( arguments[ 2: ] )
+  info = remote.getInfo( selection )
+  print info[ int( arguments[ 0 ] ) ][ arguments[ 1 ] ]
+
+elif command == "play_now":
+  selection = parseSelection( arugments )
+  remote.playNow( selection )
+elif command == "play_next":
+  selection = parseSelection( arguments )
+  remote.playNext( selection )
+elif command == "play_eventually":
+  selection = parseSelection( arguments )
+  remote.playEventually( selection )
+
+elif command == "total_time":
+  if len( arguments ) >= 1 and arguments[ 0 ] == "--integer":
+    print int( remote.totalTime() )
+  else:
+    print remote.totalTime()
+elif command == "current_time":
+  if len( arguments ) >= 1 and arguments[ 0 ] == "--integer":
+    print int( remote.currentTime() )
+  else:
+    print remote.currentTime()
+elif command == "is_playing":
+  print remote.isPlaying()
+elif command == "is_paused":
+  print remote.isPaused()
+
+elif command == "clear_playlist":
+  remote.clearPlaylist()
+
+elif command == "get_playlist_tree_xml":
+  if len( arguments ) == 0:
+    result = remote.getPlaylistTreeXML()
+  elif len( arguments ) == 1:
+    result = remote.getPlaylistTreeXML( arguments[ 0 ] )
+  else:
+    result = remote.getPlaylistTreeXML( arguments[ 0 ], arguments[ 1 ] )
+  print result
+
+elif command == "set_playlist_name":
+  remote.setPlaylistName( arguments[ 0 ], arguments[ 1 ] )
+elif command == "set_playlist_criterion":
+  remote.setPlaylistCriterion( arguments[ 0 ], arguments[ 1 ] )
+elif command == "create_playlist":
+  remote.createPlaylist( arguments[ 0 ], arguments[ 1 ] )
+elif command == "delete_playlist":
+  remote.deletePlaylist( arguments[ 0 ] )
+elif command == "add_song_to_playlist":
+  remote.addSongToPlaylist( arguments[ 0 ], arguments[ 1 ] )
+elif command == "remove_song_from_playlist":
+  remote.removeSongFromPlaylist( arguments[ 0 ], arguments[ 1 ] )
+
+else:
+  print "unknown command."
+  printUsage()
+  sys.exit(1)

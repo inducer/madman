@@ -1,0 +1,47 @@
+How to remotely control madman
+------------------------------
+
+The madman remote control API is accessed  through a HTTP server that listens
+on port 51533 by default. All remote control control commands and queries
+consist of a HTTP GET request to that server. All relevant command codes and
+parameters are encoded in the URL, which can be as simple as
+
+http://localhost:51533/madman/scripting/pause
+
+or as complicated as
+
+http://localhost:51533/madman/scripting/play_eventually?selection_type=autodj&song_count=20
+
+If you have madman running on localhost, you can try both these queries
+in your web broser right now.
+
+An example implementation for madman remote control is provided in the
+form of a python module, "madmanremote.py". You can freely use this module 
+to write scripts to obtain data from and control madman.
+
+If you plan to control madman from programs that are not written in Python,
+it is recommended that you use an HTTP library to access the raw HTTP API,
+which is not very complicated. Documentation for the API may grow if the 
+need arises, for right now, "the source is the documentation". 
+"madmanremote.py" should be considered the authoritative guide to API usage.
+The API will remain backwards-compatible in future versions of madman.
+(This rule was broken once in the transition from 0.92rc1 to 0.93beta1.)
+
+"madmanremote.py" is used by the "madmancontrol" python script to offer full
+control over madman from the shell. If you copy both files onto your path, you
+may control madman from the shell by typing things like
+
+  madmancontrol pause
+
+madmancontrol prints usage information if called without parameters.
+Also, "madmancontrol" makes madman scriptable through shell scripts. 
+
+If you have LIRC installed on your computer, a sample .lircrc snippet is
+provided in "lircrc" which you can adopt and modify for your personal
+configuration. This directory also contains the "madmansearch" script
+that builds upon the framework described here. It allows you to
+search for and play certain music using the remote. This works by
+using a cell phone text message input typing algorithm.
+[Note: xosd is suggested for most of this. The lirc scripts probably need
+some tweaking before they will work on your computer. If someone
+feels the need to write a HOWTO, please do.]

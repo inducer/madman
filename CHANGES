@@ -1,0 +1,427 @@
+This is a combined change log / todo document. Todo items are at the top, and the
+history of changes in each released version is at the bottom.
+
+far future --------------------------------------------------------------------
++ Support audioscrobbler.sourceforge.net.
++ Maybe rethink the UI.
++ What do MoodLogic (moodlogic.com), iTunes (apple.com/itunes),
+  MusicMatch (musicmatch.com) have that we don't?
++ Add more flexible tagging from file name.
++ Add on-disk reorganization, i.e. renaming according to tags.
++ Allow players to have their own customization UI,
+  thus allow having a customizable player executable.
++ Add some sort of history display and evaluation.
+* Don't put songs in playlist that are already in there
+  (confusion-proof UI?) (sugg. by Johan Forsberg)
++ One-time commit feature for tag writes. (sugg. by Johan Forsberg)
+* Deeper overview hierarchies (maybe). (sugg. by Michael Albert)
+
+future ------------------------------------------------------------------------
++ Maybe add little builtin player.
++ Support musicbrainz.
++ Can we rip off Amazon's "other customers also bought" recommendations?
+  MP3 Piranha, Amazon Web Services ...
+  Should be possible to at least display album cover.
++ Maybe use MusicLink.com?
++ Add Plink. (playlist link)
+  - Plink over Jabber.
+  - Plink broadcast UDP discovery.
+  - Plink clients for Winamp2 (3?), XMMS (write them using the tPlayer class?)
++ Integrate translations into build system.
++ BPM extraction.
+* Export M3U.
+* Automatically add .mad extension to filename entered in
+  SaveAs dialog. (Jon Burgess) [is this really a good idea?]
++ Added man page.
+* Try to identify current song through title if identifying through
+  file name doesn't work.
++ Criteria wizard.
++ Allowed Player customization UI.
++ IMMS-like ratings based on play history.
++ non-local criteria like
+  - ~is_in_set(name)
+  - ~playcount_percentile(...)
+  - ~artist_rating(...)
+  - ~auto_dj_score(...)
+  phase out jammed-together criteria
++ Allowed file renames from tag interface.
++ Add a mechanism for debug messages to get through to user that is not STDOUT.
++ ~average_play_percentage()
++ Introduce smoothly-scaling criteria.
+  ~usually_played_to_end, ...
+* use pimpl pattern in more places.
+* Song play detection in Non-GUI mode
+* ~play_count_within_n_days
+* ~manual_play_count, ~manual_play_immediately_count
+* ~new, halflife of about a week.
+* ~played_within_days(parameter), gradation
+* Portable player support: Copy files to directory without running out of 
+  space. (sugg. by Clive Butler)
+* Add support for alsaplayer (sugg. by Tim Sawchuck)
+* ID3 writing format switch: v1/v2 (sugg. by Adam Ward)
++ Splash screen.
+* Allow dragging "new" songs to the madman window to add to music repository.
+  (sugg. by Giuseppe De Michele)
++ Add possibility to store and show album art.
++ Search for duplicates on disk.
++ Support Musepack.
+  http://www.personal.uni-jena.de/~pfk/mpp/index2.html
++ modularized criterion parser with factories for various criteria.
+* Easier way to rename playlists.
++ Transaction logs to prevent data loss on shutdown. (sugg. by ceno)
++ Playlist inheritance. (sugg. by Michael Albert)
++ Player sync wizard. (sugg. by Jon Burgess)
+* Ability to query whether criteria are time-dependent.
+  (Automatic update of Last Few Songs)
+* "hide lists" and maximized windows
+* Decrease madman's memory usage upon save. (sugg. by Ove Soerensen)
++ Ripper integration. (sugg. by dbeach7 at users.sf.net)
++ Custom tags.
++ Aggregate songs. (sugg. by Pavel Avgustinov)
++ Playlist maintenance on disk. (sugg. by Pavel Avgustinov)
++ Grouping threshold in overview -> don't show group below 3 entries. 
+  (sugg. by Michael Bueker)
+
+0.94 --------------------------------------------------------------------------
++ Make the web server more visible. 
+  (document on web site)
+* Convey the killer features: Web server, remote control, AutoDJ.
+
+* Play button usability:
+  If XMMS is not running or the playlist is empty, nothing happens in response to 
+  the play button.
+
+* Add AutoDJ presets versioning.
+
+* Fixed GNOME 2 docking.
+* Bo Flower Track Number order.
+* Revived l10n.
+* Track order for playing albums. (from overview and play like songs)
+
+* Be able to parse relative M3U files. (sugg. by Jon Burgess)
++ M3U export wizard. (Consider: relative paths, "/" path delimiter,
+  DOS line endings.) (Jon Burgess)
++ Added an XDG compliant desktop file. (Fix for icon) (Jaako H Kyro)
++ Show all songs in current file's folder. (Xavier ?)
++ Filter on this field/add AND/add OR. (Adam Ward)
+
+* ~pathname, ~filename_without_path
+* Mousewheel on tray icon allows forward/back.
+
+* Play albums in the right order. (Joshua Hutchins)
+* Extended characters in filenames?
+  Passing of ext. character filenames to plugins? (?? instead of char)
+* Ctrl-A, F9 messes up order
+* Problems with doubly drawn list content
+* Fixed BadMatch X errors.
+* Mood and tempo extraction from songs?
+* Remember whether AutoDJ was enabled across runs.
+* Highlight current song leaves another marked song also selected.
+* Fix annoyance with clicking artist link twice.
+* Continuous AutoDJ from any source.
+* Convert to arch tree. 
+* Separate build tree.
+* Show count after letter in overview.
+
+MAJOR CHANGES:
+* Playlist management button. [done]
+* Continuous AutoDJ (Shawn, Adam Ward) [done]
++ Support FLAC. [done]
++ Support M4A. [done] (Walt)
+* Switched to Scott Wheeler's Taglib. [done]
++ New UI for current song, imitating Rhythmbox.
+  I guess imitation is the sincerest form of flattery. [done]
++ Hierarchical sorting. (album, track number) [done]
++ Added keyboard shortcuts for most important actions. [done]
++ Added a "small UI" mode. [done]
+* Rewrite build instructions. [done]
++ Added a fully-fledged path browser. [done]
+* New icons by Felipe Rivera. [done]
++ Added mood, tempo, custom1-3 fields. (Guido Schlabitz) [done]
+
+MINOR IMPROVEMENTS:
++ Show configurable string in title bar. [done]
+* Re-enable Ctrl+A. (Michael Albert) [done]
++ Added an install_to= option to SConstruct. (Klaus S. Madsen) [done]
+* Added a pref to say whether to read ID3v1 or v2. [done]
+* Changed "Play Now" semantics back to enqueuing in the middle of the 
+  current list. [done]
+* Text match criterion "startswith:" [done]
+* Massive redraw speedup by avoiding several hundred round trips through
+  XMMS on each redraw. Oops. [done]
++ Passive Popup now has Back and Forward buttons. (Guido Schlabitz) [done]
++ Added letterwise grouping of overview. (Guido Schlabitz) [done]
+* Added more information to passive popup by default. [done]
+
+BUGS FIXED:
+* Fixed "_lib" -> "_library" in SConstruct error output.
+  (Justus Schwartz) [done]
+* Fixed "evenutally" typos in several context menus. (Reuben Thomas) [done]
+* Looking at the play list from the WebUI caused XMMS to start, even if
+  local player control is disabled. Fixed. (Adam Ward) [done]
+* Consistent history recording when running in --no-gui mode. [done]
+* Consistent Emacs formatting hints at the end of every file,
+  and a tool to enforce this. (doc/update_format_tag) [done]
+* Fixed "play now" starting from second entry if XMMS playlist was 
+  completely empty before. (Jon Burgess) [done]
+* Fixed sorting by "Last Played" column: Reset Last Played to -1 if
+  Play Count == 0 on load. (Michael Albert) [done]
+* Fixed a major Unicode issue. [done]
+* Fixed move detection. (Josie Walker) [done]
+* Fixed a segfault in the auto tagger. [done]
+* Fixed link order problem. [done]
+* Fixed the bug where madman would fail to find songs. [done]
+* Fixed a rename box that was being too persistent.
+  Qt bug, reported. Also added workaround.
+  (reporter: io_alex_2004 through SF bug tracker) [done]
+* Caught an exception that was thrown when a failing tag read would cause 
+  database insertion to fail, and subsequently crash the program. [done]
+  (Spotted by Klaus S. Madsen)
+* Fixed configure to work around non-case-sensitive bashes. [done]
+  (Christian Hammers)
+* Added %askfile_XXX% expansions to plugin mechanism. [done]
+  (Christian Hammers)
+* Fixed the wretched "expat: parse error" bug, hopefully for real this 
+  time. (Reproduced by Shawn) [done]
+* Fixed missing comma in SConstruct. (Adam Ward) [done]
+* Fixed Sconsign littering outside of project tree. (Adam Ward) [done]
+* Fixed bug in default criteria for AutoDJ. [done]
+* Fixed path overview if one path is a prefix of the other. (Walt?) [done]
+* Updated caption line when song info changes. [done]
+* Upgraded build system to SCons 0.96.1. [done]
+* Failure to save database would lead to loss of one backup each,
+  eventually leading to total data loss. Fixed. (suffered and analyzed by 
+  Christian Hammers) [done]
+
+0.93 --------------------------------------------------------------------------
+
+---> See 0.93 CVS branch for changes leading up to the 0.93 release.
+
+* Removed 3.2 dependency of UI files.
+* Added flags that allow to add custom include and library paths.
+  (Daryl Anderman) [done]
+* Playlists can't scroll past the end any more. [done]
+
+0.93rc2 -----------------------------------------------------------------------
++ A my_cxx build option was added. [done]
++ Validated compilation with only a c++ compiler, especially for vcedit.c.
+  [done]
+* Fixed README to state correct dependencies. [done]
+* Removed ctags from default build. [done]
+* About dialog shouldn't talk about Musepack/MPC when it's not actually 
+  there. [done]
+* Attempted to fix non-reproducible crasher within XMMS libraries through
+  better error checking. [done]
+* Fix crasher when removing from empty directory list. (Tim Dreessen)
+  [done]
+* Rescan no longer adds duplicate copies of songs. (Tim Dreessen)
+  [done]
+* Plugins directory was missing from the release tarball. (Tim Dreessen)
+  [done]
+
+0.93rc1 -----------------------------------------------------------------------
+MAJOR CHANGES:
+* Auto Tagger. [done]
+* Changed build system to SCons. [done]
+* Minimize to system tray. [done]
++ Add passive popup song announcements. [done]
+* Made search substantially faster. [done]
+- Removed fuzzy search misfeature. [done]
++ Visually indicate current song. [done]
++ Select visible columns per list view, not in preferences. [done]
+* Unify madmanweb through song field identifier methods. [done]
+* Rewrote AutoDJ. (Shawn Willden) [done]
+
+MINOR IMPROVEMENTS:
+* Made sure filenames are never converted from one encoding
+  to the next. [done]
++ Integrate M3U export script from Adam Ward. [done]
+* Added Christian's madman art. [done]
+* Balance AutoDJ score min, max, offset, at least in default. [done]
++ Progress bar for repeat tagging. [done]
+* Busy progress bar for scanning. [done]
+* Display totals in a more appropriate way. [done]
+* 0.5 is now the default match threshold. [done]
+* Renamed tCriterion::operator() to matchDegree(). [done]
+* Improved startup performance by removing a stray stat(). [done]
+* Added a new about dialog. [done]
+* Greatly reduced memory footprint of madman's database.
+  - Use static list for (repetitive) directory names. [done]
+  - Eliminated key hack for ~any criterion. [done]
++ Remember sort field between runs. [done]
+* Deprecated multiword criteria without underscores. [done]
++ Added ~year,~track_number criteria. [done]
++ Added scripting for the playlist tree. [done]
+* Ensured uniqueness and validity of playlist names.
+  Also made sure related exceptions are caught. [done]
+* Took care of UTF8->Unicode string conversion in remote. [done]
+* Drop down box for genre edit. [done]
++ Search for and play like songs through the context menu. [done]
++ Added Clear button for search box. [done]
++ Rate current from toolbar and tray icon. [done]
++ Hide main window while saving database. [done]
+* Smaller playlist buttons. [done]
++ Added ~full_play_count, ~partial_play_count criteria. [done]
++ Added ~lastplayed_n_days_ago criterion. [done]
++ Added a central facility to get a one-liner describing a song. [done]
+* "File exists since" now defaults to the file's ctime. [done]
++ Added an option to restrict webserver access to localhost. [done]
+* Modified plugin interface to use field identifiers. [done]
+
+BUGS/ANNOYANCES FIXED:
+* Fixed odd tag encoding bug. (reported by Adam Ward)
+  Fixed by switching to libid3tag, which is much better
+  in many regards. [done]
++ Don't stop rescan on broken files. (ogg, file not found)
+  (Adam Ward) [done]
+* Fix right click in playlist pane crasher. (Adam Ward) [done]
+* Fixed a crasher in tSongListView::getSelection(tSongList &) [done]
+* Added k3b version detection to cd burning scripts. [done]
+* Made http server much more crash-resilient. [done]
+* Made madmancontrol quit actually work(tm) without a segfault. [done]
+* LastPlayed was not properly initialized. [done]
+* Only rescan after prefs if media directories have changed. [done]
+* Ogg tagging fixed - accidentally used Latin1 instead of UTF8. [done]
+* Fixed the case of moving to a new file type
+  (the new file would be read using the old file type, no matter what)
+  [done]
+* Focus AllSongsList on home. [done]
+* If we don't have read permission for a song, don't add it. [done]
+* Worked around a Qt3.2 bug that would not update the search line
+  until the end of the search. [done]
+* Fixed a crasher in the web server. [done]
+
+0.92rc1 -----------------------------------------------------------------------
+MAJOR ADDITIONS:
++ Builtin web server for remote control, streaming/sharing, scripting.
+  Made option for webserver to run standalone (no X). [done]
++ Added python script for remote control. [done]
++ Better auto DJ. (now uses Mersenne Twister random number generator,
+  forbids replays,  allows configuration) [done]
++ Bookmark button. [done]
++ Added Player controls. [done]
+
+MINOR IMPROVEMENTS:
++ Right click menu for Artist/Album list.
+  (Jon Burgess, David O'Shaugnessy) [done]
++ Allow command line specification of the file that is 
+  to be opened. [done]
+* Add --help command line option. [done]
+* Add criteria examples to help. [done]
+* Make backups even if file does not have .mad extension.
+  (Jon Burgess) [not reproducible, assumed fixed by previous changes]
++ Add file name and path to search index. (Johan Forsberg) [done]
++ Keep modification time stamps of songs, reread changed on rescan. [done]
+* Try and deal with oddball track numbers (like "04/18"). [done]
+* Added criterion ~unrated, to avoid depending on ~rating(=-1). [done]
++ Make a toolbar button to highlight currently playing song.
+  (Fix F12 non-obviousness.) [done]
+* Changed tPlayer architecture from polling to signalling for song and
+  state changes. (hide polling mechanism within tXmmsPlayer) [done]
+* Save whether toolbars are shown to config. [done]
++ Added rewrite tag function. [done]
+* Modified number after "By Artist" to state number of songs
+  (UI non-obviousness reported by Edgar Seemann) [done]
+* Added button icons, thus friendlifying the whole UI a bit. [done]
+* Cleaned up notification-on-modification in tSong. [done]
+
+BUGS/ANNOYANCES FIXED:
+* Fixed bug about column ordering not being preserved in some
+  cases. [done]
+* Workaround for id3lib's borked unicode tagging facility [done]
+  UNICODE mp3 tagging is BROKEN by this.
+* Weed out invalid characters in tag data. [done]
+* Don't fail with only a console message if the web server couldn't be
+  started. [done]
+* Update hash table when adding/removing songs to/from collection.
+  (reported by Martin Sauter) [done]
+* Fixed Unicode ID3 tag reading/writing. [done]
+* Madman's database is now really stored in UTF8. [done]
++ Will ask to save before opening new database. [done]
+* Fixed a bug where hitting one of the numbers (for rating) wouldn't
+  properly update the playlist window. [seems to have disappeared]
+* Fixed the fact that there are no result when searching for uppercase
+  strings. [done]
+* Fixed several file descriptor leaks reported by 
+  Jon Burgess <mplayer@jburgess.uklinux.net>. [done]
+* Fixed segfault that occurred when reading Ogg tag from non-existent song.
+  Reported by Jon Burgess <mplayer@jburgess.uklinux.net>. [done]
+* Added proper exception handling in many spots that were lacking it.
+  [done]
+
+0.91.1 ------------------------------------------------------------------------
++ Fixed some compilation problem on SuSE gcc 3.2 prerelease compilers.
+
+0.91 --------------------------------------------------------------------------
++ Added much marketing hype to the website. [done]
+
+MAJOR ADDITIONS:
++ Added fuzzy match methods. [done]
++ Added plugin scripts. [done]
+  Sample plugin scripts provided: Burn to CD, Move to Trash.
++ Made separate fields for Composer/Performer. [done]
++ Added play history collection.
+  History records if a song is allowed to play to the end,
+  to allow for statistical evaluation. Can be disabled. [done]
++ Rating feature, ~rating(...) criterion. [done]
++ Searches now work asynchronously, making them
+  (seem) much faster. [done]
++ Added separate preferences dialog. [done]
++ More categories in overview tree (albums) [done]
++ In-Archive-Since, Last-Played and Play-Count are recorded for each song.
+  Statistics are resettable per-song. [done]
++ Build process was autotoolsified. [done]
++ Make backups of databases. [done]
++ Added mass tagging. [done]
+* Improved startup performance.
+  - Used expat instead of Qt for XML parsing. [done]
+  - Centralize reading serialization code in tDatabase. [done]
+  - Made overview tree generate itself on the fly when clicked. [done]
++ Can import M3U and player playlists. [done]
++ Added a real help browser. [done]
+
+MINOR IMPROVEMENTS:
++ Automatically show relevant page of preferences dialog if 
+  creating a new file. Greet new users. [done]
+* Display <none> instead of the empty string in the overview. [done]
++ Remember main window geometry (may be turned off in preferences). [done]
++ Added possibility to add 20 random songs from command line. [done]
+* Moved duration column further to the front. [done]
+* Better keyboard bindings. [done]
++ Added "Highlight current song". [done]
++ Made tag display dynamic. [done]
+- Removed "search forward" feature because the improved "Restrict" 
+  works so much better. Avoids user confusion. [done]
++ Order of columns is preserved between runs. [done]
+* Achieved display speedup through not letting Qt do the 
+  sorting. [done]
++ Added ability to customize which columns are shown. [done]
++ Added a file size column. [done]
++ Show a summary on the status bar whenever the selection changes. [done]
++ Show counts in overview. [done]
+
+BUGS/ANNOYANCES FIXED:
+* Removed set control buttons -> more screen real estate for actual songs. [done]
+* Fixed bug in removing multiple songs from sets. [done]
+- Removed the empty "View" menu. [done]
+* Fixed auto_ptr+exception bug in expression compilation, 
+  fixed or precedence. [done]
+* Deferred retags until next main loop to avoid crashes when retag means
+  removal from current set. [done]
+* Fix artist sorting in overview.
+* Flicker and slowness upon deleting multiple files was fixed. [done]
+* Fixed crashes:
+  - Make new file, add set. [done]
+  - Open another file, drag song to set. [done]
+  - updateSongSetTree was trying to use pointers that had
+    become invalid while [done]
+* Made fileOpen() exception-safe. [done]
+* Fixed expression parsing so parentheses would really work. [done]
+* Fixed error reporting for duration extraction from MP3s. [done]
+
+0.90.1 - Feb 27, 2003 ---------------------------------------------------------
+- Fixed Compilation with Qt3.0.
+
+0.90 - Feb 26, 2003 -----------------------------------------------------------
+- Initial relase
+

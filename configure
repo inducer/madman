@@ -1,0 +1,41 @@
+#! /bin/sh
+set -e
+
+echo --------------------------------------------------------------------------
+echo IMPORTANT BUILD INSTRUCTIONS
+echo --------------------------------------------------------------------------
+echo "madman uses a new-ish build tool called \"SCons\"."
+echo "Please read the README for more information on building madman."
+echo
+echo "This script is supposed to help you get started with SCons."
+echo --------------------------------------------------------------------------
+echo Hit Enter.
+read
+
+echo --------------------------------------------------------------------------
+echo "If you don't have a copy of SCons already on your system, madman comes"
+echo "with one that you may use. Should I extract it now?"
+echo --------------------------------------------------------------------------
+echo -n "yn? [y]"
+read ANSWER
+if ! test "x$ANSWER" = "xn"; then
+  echo "Deleting a previous SCons version, if present..."
+  rm -f scons.py scons-README scons-LICENSE
+  DIR=`find -type d -name "scons-local-*"||true`
+  if ! test "x$DIR" = "x"; then
+    rm -Rf $DIR
+  fi
+  echo "Extracting..."
+  tar xfz scons-local-*.tar.gz
+  echo --------------------------------------------------------------------------
+  echo "Now just type ./scons.py to start building or ./scons.py --help to get"
+  echo "some help."
+  echo
+  echo "Have fun with madman."
+  echo --------------------------------------------------------------------------
+else
+  echo --------------------------------------------------------------------------
+  echo "Not extracting. You're on your own, I suppose you know what you're doing."
+  echo "Have fun with madman."
+  echo --------------------------------------------------------------------------
+fi
