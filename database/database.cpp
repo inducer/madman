@@ -154,8 +154,11 @@ void tSAXDatabaseHandler::startElement(const XML_Char *name, const XML_Char **at
     if (PlaylistNodeStack.size() == 0)
       Database.setPlaylistTree(my_node);
     else
-      PlaylistNodeStack.back()->insertChild(
-	  my_node, PlaylistNodeStack.back()->end());
+    {
+      tPlaylistNode *parent = PlaylistNodeStack.back();
+      parent->makeChildNodeNameUnique(my_node);
+      parent->insertChild(my_node, parent->end());
+    }
 
     PlaylistNodeStack.push_back(my_node);
     return;
@@ -277,7 +280,19 @@ void tSAXDatabaseHandler::endElement(const XML_Char *name)
 // expat parsing code ---------------------------------------------------------
 void startExpatElement(void *data, const XML_Char *el, const XML_Char **attr)
 {
+  try
+  {
   reinterpret_cast<tSAXDatabaseHandler *>(data)->startElement(el, attr);
+  }
+  catch (exception &ex)
+  {
+    cerr 
+      << "*** WHOOPS" << endl
+      << "The sax start element handler for " << el << " threw an exception:" << endl
+      << ex.what() << endl
+      << "Cannot continue. This is probably a bug." << endl;
+    abort();
+  }
 }
 
 
@@ -285,7 +300,19 @@ void startExpatElement(void *data, const XML_Char *el, const XML_Char **attr)
 
 void endExpatElement(void *data, const XML_Char *el) 
 {
-  reinterpret_cast<tSAXDatabaseHandler *>(data)->endElement(el);
+  try
+  {
+    reinterpret_cast<tSAXDatabaseHandler *>(data)->endElement(el);
+  }
+  catch (exception &ex)
+  {
+    cerr 
+      << "*** WHOOPS" << endl
+      << "The sax end element handler for " << el << " threw an exception:" << endl
+      << ex.what() << endl
+      << "Cannot continue, sorry. This is probably a bug." << endl;
+    abort();
+  }
 } 
 
 

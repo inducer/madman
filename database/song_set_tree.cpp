@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 #include <stdexcept>
+#include <cstdlib>
 #include <qapplication.h>
 
 #include "song_set_tree.h"
@@ -54,12 +55,23 @@ tPlaylistNode *tPlaylistNode::parent()
 
 
 
+void tPlaylistNode::makeChildNodeNameUnique(tPlaylistNode *node)
+{
+  QString origname = node->name();
+  unsigned count = 0;
+  while (resolve(node->name()))
+    node->setName(QString("%1 %2").arg(origname).arg(++count));
+}
+
+
+
+
 void tPlaylistNode::addChild(tPlaylistNode *node)
 {
   if (resolve(node->name()))
     throw tRuntimeError(
-	qApp->translate("ErrorMessages", "Playlist name '%1' is not unique, not added.")
-	.arg(node->name()) );
+      qApp->translate("ErrorMessages", "Playlist name '%1' is not unique, not added.")
+      .arg(node->name()) );
 
   node->Parent = this;
   ChildrenList.push_back(node);

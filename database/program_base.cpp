@@ -1,4 +1,4 @@
-// arch-tag: 685f3c5f-958a-41ab-9169-3db05ce77361/*
+/*
 madman - a music manager
 Copyright (C) 2003  Andreas Kloeckner <ak@ixion.net>
 

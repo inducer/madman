@@ -58,6 +58,7 @@ class tPlaylistNode
     }
 
     tPlaylistNode *parent();
+    void makeChildNodeNameUnique(tPlaylistNode *node);
     void addChild(tPlaylistNode *node);
     void insertChild(tPlaylistNode *node, iterator it);
     void removeChild(tPlaylistNode *node);

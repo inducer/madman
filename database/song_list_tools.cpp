@@ -198,7 +198,9 @@ static void sortSingle(tSongList &list, tSongField field)
     case FIELD_CUSTOM2 : stable_sort(list.begin(), list.end(), tCustom2Less()); break;
     case FIELD_CUSTOM3 : stable_sort(list.begin(), list.end(), tCustom3Less()); break;
     default:
-      throw tRuntimeError("Invalid field id while sorting list of songs");
+      throw tRuntimeError(
+        qApp->translate("ErrorMessages",
+                        "Invalid field id %1 while sorting list of songs").arg((int) field));
   }
 }
 
@@ -236,7 +238,9 @@ static tLessBase *getLess(tSongField field)
     case FIELD_CUSTOM3 : return new tCustom3Less;
     case FIELD_INVALID: return NULL;
     default:
-      throw tRuntimeError("Invalid field id while sorting list of songs");
+      throw tRuntimeError(
+        qApp->translate("ErrorMessages",
+                        "Invalid field id %1 while sorting list of songs").arg((int) field));
   }
 }
 

@@ -1,0 +1,47 @@
+import os
+
+Import( "env" )
+myenv = env.Copy()
+
+imagedata_builder = Builder(action = "./designer/make_imagedata $SOURCES > $TARGET",
+    suffix = "$CXXSUFFIX")
+myenv.Append(BUILDERS = { "ImageData": imagedata_builder })
+
+myenv.Append(CPPPATH = "#")
+
+files = [ 
+"about.png",
+"back.png",
+"bookmark.png",
+"clear_search.png",
+"copy.png",
+"down.png",
+"edit.png",
+"exit.png",
+"forward.png",
+"help.png",
+"history.png",
+"home.png",
+"icon.png",
+"import.png",
+"logo_small.png",
+"new.png",
+"open.png",
+"pause.png",
+"play.png",
+"preferences.png",
+"rate0.png",
+"rate1.png",
+"rate2.png",
+"rate3.png",
+"rate4.png",
+"rate5.png",
+"refresh.png",
+"remove.png",
+"save_as.png",
+"save.png",
+"set.png",
+"stop.png",
+"up.png",]
+
+myenv.ImageData( "image_data.cpp", files )

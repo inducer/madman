@@ -122,6 +122,9 @@ future ------------------------------------------------------------------------
 * Convert to arch tree. 
 * Separate build tree.
 * Show count after letter in overview.
+* sort fields filled with random data?
+
+* Fixed generation of image_data.cpp and web_data.cpp.
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -192,6 +195,8 @@ BUGS FIXED:
 * Failure to save database would lead to loss of one backup each,
   eventually leading to total data loss. Fixed. (suffered and analyzed by 
   Christian Hammers) [done]
+* Fixed loading of databases with non-unique playlist names. 
+  (encountered by dsailer) [done]
 
 0.93 --------------------------------------------------------------------------
 
