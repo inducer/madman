@@ -123,6 +123,11 @@ void tPlayerFacade::clearPlaylist()
 {
   if (Backend.get()) Backend->clearPlaylist();
 }
+bool tPlayerFacade::canGetValidStatus()
+{
+  if (Backend.get()) return Backend->canGetValidStatus();
+  else return false;
+}
 bool tPlayerFacade::isPlaying()
 {
   if (Backend.get()) return Backend->isPlaying();
@@ -197,6 +202,7 @@ tPlayer *createPlayer(QString const &name)
   }
   else
     return NULL;
+}
 
 
 
@@ -211,4 +217,3 @@ tPlayer *createPlayer(QString const &name)
 // c-basic-offset: 2
 // tab-width: 8
 // End:
-}

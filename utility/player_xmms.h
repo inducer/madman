@@ -75,6 +75,10 @@ class tXMMSPlayer : public tPlayer
     tFilename currentFilename();
     QString currentTitle();
 
+    bool canGetValidStatus()
+      {
+	return xmms_remote_is_running(Session);
+      }
     bool isPlaying()
       {
 	return xmms_remote_is_playing(Session);

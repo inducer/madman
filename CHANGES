@@ -83,6 +83,7 @@ future ------------------------------------------------------------------------
   (sugg. by Michael Bueker)
 * Mood and tempo extraction from songs?
 + ~duration
++ Integrate MPD (musicpd.org)
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -123,7 +124,6 @@ future ------------------------------------------------------------------------
 * Locking. (sugg. by Christian Hammers)
 + %title_or_filename% (sugg. by Kyoshiro)
 * passive popup ending up blank?
-* Make sure XMMS doesn't get started automatically.
 * Fix flow of control for setFieldText to not rely on exceptions.
 * Mood/CustomN/... reflection in songs?
 
@@ -219,6 +219,7 @@ BUGS FIXED:
 + Added tPlayer::getPlayListLength and implementations to simplify 
   AutoDJ process.
 * Fixed a crash when trying to edit a tag and no song is selected.
+* Make sure XMMS doesn't get started automatically. [done]
 
 0.93 --------------------------------------------------------------------------
 

@@ -871,7 +871,6 @@ void tMainWindow::doAutoDJ()
 
 void tMainWindow::clearPlaylist()
 {
-  actionPlaybackEnableAutoDJ->setOn(false);
   ProgramBase.preferences().Player.clearPlaylist();
 }
 
@@ -2038,9 +2037,10 @@ void tMainWindow::updateCurrentSongInfo()
 
 void tMainWindow::doContinuousAutoDJ()
 {
-  if (EnableAutoDJ)
+  tPlayer &player = ProgramBase.preferences().Player;
+
+  if (EnableAutoDJ && player.canGetValidStatus())
   {
-    tPlayer &player = ProgramBase.preferences().Player;
     while (true)
     {
       int playlist_index = player.getPlayListIndex();
