@@ -120,6 +120,7 @@ void tPreferences::save(QSettings &settings)
   WRITE_BOOL("show_next_song_info", ShowNextSongInfo);
 
   settings.writeEntry("/madman/passive_popup_mode", (int) PassivePopupMode);
+  settings.writeEntry("/madman/passive_popup_timeout", (int) PassivePopupTimeout);
   settings.writeEntry("/madman/number_of_backups_kept", BackupCount);
 
   WRITE_BOOL("http_daemon_enabled", HttpDaemonEnabled);
@@ -201,8 +202,10 @@ void tPreferences::load(QSettings &settings)
   READ_BOOL("show_previous_song_info", ShowPreviousSongInfo, 0);
   READ_BOOL("show_next_song_info", ShowNextSongInfo, 0);
 
-  PassivePopupMode = (tPassivePopupMode) \
+  PassivePopupMode = (tPassivePopupMode)
     settings.readNumEntry("/madman/passive_popup_mode", (int) POPUP_TOP_CENTER);
+  PassivePopupTimeout = 
+    settings.readNumEntry("/madman/passive_popup_timeout", 7500);
    
   BackupCount = settings.readNumEntry("/madman/number_of_backups_kept", 4);
 

@@ -99,44 +99,45 @@ struct tSortingPreferences
 
 struct tPreferences
 {
-  bool RememberGeometry;
-  bool ScanAtStartup;
-  bool CollectHistory;
-  bool EnableSystemTrayIcon;
-  bool MinimizeToSystemTray;
-  bool ShowPreviousSongInfo, ShowNextSongInfo;
+    bool RememberGeometry;
+    bool ScanAtStartup;
+    bool CollectHistory;
+    bool EnableSystemTrayIcon;
+    bool MinimizeToSystemTray;
+    bool ShowPreviousSongInfo, ShowNextSongInfo;
+    
+    tPassivePopupMode PassivePopupMode;
+    unsigned PassivePopupTimeout;
 
-  tPassivePopupMode PassivePopupMode;
+    int BackupCount;
+    
+    tPlayerFacade Player;
+    tDirectoryList PluginDirectories;
+    
+    bool HttpDaemonEnabled;
+    int HttpDaemonPort;
+    bool HttpDownloadsEnabled;
+    bool HttpScriptingEnabled;
+    bool HttpWriteScriptingEnabled;
+    bool HttpLocalPlayEnabled;
+    bool HttpBrowsingEnabled;
+    bool HttpRestrictToLocalhost;
 
-  int BackupCount;
+    QString TrayTooltipFormat, PassivePopupFormat, 
+      CaptionFormat, PlaylistMenuFormat;
+    
+    tAutoDJPreferences AutoDJPreferences;
+    
+    tSortingPreferences SortingPreferences;
+    
+    tID3ReadPreference ID3ReadPreference;
+    
+    QStringList TaglessExtensions;
+    
+    void save(QSettings &settings);
+    void load(QSettings &settings);
 
-  tPlayerFacade Player;
-  tDirectoryList PluginDirectories;
-
-  bool HttpDaemonEnabled;
-  int HttpDaemonPort;
-  bool HttpDownloadsEnabled;
-  bool HttpScriptingEnabled;
-  bool HttpWriteScriptingEnabled;
-  bool HttpLocalPlayEnabled;
-  bool HttpBrowsingEnabled;
-  bool HttpRestrictToLocalhost;
-
-  QString TrayTooltipFormat, PassivePopupFormat, 
-    CaptionFormat, PlaylistMenuFormat;
-
-  tAutoDJPreferences AutoDJPreferences;
-
-  tSortingPreferences SortingPreferences;
-
-  tID3ReadPreference ID3ReadPreference;
-
-  QStringList TaglessExtensions;
-
-  void save(QSettings &settings);
-  void load(QSettings &settings);
-
-  void setPlayer(tPlayer *newplayer);
+    void setPlayer(tPlayer *newplayer);
 };
 
 

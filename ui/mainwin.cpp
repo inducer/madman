@@ -1997,7 +1997,7 @@ void tMainWindow::showSongPopup()
     substituteSongFields(
       ProgramBase.preferences().PassivePopupFormat, 
       current, true), 
-    7500);
+    ProgramBase.preferences().PassivePopupTimeout);
 
   if (pp)
   {

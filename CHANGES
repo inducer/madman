@@ -84,9 +84,7 @@ future ------------------------------------------------------------------------
 * Mood and tempo extraction from songs?
 + ~duration
 + Integrate MPD (musicpd.org)
-
-Patch credits (if not mentioned above): 
-- Benjamin Montgomery <bmontgom@gmail.com>
+* Mood/CustomN/... reflection in songs?
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -118,9 +116,6 @@ Patch credits (if not mentioned above):
 + %title_or_filename% (sugg. by Kyoshiro)
 * passive popup ending up blank?
 * Fix flow of control for setFieldText to not rely on exceptions.
-* Mood/CustomN/... reflection in songs?
-+ Customize time for song popup. (sugg. by Dave Sailer)
-  (via .rc)
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -229,6 +224,11 @@ BUGS FIXED:
 * Fixed GNOME 2 docking. (i.e. imported new Psi tray code)
   [done]
 * Mousewheel on tray icon allows forward/back. [done]
++ Customize time for song popup. (sugg. by Dave Sailer)
+  (via .rc) [done]
+
+Patch credits (if not mentioned above): 
+- Benjamin Montgomery <bmontgom@gmail.com>
 
 0.93 --------------------------------------------------------------------------
 
