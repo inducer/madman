@@ -302,6 +302,7 @@ if env[ 'my_cxx' ] != "not specified":
   env.Replace(CXX = env[ 'my_cxx' ])
 
 if env["maintainer_mode"]:
+  builddir_name = ",build/maintmode"
   print "*** NOTICE *** Enabling maintainer mode."
 
   madman_sources = []
@@ -313,6 +314,7 @@ if env["maintainer_mode"]:
   env["CXXFLAGS"] += " -fmessage-length=0 -g -Wall"
   env["CPPDEFINES"].append(("MADMAN_DEBUG", "1"))
 else:
+  builddir_name = ",build/release"
   env[ "CPPDEFINES"].append(("NDEBUG", "1"))
 
 if env["with_m4a"]:
@@ -327,4 +329,4 @@ env.Alias("install", "$install_to/lib/madman/plugins")
 
 for dir in ["expat", "utility", "database", "httpd", "designer",
             "ui", "main"]:
-  SConscript("%s/SConscript" % dir, build_dir = ",,build/%s" % dir, duplicate = 0)
+  SConscript("%s/SConscript" % dir, build_dir = "%s/%s" % (builddir_name, dir), duplicate = 0)

@@ -110,7 +110,7 @@ Here's how it works:
 
    If you'd like, you can test your madman build by saying
 
-   ,,build/main/madman
+   ,build/release/main/madman
 
    madman will run just fine from the build directory, it may however be unable to find
    its plugins, which have not been installed yet.
