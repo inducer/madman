@@ -127,6 +127,9 @@ future ------------------------------------------------------------------------
 * See why AutoDJ was wrong with multiple selections from the same score set.
 * Directory sort order in overview path tree.
 * Click on /mnt/win_c yields /mnt/win_c//.
+* Locking. (sugg. by Christian Hammers)
+* gcc 3.4 compatibility. (sugg. by Shawn Sharpe)
+* Big "play all" button. (sugg by "Mozai" and many others)
 
 MAJOR CHANGES:
 * Playlist management button. [done]

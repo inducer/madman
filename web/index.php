@@ -23,7 +23,7 @@
 
   <b>Join the madman community.</b><br>
   List: <a href="mailto:madman-discuss@lists.sourceforge.net">madman-discuss@lists.sourceforge.net</a>,
-  click <a href="http://lists.sourceforge.net/lists/listinfo/madman-discuss">here</a> to sign up.<br>
+  click <a href="list.php">here</a> for information.<br>
   <a href="http://freshmeat.net/subscribe/35497">Get notified</a> when new releases
   of madman come out.
 
