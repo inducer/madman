@@ -1431,6 +1431,7 @@ void tMainWindow::followCurrentSongLink(const QString &href)
 
     lstAllSongs->setFocus();
     SearchViewManager.highlightCurrentSong();
+    checkHideLists->setChecked(FALSE);
   }
   else if (href == "artist" && current_song)
     item_to_select = findItemInOverview(lstOverview,
@@ -1445,6 +1446,7 @@ void tMainWindow::followCurrentSongLink(const QString &href)
     lstOverview->setCurrentItem(item_to_select);
     if (editSearch->text() != item_to_select->criterion())
       editSearch->setText(item_to_select->criterion());
+    checkHideLists->setChecked(FALSE);
   }
 }
 

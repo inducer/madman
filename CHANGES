@@ -85,6 +85,9 @@ future ------------------------------------------------------------------------
 + ~duration
 + Integrate MPD (musicpd.org)
 
+Patch credits (if not mentioned above): 
+- Benjamin Montgomery <bmontgom@gmail.com>
+
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
   (document on web site)
