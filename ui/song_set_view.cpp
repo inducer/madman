@@ -345,7 +345,10 @@ void tSongListView::highlightSong(tSong *song)
 {
   tSongList::iterator it = ::find(SongList.begin(), SongList.end(), song);
   if (it != SongList.end())
+  {
+    clearSelection();
     setCurrentCell(it - SongList.begin(), currentColumn());
+  }
 }
 
 

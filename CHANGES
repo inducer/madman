@@ -110,7 +110,6 @@ Patch credits (if not mentioned above):
 * Mousewheel on tray icon allows forward/back.
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
-* Highlight current song leaves another marked song also selected.
 * Continuous AutoDJ from any source.
   (sugg. by Johan Forsberg)
 * Show count after letter in overview.
@@ -226,7 +225,9 @@ BUGS FIXED:
   (patch by Benjamin Montgomery <bmontgom@gmail.com>)
 * Fixed a few remote bugs. ("patch" by David Blackman)
 * Fixed file name encoding problems, including the ones
-  involving plugins.
+  involving plugins. [done]
+* Fixed: Highlight current song leaves another marked song 
+  also selected. [done]
 
 0.93 --------------------------------------------------------------------------
 
