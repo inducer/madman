@@ -219,6 +219,7 @@ BUGS FIXED:
   when XMMS would return an unexpected NULL.
 + Added tPlayer::getPlayListLength and implementations to simplify 
   AutoDJ process.
+* Fixed a crash when trying to edit a tag and no song is selected.
 
 0.93 --------------------------------------------------------------------------
 

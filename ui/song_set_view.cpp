@@ -573,8 +573,12 @@ void tSongListView::clearCellWidget(int r, int c)
 
 QWidget *tSongListView::createEditor (int row, int col, bool initFromCell) const
 {
-  tSongField field = (tSongField) ColumnToField[ col ];
-  tSong *song = SongList[ row ];
+  // This does happen. Poo on Qt.
+  if (row < 0 || row >= int(SongList.size()))
+    return NULL;
+
+  tSongField field = (tSongField) ColumnToField[col];
+  tSong *song = SongList[row];
 
   if (field == FIELD_ARTIST || 
       field == FIELD_PERFORMER || 
