@@ -55,7 +55,9 @@ tDirectoryList &tDirectoryListManager::directoryList()
 
 void tDirectoryListManager::add()
 {
-  QString dir = QFileDialog::getExistingDirectory(QString::null, Parent, tr("Add Directory"));
+  QString dir = QFileDialog::getExistingDirectory(QString::null, 
+                                                  Parent, tr("Add Directory"),
+                                                  NULL, true, false);
   if (dir == QString::null)
     return;
   DirectoryList.push_back((const char *) dir.utf8());

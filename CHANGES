@@ -161,6 +161,8 @@ MINOR IMPROVEMENTS:
 * Play button usability:
   If XMMS is not running or the playlist is empty, nothing happens in response to 
   the play button. [done]
+* Don't resolve symlinks for media directories.
+  (sugg. by Kyle Liddell) [done]
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
