@@ -96,7 +96,6 @@ future ------------------------------------------------------------------------
 * Add AutoDJ presets versioning.
 
 * Fixed GNOME 2 docking.
-* Bo Flower Track Number order.
 * Revived l10n.
 * Track order for playing albums. (from overview and play like songs)
 
@@ -112,8 +111,7 @@ future ------------------------------------------------------------------------
 
 * Extended characters in filenames?
   Passing of ext. character filenames to plugins? (?? instead of char)
-* Problems with doubly drawn list content
-* Fixed BadMatch X errors.
+* Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Highlight current song leaves another marked song also selected.
 * Fix annoyance with clicking artist link twice.
 * Continuous AutoDJ from any source.
@@ -124,11 +122,9 @@ future ------------------------------------------------------------------------
 * Save database after web server is done. (sugg. by Brian Lopes)
 * See why AutoDJ was wrong with multiple selections from the same score set.
 * Locking. (sugg. by Christian Hammers)
-* gcc 3.4 compatibility. (sugg. by Shawn Sharpe)
 + %title_or_filename% (sugg. by Kyoshiro)
 * passive popup ending up blank?
 * Make sure XMMS doesn't get started automatically.
-+ Add a better diagnostic for expat errors, including line number.
 * Fix flow of control for setFieldText to not rely on exceptions.
 * Mood/CustomN/... reflection in songs?
 
@@ -168,6 +164,8 @@ MINOR IMPROVEMENTS:
 + Big "play all" button. (sugg by "Mozai" and many others) [done]
 + Allow immediate play of first song in search result from search line by
   Enter, f9, f10, f11. (sugg. by Hendrik Wouters) [done]
++ Add a better diagnostic for expat errors, including line number.
+  [done]
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.

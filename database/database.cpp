@@ -438,8 +438,11 @@ void tDatabase::load(const QString &filename, tProgress *progress)
       Q_LONG read_bytes = dbfile.readBlock(buffer, sizeof(buffer));
       if (XML_Parse(parser, buffer, read_bytes, dbfile.atEnd()) == 0)
       {
-	throw tRuntimeError(QString("expat: %1").arg(
-	      QString::fromUtf8(XML_ErrorString(XML_GetErrorCode(parser)))));
+	throw tRuntimeError(tr("Error in XML Parser: %1 - line %2")
+                            .arg(QString::fromUtf8(
+                                   XML_ErrorString(
+                                     XML_GetErrorCode(parser))))
+                            .arg(XML_GetCurrentLineNumber(parser)));
       }
     }
 
