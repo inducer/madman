@@ -58,6 +58,7 @@ class tXMMSPlayer : public tPlayer
     void setPlayList(tSongList const &songlist);
     void getPlayList(vector<tFilename> &songs);
     int getPlayListIndex();
+    unsigned getPlayListLength();
     void setPlayListIndex(int index)
       {
 	xmms_remote_set_playlist_pos(Session, index);

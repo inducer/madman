@@ -133,7 +133,11 @@ void tXMMSPlayer::getPlayList(vector<tFilename> &songs)
 
   int length = xmms_remote_get_playlist_length(Session);
   for (int i = 0; i < length; i++)
-    songs.push_back(xmms_remote_get_playlist_file(Session, i));
+  {
+    char *song = xmms_remote_get_playlist_file(Session, i);
+    if (song)
+      songs.push_back(song);
+  }
 }
 
 
@@ -146,6 +150,18 @@ int tXMMSPlayer::getPlayListIndex()
     return playlist_pos;
   else
     return -1;
+}
+
+
+
+
+unsigned tXMMSPlayer::getPlayListLength()
+{
+  gint len = xmms_remote_get_playlist_length(Session);
+  if (len < 0)
+    throw tRuntimeError(tr("Error getting playlist length, negative value from XMMS"));
+  else
+    return (unsigned) len;
 }
 
 

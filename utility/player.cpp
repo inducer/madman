@@ -106,6 +106,11 @@ int tPlayerFacade::getPlayListIndex()
   if (Backend.get()) return Backend->getPlayListIndex();
   else return -1;
 }
+unsigned tPlayerFacade::getPlayListLength()
+{
+  if (Backend.get()) return Backend->getPlayListLength();
+  else return 0;
+}
 void tPlayerFacade::setPlayListIndex(int index)
 {
   if (Backend.get()) Backend->setPlayListIndex(index);

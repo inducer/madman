@@ -2044,12 +2044,10 @@ void tMainWindow::doContinuousAutoDJ()
     while (true)
     {
       int playlist_index = player.getPlayListIndex();
+      unsigned playlist_length = player.getPlayListLength();
       
-      vector<tFilename> plist;
-      player.getPlayList(plist);
-
       int songs_needed = 6;
-      int have_songs = plist.size() - playlist_index;
+      int have_songs = playlist_length - playlist_index;
       if (have_songs >= songs_needed)
         break;
       songs_needed -= have_songs;

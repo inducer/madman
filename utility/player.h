@@ -43,6 +43,7 @@ class tPlayer : public QObject
     virtual QString currentTitle() = 0;
     virtual void getPlayList(vector<tFilename> &songs) = 0;
     virtual int getPlayListIndex() = 0;
+    virtual unsigned getPlayListLength() = 0;
     virtual void setPlayListIndex(int index) = 0;
     virtual void removePlayListIndex(int index) = 0;
     virtual void clearPlaylist() = 0;
@@ -85,6 +86,7 @@ class tPlayerFacade : public tPlayer
     QString currentTitle();
     void getPlayList(vector<tFilename> &songs);
     int getPlayListIndex();
+    unsigned getPlayListLength();
     void setPlayListIndex(int index);
     void removePlayListIndex(int index);
     void clearPlaylist();

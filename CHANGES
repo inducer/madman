@@ -82,6 +82,7 @@ future ------------------------------------------------------------------------
 + Grouping threshold in overview -> don't show group below 3 entries. 
   (sugg. by Michael Bueker)
 * Mood and tempo extraction from songs?
++ ~duration
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -127,6 +128,9 @@ future ------------------------------------------------------------------------
 + %title_or_filename% (sugg. by Kyoshiro)
 * passive popup ending up blank?
 * Make sure XMMS doesn't get started automatically.
++ Add a better diagnostic for expat errors, including line number.
+* Fix flow of control for setFieldText to not rely on exceptions.
+* Mood/CustomN/... reflection in songs?
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -211,6 +215,10 @@ BUGS FIXED:
 * Made the main window use a stock icon, using proper alpha channel. [done]
 * Fixed out-of-order insertion for Ctrl-A-marked selections. [done]
 * Play albums in the right order. (Joshua Hutchins) [done]
+* Fixed potential crash in tXMMSPlayer::getPlayList,
+  when XMMS would return an unexpected NULL.
++ Added tPlayer::getPlayListLength and implementations to simplify 
+  AutoDJ process.
 
 0.93 --------------------------------------------------------------------------
 
