@@ -672,4 +672,4 @@ void showAutoTagger(QWidget *parent, const tSongList &songs, tDatabase &database
 // c-basic-offset: 2
 // tab-width: 8
 // End:
-#include "auto_tag.moc"
+#include "ui/auto_tag.moc"

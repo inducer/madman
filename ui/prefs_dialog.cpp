@@ -611,4 +611,4 @@ pair<bool,bool> editPreferences(tMainWindow *mainwin, tPreferences &prefs,
 // c-basic-offset: 2
 // tab-width: 8
 // End:
-#include "prefs_dialog.moc"
+#include "ui/prefs_dialog.moc"

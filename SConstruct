@@ -317,4 +317,4 @@ env.Alias("install", "$install_to/lib/madman/plugins")
 
 for dir in ["expat", "utility", "database", "httpd", "designer",
             "ui", "main"]:
-  SConscript("%s/SConscript" % dir, build_dir = ",,build/%s" % dir)
+  SConscript("%s/SConscript" % dir, build_dir = ",,build/%s" % dir, duplicate = 0)

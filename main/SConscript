@@ -6,6 +6,7 @@ myenv = env.Copy()
 myenv.Tool("qt")
 
 myenv.Append(CPPPATH = "#")
+myenv.Append(CPPPATH = "..")
 
 for i in [ "XMMS", "GLIB", "TAGLIB" ]:
   myenv.Append(LIBS = myenv[ "%s_LIBS" % i ])
@@ -17,7 +18,7 @@ if myenv[ 'with_m4a' ]:
   myenv.Append(LIBS = 'mp4v2')
 
 for component in [ "ui", "designer", "ui", "httpd",  "database", "expat", "utility" ]:
-  myenv.Append(LIBPATH = os.path.join("#", component))
+  myenv.Append(LIBPATH = "../"+component)
   myenv.Append(LIBS = "madman" + component)
 
 myenv.Replace(QT_LIB = myenv["QT_LIBRARY_NAME"])

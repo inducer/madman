@@ -3,6 +3,7 @@ myenv = env.Copy()
 myenv.Tool( "qt" )
 
 myenv.Append( CPPPATH = "#" )
+myenv.Append( CPPPATH = ".." )
 myenv.Append( CPPPATH = myenv[ 'QT_CPPPATH' ] )
 myenv.Append( CPPPATH = myenv[ 'GLIB_CPPPATH' ] )
 
