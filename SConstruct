@@ -122,7 +122,7 @@ def SplitLibs(lstring):
 def CheckForQtAt(context, qtdir, variant, libdir):
   context.Message("Checking for %s at %s (with %s) " % (variant, qtdir, libdir))
   result = AttemptLinkWithVariables(context,
-      { "LIBS": variant, "LIBPATH": libdir, 
+      { "LIBS": variant, "LIBPATH": qtdir+"/"+libdir, 
         "CPPPATH": qtdir + '/include' },
                                     """
                                     #include <qapplication.h>
@@ -152,12 +152,12 @@ def CheckForQt(context):
   if env[ 'qt_directory' ] != "not specified":
     potential_qt_dirs.insert(0, env[ 'qt_directory' ])
 
-  for libdir in ["$QTDIR/lib", "$QTDIR/lib64"]:
+  for libdir in ["lib", "lib64"]:
     for qtdir in potential_qt_dirs:
       for variant in ["qt", "qt-mt"]:
         if CheckForQtAt(context, qtdir, variant, libdir):
           context.env.Replace(QTDIR = qtdir)
-          context.env.Replace(QT_LIBPATH = libdir)
+          context.env.Replace(QT_LIBPATH = qtdir + "/" + libdir)
           context.env.Replace(QT_LIBRARY_NAME = variant)
           return 1
   return 0
