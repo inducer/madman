@@ -111,18 +111,22 @@ future ------------------------------------------------------------------------
 * Play albums in the right order. (Joshua Hutchins)
 * Extended characters in filenames?
   Passing of ext. character filenames to plugins? (?? instead of char)
-* Ctrl-A, F9 messes up order
 * Problems with doubly drawn list content
 * Fixed BadMatch X errors.
 * Mood and tempo extraction from songs?
-* Remember whether AutoDJ was enabled across runs.
 * Highlight current song leaves another marked song also selected.
 * Fix annoyance with clicking artist link twice.
 * Continuous AutoDJ from any source.
+  (sugg. by Johan Forsberg)
 * Show count after letter in overview.
-* sort fields filled with random data?
 * Allow immediate play of first song in search result from search line by
   Enter, f9, f10, f11. (sugg. by Hendrik Wouters)
+* Avoid automatic window resize on very long song titles.
+  (sugg. by Johan Forsberg)
+* Save database after web server is done. (sugg. by Brian Lopes)
+* See why AutoDJ was wrong with multiple selections from the same score set.
+* Directory sort order in overview path tree.
+* Click on /mnt/win_c yields /mnt/win_c//.
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -202,6 +206,7 @@ BUGS FIXED:
 * Fixed generation of image_data.cpp and web_data.cpp. [done]
 * Fix AutoDJ score generation. (Shawn, patch-5) [done]
 * Made the main window use a stock icon, using proper alpha channel. [done]
+* Fixed out-of-order insertion for Ctrl-A-marked selections. [done]
 
 0.93 --------------------------------------------------------------------------
 

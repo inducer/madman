@@ -1237,6 +1237,7 @@ void tSongSetViewManager::highlightCurrentSong()
 
 void tSongSetViewManager::selectAll()
 {
+  ListView.clearSelection(false);
   ListView.selectCells(0, 0, ListView.numRows(), ListView.numCols());
 }
 
