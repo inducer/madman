@@ -50,7 +50,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qapplication.h>
 
 #ifdef WITH_M4A 
-#include <mp4.h>
+#define USE_TAGGING
+#include <mp4ff.h>
+#include <faad.h>
+#include <fcntl.h>
 #endif
 
 
@@ -1855,57 +1858,170 @@ class tM4ASong : public tSong
 
 
 
+//
+//  C callbacks for metadata reading 
+//
+uint32_t md_read_callback(void *user_data, void *buffer, uint32_t length)
+{
+  mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
+  return fread(buffer, 1, length, file_data->file);
+}
+
+
+
+
+uint32_t md_write_callback(void *user_data, void *buffer, uint32_t length)
+{
+  mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
+  return fwrite(buffer, 1, length, file_data->file);
+}
+
+
+
+
+uint32_t md_truncate_callback(void *user_data) 
+{
+  mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
+  ftruncate(file_data->fd, ftello(file_data->file));
+  return 0;
+}
+
+
+
+
+uint32_t md_seek_callback(void *user_data, uint64_t position)
+{
+  mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
+  return fseek(file_data->file, position, SEEK_SET);
+}
+
+
+int GetAACTrack(mp4ff_t *infile)
+{
+  /* find AAC track */
+  unsigned int i, rc;
+  int numTracks = mp4ff_total_tracks(infile);
+  for (i = 0; i < numTracks; i++)
+  {
+    unsigned char *buff = NULL;
+    unsigned int buff_size = 0;
+    mp4AudioSpecificConfig mp4ASC;
+    mp4ff_get_decoder_config(infile, i, &buff, &buff_size);
+    if (buff)
+    {
+      rc = AudioSpecificConfig(buff, buff_size, &mp4ASC);
+      free(buff);
+      if (rc < 0)
+        return -1;
+      return i;
+    }      
+  }
+  /* can"t decode this */
+  return -1;
+}
+
+
+
+
 void tM4ASong::readInfo() const
 {
-  char * tag_string = NULL;
-  u_int16_t track = 0, total = 0;
+  mp4ff_t *infile;
+  char *tag_string=NULL;
+  char *tag_item=NULL;
+  mp4ff_callback_t *mp4cb;
+  unsigned char *buffer;
+  unsigned int buffer_size;
+  mp4AudioSpecificConfig mp4ASC;
+  int track = 0;
   
-  MP4FileHandle mp4_file  = MP4Read(filename().c_str());
-  MP4Duration duration = 0;
+  mp4callback_data_t callback_data;
+  callback_data.fd = open(filename().c_str(), O_RDWR);
+  if (callback_data.fd < 0) {
+    return ;
+  }
+     
+  callback_data.file = fdopen(callback_data.fd, "r+");
+  if (!callback_data.file)
+  {
+    close(callback_data.fd);
+    return ;
+  }
   
-  MP4GetMetadataName(mp4_file,&tag_string);
-  assignAndCheckForModification(this, SongCollection, 
-          			const_cast<tM4ASong *>(this)->Title, 
-				QString::fromUtf8(tag_string), FIELD_TITLE);
-
-  MP4GetMetadataArtist(mp4_file,&tag_string);
+  mp4cb = (mp4ff_callback_t *) malloc(sizeof(mp4ff_callback_t)); 
+  mp4cb->read = md_read_callback;
+  mp4cb->seek = md_seek_callback;
+  mp4cb->user_data = &callback_data;
+      
+  infile = mp4ff_open_read(mp4cb);
+  mp4ff_meta_get_title(infile,&tag_string);
   assignAndCheckForModification(this, SongCollection,
-                                const_cast<tM4ASong *>(this)->Artist, 
-				QString::fromUtf8(tag_string), FIELD_ARTIST);
-								    
-  MP4GetMetadataAlbum(mp4_file,&tag_string);
-  assignAndCheckForModification(this, SongCollection,
-                                const_cast<tM4ASong *>(this)->Album, 
-  			        QString::fromUtf8(tag_string), FIELD_ALBUM);
-  
-  MP4GetMetadataYear(mp4_file,&tag_string);
-  assignAndCheckForModification(this, SongCollection,
-                                const_cast<tM4ASong *>(this)->Year, 
-				QString::fromUtf8(tag_string), FIELD_YEAR);
-  
-  MP4GetMetadataGenre(mp4_file,&tag_string);
-  assignAndCheckForModification(this, SongCollection,
-                                const_cast<tM4ASong *>(this)->Genre, 
-				QString::fromUtf8(tag_string), FIELD_GENRE);
-
-  MP4GetMetadataTrack(mp4_file,&track,&total);
-  assignAndCheckForModification(this, SongCollection,
-                                const_cast<tM4ASong *>(this)->TrackNumber, 
-				QString::number(track), FIELD_TRACKNUMBER);
-
-  int timeScale = MP4GetTimeScale(mp4_file); 
-
-  if(timeScale!=0)
-    duration = MP4GetDuration(mp4_file)/timeScale;
+        const_cast<tM4ASong *>(this)->Title,
+        QString::fromUtf8(tag_string), FIELD_TITLE);
  
+  mp4ff_meta_get_artist(infile,&tag_string);
   assignAndCheckForModification(this, SongCollection,
-                                const_cast<tM4ASong *>(this)->Duration,
-				duration, FIELD_DURATION);
+        const_cast<tM4ASong *>(this)->Artist,
+        QString::fromUtf8(tag_string), FIELD_ARTIST);
+      
+  mp4ff_meta_get_album(infile,&tag_string);
+  assignAndCheckForModification(this, SongCollection, 
+        const_cast<tM4ASong *>(this)->Album,
+       QString::fromUtf8(tag_string), FIELD_ALBUM);                                                                              
+           
+  mp4ff_meta_get_track(infile,&tag_string);
+  assignAndCheckForModification(this, SongCollection,
+        const_cast<tM4ASong *>(this)->TrackNumber,
+        QString::fromUtf8(tag_string), FIELD_TRACKNUMBER);
+       
+  mp4ff_meta_get_genre(infile,&tag_string);
+  assignAndCheckForModification(this, SongCollection,
+        const_cast<tM4ASong *>(this)->Genre,
+        QString::fromUtf8(tag_string), FIELD_GENRE);
+       
+  mp4ff_meta_get_date(infile,&tag_string);
+  assignAndCheckForModification(this, SongCollection,
+        const_cast<tM4ASong *>(this)->Year,
+        QString::fromUtf8(tag_string), FIELD_YEAR);
+                               
+  if ((track = GetAACTrack(infile)) < 0)
+  {
+
+    mp4ff_close(infile);
+    free(mp4cb);
+    close(callback_data.fd);
+    fclose(callback_data.file);
+
+    return;
+  }
+
+  buffer = NULL;
+  buffer_size = 0;
+  mp4ff_get_decoder_config(infile, track, &buffer, &buffer_size);
+  if (buffer)
+  {
+    AudioSpecificConfig(buffer, buffer_size, &mp4ASC);
+    free(buffer);
+  }
+  long samples = mp4ff_num_samples(infile,track);
+  float f = 1024.0;
+  float seconds;
+  if ((mp4ASC.sbr_present_flag == 1) || mp4ASC.forceUpSampling)
+  {
+    f = f * 2.0;
+  }
+  seconds = (float)samples*(float)(f-1.0)/(float)mp4ASC.samplingFrequency;
+  assignAndCheckForModification(this, SongCollection,
+       const_cast<tM4ASong *>(this)->Duration,
+       seconds, FIELD_DURATION);
  
   free(tag_string);
-  MP4Close(mp4_file);
-  
+  mp4ff_close(infile);
+  free(mp4cb);
+  close(callback_data.fd);
+  fclose(callback_data.file);
+
   tSong::readInfo();
+
 }
 
 
@@ -1921,38 +2037,103 @@ void  tM4ASong::setFieldText(tSongField field, QString const &value)
   {
   }
 
-  MP4FileHandle mp4_file = MP4Modify(filename().c_str(),0/*MP4_DETAILS_ALL*/,0);
-  
-  if(mp4_file == MP4_INVALID_FILE_HANDLE){
-    printf("Failed to open MP4 file for writing!\n");
-    return;
-  }
 
+   mp4callback_data_t callback_data;
 
+    callback_data.fd = open(filename().c_str(), O_RDWR);
+    if (callback_data.fd < 0) {
+        return ;
+    }
+     
+    callback_data.file = fdopen(callback_data.fd, "r+");
+    if (!callback_data.file)
+    {
+        close(callback_data.fd);
+        return ;
+    }
 
-  switch(field)
-  {
-    case FIELD_TITLE:
-      MP4SetMetadataName(mp4_file,value);
-      break;
-    case FIELD_ARTIST:
-      MP4SetMetadataArtist(mp4_file,value);
-      break;
-    case FIELD_ALBUM:
-      MP4SetMetadataAlbum(mp4_file,value);
-      break;
-    case FIELD_YEAR:
-      MP4SetMetadataYear(mp4_file,value);
-      break;
-    case FIELD_GENRE:
-      MP4SetMetadataGenre(mp4_file,value);
-      break;
-    case FIELD_TRACKNUMBER:       
-      MP4SetMetadataTrack(mp4_file,(unsigned)value.toShort(),0);
-      break;
-  }
-  MP4Close(mp4_file);
-  readInfo();
+    //
+    //  Create the callback structure
+    //
+
+    mp4ff_callback_t *mp4_cb = (mp4ff_callback_t*) malloc(sizeof(mp4ff_callback_t));
+    if (!mp4_cb) {
+      close(callback_data.fd);
+      fclose(callback_data.file);
+      return;
+    }
+    mp4_cb->read = md_read_callback;
+    mp4_cb->seek = md_seek_callback;
+    mp4_cb->write = md_write_callback;
+    mp4_cb->truncate = md_truncate_callback;
+    mp4_cb->user_data = &callback_data;
+
+    mp4ff_metadata_t * mp4ff_mdata = (mp4ff_metadata_t *)malloc(sizeof(mp4ff_metadata_t));
+    if (!mp4ff_mdata) {
+      free(mp4_cb);
+      close(callback_data.fd);
+      fclose(callback_data.file);
+      return;
+    }
+    mp4ff_mdata->tags = (mp4ff_tag_t*)malloc(7 * sizeof(mp4ff_tag_t));
+    if (!mp4ff_mdata) {
+      free(mp4_cb);
+      free(mp4ff_mdata);
+      close(callback_data.fd);
+      fclose(callback_data.file);
+      return ;
+    }
+
+    //
+    //  Open the mp4 input file  
+    //                   
+
+    mp4ff_t *mp4_ifile = mp4ff_open_read(mp4_cb);
+    if (!mp4_ifile)
+    {
+        free(mp4_cb);
+        free(mp4ff_mdata);
+        close(callback_data.fd);
+        fclose(callback_data.file);
+        return ;
+    } 
+    
+    mp4ff_mdata->tags[0].item = "artist";
+    mp4ff_mdata->tags[0].value = strdup((char*)(FIELD_ARTIST == field ? value.ascii() : artist().ascii()));
+
+    mp4ff_mdata->tags[1].item = "album";
+    mp4ff_mdata->tags[1].value = strdup((char*)(FIELD_ALBUM == field ? value.ascii() : album().ascii()));
+
+    mp4ff_mdata->tags[2].item = "title";
+    mp4ff_mdata->tags[2].value = strdup((char*)(FIELD_TITLE == field ? value.ascii() : title().ascii()));
+
+    mp4ff_mdata->tags[3].item = "genre";
+    mp4ff_mdata->tags[3].value = strdup((char*) (FIELD_GENRE == field ? value.ascii() : genre().ascii()));
+
+    mp4ff_mdata->tags[4].item = "date";
+    mp4ff_mdata->tags[4].value =  (char*)malloc(128);
+    snprintf(mp4ff_mdata->tags[4].value, 128, "%d",(FIELD_YEAR == field ? value.toUInt() : year().toUInt()));
+
+    mp4ff_mdata->tags[5].item = "track";
+    mp4ff_mdata->tags[5].value = (char*)malloc(128);
+    snprintf(mp4ff_mdata->tags[5].value, 128, "%d",  (FIELD_TRACKNUMBER == field ? value.toUInt() : trackNumber().toUInt()));
+
+    mp4ff_mdata->count =6;
+
+    for(int i=0;i<mp4ff_mdata->count;i++) if(strcmp(mp4ff_mdata->tags[i].value, "")==0) mp4ff_mdata->tags[i].value = "Unknown";
+    
+    mp4ff_meta_update(mp4_cb, mp4ff_mdata);
+    
+    mp4ff_close(mp4_ifile);
+    free(mp4_cb);
+    close(callback_data.fd);
+    fclose(callback_data.file);
+   
+
+    free(mp4ff_mdata->tags);
+    free(mp4ff_mdata);
+    readInfo();
+
 }
 
 
@@ -1960,9 +2141,7 @@ void  tM4ASong::setFieldText(tSongField field, QString const &value)
 
 void  tM4ASong::stripTagInternal()
 {
-  MP4FileHandle mp4_file = MP4Modify(filename().c_str());
-  MP4MetadataDelete(mp4_file);
-  MP4Close(mp4_file);
+
 }
 #endif
 

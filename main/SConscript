@@ -15,7 +15,8 @@ for i in [ "XMMS", "GLIB", "TAGLIB" ]:
 myenv.Append(LIBPATH = myenv["QT_LIBPATH"])
 
 if myenv[ 'with_m4a' ]:
-  myenv.Append(LIBS = 'mp4v2')
+  myenv.Append(LIBS = 'mp4ff')
+  myenv.Append(LIBS = 'faad')
 
 for component in [ "ui", "designer", "ui", "httpd",  "database", "expat", "utility" ]:
   myenv.Append(LIBPATH = "../"+component)

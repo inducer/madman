@@ -11,10 +11,12 @@ opts.Add("glib_config_program", "Path to glib-config", "not specified")
 opts.Add("taglib_include", "Include path for taglib", "/usr/include/taglib")
 opts.Add("taglib_library", "Library path for taglib", "not specified")
 
-opts.Add(BoolOption("with_m4a","Enable m4a support.  Requires mp4v2/faac",1))
-opts.Add("mp4_include", "Include path for mp4.h", "not specified")
-opts.Add("mp4_library", "Library path for mp4v2", "not specified")
-
+opts.Add(BoolOption("with_m4a","Enable m4a support.  Requires mp4ff/faad",1))
+opts.Add("mp4ff_include", "Include path for mp4ff.h", "not specified")
+opts.Add("mp4ff_library", "Library path for mp4ff", "not specified")
+opts.Add("faad_include", "Include path for faad.h", "not specified")
+opts.Add("faad_library", "Library path for faad", "not specified")
+  
 opts.Add("my_cc", "The C Compiler you want to use", "not specified")
 opts.Add("my_cxx", "The C++ Compiler you want to use", "not specified")
 
@@ -252,9 +254,11 @@ def CheckForGlib(context):
 # Check subroutines -----------------------------------------------------------
 def CheckForTagLib():
   return CheckForSimpleLibrary("taglib", "taglib.h", [ "tag", "z" ])
-def CheckForMP4V2(serious):
-  return CheckForSimpleLibrary("mp4","mp4.h",["mp4v2"], serious = serious)
-
+def CheckForMP4FF(serious):
+  return CheckForSimpleLibrary("mp4ff","mp4ff.h",["mp4ff"], serious = serious)
+def CheckForFAAD(serious):
+  return CheckForSimpleLibrary("faad","faad.h",["faad"], serious = serious)\
+  
 
 
 # Configure -------------------------------------------------------------------
@@ -281,7 +285,7 @@ if not CheckForTagLib():
   print "*********************************************************"
   Exit(1)
 
-if env["with_m4a"] and not CheckForMP4V2(serious = False):
+if env["with_m4a"] and not CheckForMP4FF(serious = False) and not CheckForFAAD(serious = False):
   print "*** WARNING *** Disabling m4a support."
   env["with_m4a"] = 0
 

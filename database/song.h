@@ -80,6 +80,16 @@ enum tSongField {
 
 
 
+//#ifdef WITH_M4A 
+typedef struct
+{
+  FILE* file;
+  int fd; //only used for truncating/writing.
+} mp4callback_data_t;
+//#endif
+
+
+
 const int GENRE_COUNT = 126;
 
 QString genreIdToString(int genre);
