@@ -1986,7 +1986,6 @@ void tMainWindow::doContinuousAutoDJ()
 {
   if (EnableAutoDJ)
   {
-    bool something_done = false;
     tPlayer &player = ProgramBase.preferences().Player;
     while (true)
     {
@@ -1995,22 +1994,17 @@ void tMainWindow::doContinuousAutoDJ()
       vector<tFilename> plist;
       player.getPlayList(plist);
 
-      if (playlist_index == -1 || plist.size() - playlist_index <= 5)
-      {
-	tSongList slist;
-	
-	int songsNeeded = 6;
-	if (plist.size() > 0)
-	  songsNeeded -= (plist.size() - playlist_index);
+      int songs_needed = 6;
+      int have_songs = plist.size() - playlist_index;
+      if (have_songs >= songs_needed)
+        break;
+      songs_needed -= have_songs;
 
-	ProgramBase.autoDJ().reEvaluateScores();
-	ProgramBase.autoDJ().selectSongs(slist, songsNeeded);
+      tSongList slist;
+      ProgramBase.autoDJ().reEvaluateScores();
+      ProgramBase.autoDJ().selectSongs(slist, songs_needed);
 
-	player.playEventually(slist);
-	something_done = true;
-      }
-      else
-	break;
+      player.playEventually(slist);
     }
   }
 }

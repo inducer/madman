@@ -121,6 +121,8 @@ future ------------------------------------------------------------------------
 * Continuous AutoDJ from any source.
 * Show count after letter in overview.
 * sort fields filled with random data?
+* Allow immediate play of first song in search result from search line by
+  Enter, f9, f10, f11. (sugg. by Hendrik Wouters)
 
 MAJOR CHANGES:
 * Playlist management button. [done]

@@ -146,6 +146,7 @@ void tAcceleratorTable::keyPressEvent(QKeyEvent * e)
   }
 
   super::keyPressEvent(e);
+}
 
 
 
@@ -160,4 +161,3 @@ void tAcceleratorTable::keyPressEvent(QKeyEvent * e)
 // c-basic-offset: 2
 // tab-width: 8
 // End:
-}

@@ -65,7 +65,7 @@ class tAcceleratorListView : public QListView
     ~tAcceleratorListView();
 
     void addShortCut(tKeyboardShortCut *sc);
-    void keyPressEvent (QKeyEvent * e);
+    void keyPressEvent(QKeyEvent * e);
 };
 
 
@@ -82,7 +82,7 @@ class tAcceleratorTable : public QTable
     ~tAcceleratorTable();
 
     void addShortCut(tKeyboardShortCut *sc);
-    void keyPressEvent (QKeyEvent * e);
+    void keyPressEvent(QKeyEvent * e);
 };
 
 
