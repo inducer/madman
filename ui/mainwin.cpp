@@ -1990,7 +1990,14 @@ void tMainWindow::doContinuousAutoDJ()
       if (playlist_index == -1 || plist.size() - playlist_index <= 5)
       {
 	tSongList slist;
-	slist.push_back(const_cast<tSong*>(ProgramBase.autoDJ().selectSong()));
+	
+	int songsNeeded = 6;
+	if (plist.size() > 0)
+	  songsNeeded -= (plist.size() - playlist_index);
+
+	ProgramBase.autoDJ().reEvaluateScores();
+	ProgramBase.autoDJ().selectSongs(slist, songsNeeded);
+
 	player.playEventually(slist);
 	something_done = true;
       }

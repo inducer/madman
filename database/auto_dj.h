@@ -45,6 +45,10 @@ class tAutoDJ
     const tSong *selectSong();
     void selectSongs(tSongList& result, unsigned count);
 
+    // Re-evaluate scores, based on updated song data.  This will go
+    // away when we hook more fully into tSong.
+    void reEvaluateScores() { clearScores(); }
+
   private:
     void addCriterion(const QString& criterion, int weight);
     float score(const tSong *song) const;

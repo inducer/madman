@@ -134,14 +134,24 @@ void tAutoDJ::clearCompiledScoringRules()
 
 void tAutoDJ::selectSongs(tSongList &result, unsigned count)
 {
+  try
+  {
   while (count-- > 0)
   {
     const tSong* song = selectSong();
-
     if (!song)
       break;
 
     result.push_back(const_cast<tSong*>(song));
+  }
+}
+  catch (tRuntimeError& t)
+  {
+    // Got an error?  If we have some songs, take them.
+    if (result.size() > 0)
+      return;
+    else
+      throw;
   }
 }
 

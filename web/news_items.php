@@ -1,11 +1,19 @@
 <?
+madman_news_item("October 21, 2004",
+  "<b>Trackers are closed now.</b> 
+  The Sourceforge bug, feature and support trackers are closed now, effective 
+  immediately. Please turn to the mailing list for your support needs. Anonymous
+  posting is allowed, but please request for yourself to be cc'ed. If you 
+  have data in the trackers, it has not been deleted and will influence future 
+  madman releases. I'm sorry that I had to take this step, but I unfortunately do not 
+  have the time to properly maintain them.<p/>Thanks for your understanding.");
 madman_news_item("October 19, 2004",
   "<b>Giving CVS the boot.</b>".
   "Work on 0.94 is continuing nicely, with Guido as a notable addition to the ".
   "development team. Shawn is considering a rewrite of the criteria language. ".
   "And you'll probably miss all this new development if you only check the ".
   "SourceForge CVS--it is out of use as of today. The code is now maintained ".
-  "in my public arch repository. See <a href=\"download.php\">the download page</a>".
+  "in my public arch repository. See <a href=\"download.php\">the download page</a> ".
   "for details on how to get the tree.");
 madman_news_item("June 9, 2004",
   "<b>Package frenzy.</b> ".

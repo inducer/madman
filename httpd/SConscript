@@ -1,21 +1,10 @@
-import glob
-import os
-
-Import( "env" )
-
-webdata_builder = Builder( action = "httpd/make_webdata $SOURCES > $TARGET",
-    suffix = "$CXXSUFFIX" )
+Import("env")
 
 myenv = env.Copy()
-myenv.Tool( "qt" )
+myenv.Tool("qt")
 
-myenv.Append( BUILDERS = { "WebData": webdata_builder } )
+myenv.Append(CPPPATH = "#")
+myenv.Append(CPPPATH = myenv['QT_CPPPATH'])
 
-myenv.Append( CPPPATH = "#" )
-myenv.Append( CPPPATH = myenv[ 'QT_CPPPATH' ] )
-
-files = glob.glob( "webdata/*.*" )
-myenv.WebData( "webdata.cpp", files )
-
-myenv.StaticLibrary( target = "madmanhttpd",
-  source = [ "httpd.cpp", "madmanweb.cpp", "webdata.cpp" ] )
+myenv.StaticLibrary(target = "madmanhttpd",
+  source = ["webdata/webdata.cpp", "httpd.cpp", "madmanweb.cpp"])

@@ -1,0 +1,30 @@
+Import("env")
+
+myenv = env.Copy()
+
+webdata_builder = Builder(action = "./httpd/make_webdata $SOURCES > $TARGET",
+    suffix = "$CXXSUFFIX")
+
+myenv.Append(BUILDERS = {"WebData": webdata_builder})
+
+files = [
+  "back_gray.png",
+  "back.png",
+  "down.png",
+  "format.css",
+  "forward_gray.png",
+  "forward.png",
+  "info.png",
+  "madman_lettering.png",
+  "madman_logo.png",
+  "outer.html",
+  "play_eventually.png",
+  "play_next.png",
+  "play_next.xcf",
+  "play.png",
+  "save.png",
+  "stream.png",
+  "up.png",
+  ]
+
+myenv.WebData("webdata.cpp", files)

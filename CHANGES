@@ -124,11 +124,9 @@ future ------------------------------------------------------------------------
 * Show count after letter in overview.
 * sort fields filled with random data?
 
-* Fixed generation of image_data.cpp and web_data.cpp.
-
 MAJOR CHANGES:
 * Playlist management button. [done]
-* Continuous AutoDJ (Shawn, Adam Ward) [done]
+* Continuous AutoDJ. (Shawn, Adam Ward) [done]
 + Support FLAC. [done]
 + Support M4A. [done] (Walt)
 * Switched to Scott Wheeler's Taglib. [done]
@@ -196,7 +194,9 @@ BUGS FIXED:
   eventually leading to total data loss. Fixed. (suffered and analyzed by 
   Christian Hammers) [done]
 * Fixed loading of databases with non-unique playlist names. 
-  (encountered by dsailer) [done]
+  (encountered by Dave Sailer) [done]
+* Fixed generation of image_data.cpp and web_data.cpp. [done]
+* Fix AutoDJ score generation. (Shawn, patch-5) [done]
 
 0.93 --------------------------------------------------------------------------
 
