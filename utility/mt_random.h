@@ -33,6 +33,8 @@
 /* ACM Transactions on Modeling and Computer Simulation,           */
 /* Vol. 8, No. 1, January 1998, pp 3--30.                          */
 
+#include <stdint.h>
+
 /* Period parameters */  
 #ifndef mtRand_N
 
@@ -48,30 +50,30 @@ class mtRand
 
 /* initializing the array with a NONZERO seed */
 public:
-	void sgenrand(unsigned long seed);	
+	void sgenrand(uint32_t seed);	
 
-	mtRand(unsigned long seed)
+	mtRand(uint32_t seed)
 	{
 	    if (seed)
 	    {
 		sgenrand(seed);
 	    } else
 	    {
-		sgenrand((unsigned long)nrand48(mtRand_xsubi));
+		sgenrand((uint32_t)nrand48(mtRand_xsubi));
 	    }
 	}
 
 	mtRand(void)
 	{
-		sgenrand((unsigned long)nrand48(mtRand_xsubi));
+		sgenrand((uint32_t)nrand48(mtRand_xsubi));
 	}
 
 
 	double gendrand();
 
-	unsigned long genlrand();
+	uint32_t genlrand();
 protected:
-	 unsigned long mt[mtRand_N]; /* the array for the state vector  */
+	 uint32_t mt[mtRand_N]; /* the array for the state vector  */
 	 int mti; /* mti==N+1 means mt[N] is not initialized */
 };
 

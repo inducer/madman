@@ -218,6 +218,7 @@ BUGS FIXED:
   AutoDJ process.
 * Fixed a crash when trying to edit a tag and no song is selected.
 * Make sure XMMS doesn't get started automatically. [done]
+* Made sure AutoDJ works on 64 bit, applied Kyle Liddell's patch. [done]
 
 0.93 --------------------------------------------------------------------------
 

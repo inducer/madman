@@ -56,7 +56,7 @@ unsigned short mtRand_xsubi[3] = {723, 32761, 44444};
 #define TEMPERING_SHIFT_L(y)  (y >> 18)
 
 /* initializing the array with a NONZERO seed */
-void mtRand::sgenrand(unsigned long seed)
+void mtRand::sgenrand(uint32_t seed)
 {
     /* setting initial seeds to mt[N] using         */
     /* the generator Line 25 of Table 1 in          */
@@ -73,7 +73,7 @@ void mtRand::sgenrand(unsigned long seed)
        random generator used is more or less arbitrary, but
        it has a reasonably long period (1825731182) and
        should generate well-mixed bit-streams. */
-    unsigned long s = 373737;
+    uint32_t s = 373737;
     for (mti=1; mti<mtRand_N; mti++)
     {
 	mt[mti] ^= s;
@@ -84,8 +84,8 @@ void mtRand::sgenrand(unsigned long seed)
 
 double mtRand:: gendrand()
 {
-    unsigned long y;
-    static unsigned long mag01[2]={0x0, MATRIX_A};
+    uint32_t y;
+    static uint32_t mag01[2]={0x0, MATRIX_A};
     /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
     if (mti >= mtRand_N) { /* generate mtRand_N words at one time */
@@ -115,10 +115,10 @@ double mtRand:: gendrand()
 }
 
 
-unsigned long mtRand::genlrand()
+uint32_t mtRand::genlrand()
 {
-    unsigned long y;
-    static unsigned long mag01[2]={0x0, MATRIX_A};
+    uint32_t y;
+    static uint32_t mag01[2]={0x0, MATRIX_A};
     /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
     if (mti >= mtRand_N) { /* generate mtRand_N words at one time */
