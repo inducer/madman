@@ -109,8 +109,6 @@ Patch credits (if not mentioned above):
 * ~pathname, ~filename_without_path
 * Mousewheel on tray icon allows forward/back.
 
-* Extended characters in filenames?
-  Passing of ext. character filenames to plugins? (?? instead of char)
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Highlight current song leaves another marked song also selected.
 * Continuous AutoDJ from any source.
@@ -126,7 +124,6 @@ Patch credits (if not mentioned above):
 * Mood/CustomN/... reflection in songs?
 + Customize time for song popup. (sugg. by Dave Sailer)
   (via .rc)
-* Back button does not work.
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -228,6 +225,8 @@ BUGS FIXED:
 * Keep scanning even when an unreadable directory is encountered.
   (patch by Benjamin Montgomery <bmontgom@gmail.com>)
 * Fixed a few remote bugs. ("patch" by David Blackman)
+* Fixed file name encoding problems, including the ones
+  involving plugins.
 
 0.93 --------------------------------------------------------------------------
 

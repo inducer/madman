@@ -252,10 +252,35 @@ ostream &operator <<(ostream &ostr, QString const &str)
 
 
 
+string replace(const string &haystack, 
+  const string &needle,
+  const string &new_needle)
+{
+  string result = haystack;
+  string::size_type pos = 0;
+  while ((pos = result.find(needle, pos)) != string::npos)
+  {
+    result.replace(pos, needle.size(), new_needle);
+    pos += new_needle.size();
+  }
+  return result;
+}
+
+
+
+
 QString quoteString(const QString &victim)
 {
   QString my_victim = victim;
   return "\"" + my_victim.replace(QRegExp("\\\""), "\\\"") + "\"";
+}
+
+
+
+
+string quoteString(const string &victim)
+{
+  return "\"" + replace(victim, "\"", "\\\"") + "\"";
 }
 
 
@@ -520,6 +545,223 @@ unsigned long hash_string::operator() (string const &str) const
   return h;
 }
 
+
+
+
+
+string sanitizeUtf8(string const &victim)
+{
+  string result;
+  string::const_iterator first = victim.begin(), last = victim.end();
+  while (first != last)
+  {
+    unsigned char ucf = (unsigned char) *first;
+    if (ucf < 0x20)
+    {
+      result += "?";
+      first++;
+    }
+    else if (0x20 <= ucf && ucf <= 0x7f)
+    {
+      result += *first++;
+    }
+    else if (0x80 <= ucf && ucf <= 0xc1)
+    {
+      result += "?";
+      first++;
+    }
+    else if (0xc2 <= ucf && ucf <= 0xdf)
+    {
+      // two byte sequences
+      if (last - first >= 2)
+      {
+        unsigned char ucf1 = (unsigned char) first[1];
+        if (0x80 <= ucf1 && ucf1 <= 0xbf)
+        {
+          result += *first++;
+          result += *first++;
+        }
+        else
+        {
+          first += 2;
+          result += "?";
+        }
+      }
+      else
+      {
+        first++;
+        result += "?";
+      }
+    }
+    else if (0xe0 <= ucf  && ucf <= 0xef)
+    {
+      // three byte sequences
+      if (last - first >= 3)
+      {
+        unsigned char ucf1 = (unsigned char) first[1];
+        unsigned char ucf2 = (unsigned char) first[2];
+
+        bool valid = 
+          (0x80 <= ucf1 && ucf1 <= 0xbf) &&
+          (0x80 <= ucf2 && ucf2 <= 0xbf);
+
+        valid = valid && !(ucf == 0xe0 && ucf1 < 0xa0);
+        valid = valid && !(ucf == 0xed && ucf1 > 0x9f);
+        if (valid)
+        {
+          result += *first++;
+          result += *first++;
+          result += *first++;
+        }
+        else
+        {
+          first += 3;
+          result += "?";
+        }
+      }
+      else
+      {
+        first++;
+        result += "?";
+      }
+    }
+    else if (0xf0 <= ucf && ucf <= 0xf4)
+    {
+      // four byte sequences
+      if (last - first >= 4)
+      {
+        unsigned char ucf1 = (unsigned char) first[1];
+        unsigned char ucf2 = (unsigned char) first[2];
+        unsigned char ucf3 = (unsigned char) first[3];
+
+        bool valid = 
+          (0x80 <= ucf1 && ucf1 <= 0xbf) &&
+          (0x80 <= ucf2 && ucf2 <= 0xbf) &&
+          (0x80 <= ucf3 && ucf3 <= 0xbf);
+
+        valid = valid && !(ucf == 0xf0 && ucf1 < 0x90);
+        valid = valid && !(ucf == 0xf4 && ucf1 > 0x8f);
+        if (valid)
+        {
+          result += *first++;
+          result += *first++;
+          result += *first++;
+          result += *first++;
+        }
+        else
+        {
+          first += 4;
+          result += "?";
+        }
+      }
+      else
+      {
+        first++;
+        result += "?";
+      }
+    }
+    else
+    {
+      first += 1;
+      result += "?";
+    }
+  }
+  return result;
+}
+
+
+
+
+
+bool isValidUtf8(string const &victim)
+{
+  string::const_iterator first = victim.begin(), last = victim.end();
+  while (first != last)
+  {
+    unsigned char ucf = (unsigned char) *first;
+    if (ucf < 0x20)
+      return false;
+    else if (0x20 <= ucf && ucf <= 0x7f)
+      first++;
+    else if (0x80 <= ucf && ucf <= 0xc1)
+      return false;
+    else if (0xc2 <= ucf && ucf <= 0xdf)
+    {
+      // two byte sequences
+      if (last - first >= 2)
+      {
+        unsigned char ucf1 = (unsigned char) first[1];
+        if (0x80 <= ucf1 && ucf1 <= 0xbf)
+          first += 2;
+        else
+          return false;
+      }
+      else
+        return false;
+    }
+    else if (0xe0 <= ucf && ucf <= 0xef)
+    {
+      // three byte sequences
+      if (last - first >= 3)
+      {
+        unsigned char ucf1 = (unsigned char) first[1];
+        unsigned char ucf2 = (unsigned char) first[2];
+
+        bool valid = 
+          (0x80 <= ucf1 && ucf1 <= 0xbf) &&
+          (0x80 <= ucf2 && ucf2 <= 0xbf);
+
+        valid = valid && !(ucf == 0xe0 && ucf1 < 0xa0);
+        valid = valid && !(ucf == 0xed && ucf1 > 0x9f);
+        if (valid)
+          first += 3;
+        else
+          return false;
+      }
+      else
+        return false;
+    }
+    else if (0xf0 <= ucf && ucf <= 0xf4)
+    {
+      // four byte sequences
+      if (last - first >= 4)
+      {
+        unsigned char ucf1 = (unsigned char) first[1];
+        unsigned char ucf2 = (unsigned char) first[2];
+        unsigned char ucf3 = (unsigned char) first[3];
+
+        bool valid = 
+          (0x80 <= ucf1 && ucf1 <= 0xbf) &&
+          (0x80 <= ucf2 && ucf2 <= 0xbf) &&
+          (0x80 <= ucf3 && ucf3 <= 0xbf);
+
+        valid = valid && !(ucf == 0xf0 && ucf1 < 0x90);
+        valid = valid && !(ucf == 0xf4 && ucf1 > 0x8f);
+        if (valid)
+          first += 4;
+        else
+          return false;
+      }
+      else
+        return false;
+    }
+    else
+      return false;
+  }
+  return true;
+}
+
+
+
+
+
+QString filename2QString(const string &fn)
+{
+  if (isValidUtf8(fn))
+    return QString::fromUtf8(fn.c_str());
+  else
+    return QString::fromLatin1(fn.c_str());
+}
 
 
 

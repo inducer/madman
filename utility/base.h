@@ -102,7 +102,11 @@ QStringList QStringvector2QStringList(const vector<QString> &strlist);
 vector<string> QStringList2stringvector(const QStringList &strlist);
 QStringList stringvector2QStringList(const vector<string> &strlist);
 ostream &operator <<(ostream &ostr, QString const &str);
+string replace(const string &haystack, 
+               const string &needle,
+               const string &new_needle);
 QString quoteString(const QString &victim);
+string quoteString(const string &victim);
 void split(const QString &sep, const QString &str, vector<QString> &result);
 QString join(const vector<QString> &strlist, const QString &sep = QString(";"));
 void enumerateFiles(const string &directory, vector<string> &result, tProgress *prog = NULL);
@@ -111,6 +115,9 @@ size_t decodeBase64(unsigned char *data, string const &base64);
 void encodeBase64(string &base64, unsigned char const *data, size_t size);
 string encodeBase64(const string &src);
 string decodeBase64(const string &src);
+string sanitizeUtf8(string const &victim);
+bool isValidUtf8(string const &victim);
+QString filename2QString(const string &fn);
 
 
 

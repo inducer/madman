@@ -302,7 +302,7 @@ tSongListSummary getSongListSummary(tSongList &list)
   result.DurationSeconds = int(duration);
 
   if (list.size())
-    result.FirstFilename = QString::fromUtf8(list[0]->filename().c_str());
+    result.FirstFilename = filename2QString(list[0]->filename());
   return result;
 }
 

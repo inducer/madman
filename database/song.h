@@ -86,7 +86,11 @@ QString genreIdToString(int genre);
 QString getFieldName(tSongField field);
 QString getFieldIdentifier(tSongField field);
 tSongField getFieldFromIdentifier(const QString &field);
-QString substituteSongFields(QString const &format, tSong *song, bool human_readable, bool shell_quote = false);
+QString substituteSongFields(QString const &format, tSong *song, 
+                             bool human_readable, bool shell_quote = false);
+string substituteSongFieldsUtf8(QString const &format, tSong *song, 
+                                bool human_readable, bool shell_quote = false);
+
 
 
 

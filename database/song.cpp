@@ -57,97 +57,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // private helpers ------------------------------------------------------------
 namespace 
 {
-  string sanitizeUtf8(string const &victim)
-  {
-    string result;
-    string::const_iterator first = victim.begin(), last = victim.end();
-    while (first != last)
-    {
-      if ((unsigned char) *first < 0x20)
-      {
-	result += "?";
-	first++;
-      }
-      else if (0x20 <= (unsigned char) *first <= 0x7f)
-      {
-	result += *first++;
-      }
-      else if (0x80 <= (unsigned char) *first <= 0xc1)
-      {
-	result += "?";
-	first++;
-      }
-      else if (0xc2 <= (unsigned char) *first <= 0xdf)
-      {
-	// two byte sequences
-	if (last - first >= 2 && 0x80 <= (unsigned char) first[1] <= 0xbf)
-	{
-	  result += *first++;
-	  result += *first++;
-	}
-	else
-	{
-	  first += 2;
-	  result += "?";
-	}
-      }
-      else if (0xe0 <= (unsigned char) *first <= 0xef)
-      {
-	// three byte sequences
-	bool valid = last - first >= 3 &&
-	  (0x80 <= (unsigned char) first[1] <= 0xbf) &&
-	  (0x80 <= (unsigned char) first[2] <= 0xbf);
-
-	if (valid && (unsigned char) first[0] == 0xe0 && (unsigned char) first[1] < 0xa0)
-	  valid = false;
-	if (valid && (unsigned char) first[0] == 0xed && (unsigned char) first[1] > 0x9f)
-	  valid = false;
-	if (valid)
-	{
-	  result += *first++;
-	  result += *first++;
-	  result += *first++;
-	}
-	else
-	{
-	  first += 3;
-	  result += "?";
-	}
-      }
-      else if (0xf0 <= (unsigned char) *first <= 0xf4)
-      {
-	// four byte sequences
-	bool valid = last - first >= 4 &&
-	  (0x80 <= (unsigned char) first[1] <= 0xbf) &&
-	  (0x80 <= (unsigned char) first[2] <= 0xbf) &&
-	  (0x80 <= (unsigned char) first[3] <= 0xbf);
-
-	if (valid && (unsigned char) first[0] == 0xf0 && (unsigned char) first[1] < 0x90)
-	  valid = false;
-	if (valid && (unsigned char) first[0] == 0xf4 && (unsigned char) first[1] > 0x8f)
-	  valid = false;
-	if (valid)
-	{
-	  result += *first++;
-	  result += *first++;
-	  result += *first++;
-	  result += *first++;
-	}
-	else
-	{
-	  first += 4;
-	  result += "?";
-	}
-      }
-      else
-      {
-	first += 1;
-	result += "?";
-      }
-    }
-    return result;
-  }
-
   string decodeFilename(const QString &str)
   {
     if (str.left(7) == "base64:")
@@ -641,7 +550,7 @@ QString substituteSongFields(QString const &format, tSong *song, bool human_read
 {
   QString result = format;
 
-  for (int i = 0; i < FIELD_COUNT; i++)
+  for (unsigned i = 0; i < FIELD_COUNT; i++)
   {
     tSongField f = (tSongField) i;
     QString replacement;
@@ -656,6 +565,40 @@ QString substituteSongFields(QString const &format, tSong *song, bool human_read
     result.replace("%" + getFieldIdentifier(f) + "%", replacement);
   }
   result.replace("%newline%", "\n");
+
+  return result;
+}
+
+
+
+
+string substituteSongFieldsUtf8(QString const &format, tSong *song, 
+                                bool human_readable, bool shell_quote)
+{
+  string result = format;
+
+  for (unsigned i = 0; i < FIELD_COUNT; i++)
+  {
+    tSongField f = (tSongField) i;
+    string replacement;
+
+    if (f == FIELD_FILE)
+      replacement = song->filenameOnly();
+    else if (f == FIELD_PATH)
+      replacement = song->pathname();
+    else if (human_readable)
+      replacement = song->humanReadableFieldText(f).utf8();
+    else
+      replacement = song->fieldText(f).utf8();
+
+    if (shell_quote)
+      replacement = quoteString(replacement);
+
+    replace(result, 
+            "%" + QString2string(getFieldIdentifier(f)) + "%", 
+            replacement);
+  }
+  replace(result, "%newline%", "\n");
 
   return result;
 }
@@ -1237,9 +1180,9 @@ QString tSong::fieldText(tSongField field) const
       case FIELD_YEAR:
 	return year();
       case FIELD_FILE:
-	return QString::fromUtf8(filenameOnly().c_str());
+	return filename2QString(filenameOnly().c_str());
       case FIELD_PATH:
-	return QString::fromUtf8(pathname().c_str());
+	return filename2QString(pathname().c_str());
       case FIELD_SIZE:
 	return QString::number(fileSize());
 

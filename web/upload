@@ -1,3 +1,4 @@
 #! /bin/bash
 
+update-news.py
 rsync -e ssh --verbose --progress --perms --delete * inducer@shell.sourceforge.net:/home/groups/m/ma/madman/htdocs
