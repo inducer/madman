@@ -190,6 +190,7 @@ class tMainWindow : public tMainWindowBase
     void skipTo(int value);
 
     void trayIconClicked(const QPoint&, int);
+    void trayIconWheelMoved(const QPoint&, int delta, Qt::Orientation orient);
 
     bool eventFilter(QObject *o, QEvent *e);
 

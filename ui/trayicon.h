@@ -1,6 +1,7 @@
 /*
  * trayicon.h - system-independent trayicon class (adapted from Qt example)
  * Copyright (C) 2003  Justin Karneges
+ * Nicked from Psi 0.9.3 and patched by Andreas Kloeckner.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,12 +31,12 @@ class TrayIcon : public QObject
 {
 	Q_OBJECT
 
-	Q_PROPERTY(QString toolTip READ toolTip WRITE setToolTip)
-	Q_PROPERTY(QPixmap icon READ icon WRITE setIcon)
+	Q_PROPERTY( QString toolTip READ toolTip WRITE setToolTip )
+	Q_PROPERTY( QPixmap icon READ icon WRITE setIcon )
 
 public:
-	TrayIcon(QObject *parent = 0, const char *name = 0);
-	TrayIcon(const QPixmap &, const QString &, QPopupMenu *popup = 0, QObject *parent = 0, const char *name = 0);
+	TrayIcon( QObject *parent = 0, const char *name = 0 );
+	TrayIcon( const QPixmap &, const QString &, QPopupMenu *popup = 0, QObject *parent = 0, const char *name = 0 );
 	~TrayIcon();
 
 	// use WindowMaker dock mode.  ignored on non-X11 platforms
@@ -43,7 +44,7 @@ public:
 	bool isWMDock() { return v_isWMDock; }
 
 	// Set a popup menu to handle RMB
-	void setPopup(QPopupMenu *);
+	void setPopup( QPopupMenu * );
 	QPopupMenu* popup() const;
 
 	QPixmap icon() const;
@@ -52,54 +53,45 @@ public:
 	void gotCloseEvent();
 
 public slots:
-	void setIcon(const QPixmap &icon);
-	void setToolTip(const QString &tip);
+	void setIcon( const QPixmap &icon );
+	void setToolTip( const QString &tip );
 
 	void show();
 	void hide();
 
+	void newTrayOwner();
+
 signals:
-	void clicked(const QPoint&, int);
-	void doubleClicked(const QPoint&);
+	void clicked( const QPoint&, int);
+	void doubleClicked( const QPoint&, int );
+	void wheelMoved( const QPoint&, int delta, Qt::Orientation );
 	void closed();
 
 protected:
-	bool event(QEvent *);
-	virtual void mouseMoveEvent(QMouseEvent *e);
-	virtual void mousePressEvent(QMouseEvent *e);
-	virtual void mouseReleaseEvent(QMouseEvent *e);
-	virtual void mouseDoubleClickEvent(QMouseEvent *e);
+	bool event( QEvent * );
+	virtual void mouseMoveEvent( QMouseEvent *e );
+	virtual void mousePressEvent( QMouseEvent *e );
+	virtual void mouseReleaseEvent( QMouseEvent *e );
+	virtual void mouseDoubleClickEvent( QMouseEvent *e );
+	virtual void wheelEvent( QWheelEvent *e );
 
-	private:
+private:
 	QPopupMenu *pop;
 	QPixmap pm;
 	QString tip;
 	bool v_isWMDock;
 
 	// system-dependant part
+public:
 	class TrayIconPrivate;
+private:
 	TrayIconPrivate *d;
 	void sysInstall();
 	void sysRemove();
 	void sysUpdateIcon();
 	void sysUpdateToolTip();
+
+	friend class TrayIconPrivate;
 };
 
-
-
-
 #endif // CS_TRAYICON_H
-
-
-
-
-// EMACS-FORMAT-TAG
-//
-// Local Variables:
-// mode: C++
-// eval: (c-set-style "stroustrup")
-// eval: (c-set-offset 'access-label -2)
-// eval: (c-set-offset 'inclass '++)
-// c-basic-offset: 2
-// tab-width: 8
-// End:

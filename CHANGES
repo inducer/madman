@@ -95,7 +95,6 @@ Patch credits (if not mentioned above):
 
 * Add AutoDJ presets versioning.
 
-* Fixed GNOME 2 docking.
 * Revived l10n.
 * Track order for playing albums. (from overview and play like songs)
 
@@ -107,7 +106,6 @@ Patch credits (if not mentioned above):
 + Filter on this field/add AND/add OR. (Adam Ward)
 
 * ~pathname, ~filename_without_path
-* Mousewheel on tray icon allows forward/back.
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Continuous AutoDJ from any source.
@@ -228,6 +226,9 @@ BUGS FIXED:
   involving plugins. [done]
 * Fixed: Highlight current song leaves another marked song 
   also selected. [done]
+* Fixed GNOME 2 docking. (i.e. imported new Psi tray code)
+  [done]
+* Mousewheel on tray icon allows forward/back. [done]
 
 0.93 --------------------------------------------------------------------------
 

@@ -515,6 +515,8 @@ void tMainWindow::realizeSystemTrayIconSettings()
 
     connect(SystemTrayIcon, SIGNAL(clicked(const QPoint &, int)),
 	  this, SLOT(trayIconClicked(const QPoint &, int)));
+    connect(SystemTrayIcon, SIGNAL(wheelMoved(const QPoint &, int, Qt::Orientation)),
+	  this, SLOT(trayIconWheelMoved(const QPoint &, int, Qt::Orientation)));
   }
   if (!ProgramBase.preferences().EnableSystemTrayIcon && SystemTrayIcon)
   {
@@ -1614,6 +1616,20 @@ void tMainWindow::trayIconClicked(const QPoint &where, int button)
 
 
 
+void tMainWindow::trayIconWheelMoved(const QPoint&, int delta, Orientation orient)
+{
+  if (orient == Qt::Vertical)
+  {
+    if (delta > 0)
+      skipBack();
+    else if (delta < 0)
+      skipForward();
+  }
+}
+
+
+
+
 bool tMainWindow::eventFilter(QObject *o, QEvent *e)
 {
   if (o == btnPlaylist && e->type() == QEvent::MouseButtonPress)
@@ -2009,7 +2025,7 @@ void tMainWindow::updateTrayIconStatus()
 
   // update icon --------------------------------------------------------------
   QImage tray_img = icon()->convertToImage();
-  tray_img = tray_img.smoothScale(16, 16);
+  tray_img = tray_img.smoothScale(24, 24);
 
   QPixmap tray_pixmap;
   tray_pixmap.convertFromImage(tray_img);

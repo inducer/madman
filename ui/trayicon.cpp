@@ -1,6 +1,7 @@
 /*
  * trayicon.cpp - system-independent trayicon class (adapted from Qt example)
  * Copyright (C) 2003  Justin Karneges
+ * Nicked from Psi 0.9.3 and patched by Andreas Kloeckner.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +33,7 @@
 
   \sa show
 */
-TrayIcon::TrayIcon(QObject *parent, const char *name)
+TrayIcon::TrayIcon( QObject *parent, const char *name )
 : QObject(parent, name), pop(0), d(0)
 {
 	v_isWMDock = FALSE;
@@ -45,10 +46,13 @@ TrayIcon::TrayIcon(QObject *parent, const char *name)
 
   \sa show
 */
-TrayIcon::TrayIcon(const QPixmap &icon, const QString &tooltip, QPopupMenu *popup, QObject *parent, const char *name)
+TrayIcon::TrayIcon( const QPixmap &icon, const QString &tooltip, QPopupMenu *popup, QObject *parent, const char *name )
 : QObject(parent, name), pop(popup), pm(icon), tip(tooltip), d(0)
 {
 	v_isWMDock = FALSE;
+
+	if ( !pm.width() || !pm.height() )
+		pm = QPixmap( 16, 16 );
 }
 
 /*!
@@ -60,10 +64,23 @@ TrayIcon::~TrayIcon()
 }
 
 /*!
+  Informs the trayicon that the notification owner has probably been changed;
+  and that it should attempt to register or re-register.
+*/
+void TrayIcon::newTrayOwner()
+{
+    // detach ourself from any existing notification area.
+    hide();
+    // show ourself on the new notification area
+    show();
+}
+
+
+/*!
   Sets the context menu to \a popup. The context menu will pop up when the
   user clicks the system tray entry with the right mouse button.
 */
-void TrayIcon::setPopup(QPopupMenu* popup)
+void TrayIcon::setPopup( QPopupMenu* popup )
 {
     pop = popup;
 }
@@ -82,7 +99,7 @@ QPopupMenu* TrayIcon::popup() const
   \property TrayIcon::icon
   \brief the system tray icon.
 */
-void TrayIcon::setIcon(const QPixmap &icon)
+void TrayIcon::setIcon( const QPixmap &icon )
 {
     //if(!popup()) {
     //    tip = "";
@@ -103,7 +120,7 @@ QPixmap TrayIcon::icon() const
 
   On some systems, the tooltip's length is limited and will be truncated as necessary.
 */
-void TrayIcon::setToolTip(const QString &tooltip)
+void TrayIcon::setToolTip( const QString &tooltip )
 {
     tip = tooltip;
     sysUpdateToolTip();
@@ -135,26 +152,31 @@ void TrayIcon::hide()
 /*!
   \reimp
 */
-bool TrayIcon::event(QEvent *e)
+bool TrayIcon::event( QEvent *e )
 {
-    switch (e->type()) {
+    switch ( e->type() ) {
     case QEvent::MouseMove:
-	mouseMoveEvent((QMouseEvent*)e);
+	mouseMoveEvent( (QMouseEvent*)e );
 	break;
 
     case QEvent::MouseButtonPress:
-	mousePressEvent((QMouseEvent*)e);
+	mousePressEvent( (QMouseEvent*)e );
 	break;
 
     case QEvent::MouseButtonRelease:
-	mouseReleaseEvent((QMouseEvent*)e);
+	mouseReleaseEvent( (QMouseEvent*)e );
 	break;
 
     case QEvent::MouseButtonDblClick:
-	mouseDoubleClickEvent((QMouseEvent*)e);
+	mouseDoubleClickEvent( (QMouseEvent*)e );
 	break;
+
+    case QEvent::Wheel:
+	wheelEvent( (QWheelEvent*)e );
+	break;
+
     default:
-	return QObject::event(e);
+	return QObject::event( e );
     }
 
     return TRUE;
@@ -166,7 +188,7 @@ bool TrayIcon::event(QEvent *e)
 
   \sa mousePressEvent(), mouseReleaseEvent(), mouseDoubleClickEvent(),  QMouseEvent
 */
-void TrayIcon::mouseMoveEvent(QMouseEvent *e)
+void TrayIcon::mouseMoveEvent( QMouseEvent *e )
 {
     e->ignore();
 }
@@ -178,9 +200,27 @@ void TrayIcon::mouseMoveEvent(QMouseEvent *e)
   \sa mouseReleaseEvent(), mouseDoubleClickEvent(),
   mouseMoveEvent(), QMouseEvent
 */
-void TrayIcon::mousePressEvent(QMouseEvent *e)
+void TrayIcon::mousePressEvent( QMouseEvent *e )
 {
-    e->ignore();
+#ifndef Q_WS_WIN
+// This is for X11, menus appear on mouse press
+// I'm not sure whether Mac should be here or below.. Somebody check?
+	switch ( e->button() ) {
+		case RightButton:
+			if ( pop ) {
+				pop->popup( e->globalPos() );
+				e->accept();
+			}
+			break;
+		case LeftButton:
+		case MidButton:
+			emit clicked( e->globalPos(), e->button() );
+			break;
+		default:
+			break;
+	}
+#endif
+	e->ignore();
 }
 
 /*!
@@ -193,31 +233,30 @@ void TrayIcon::mousePressEvent(QMouseEvent *e)
   \sa setPopup(), mousePressEvent(), mouseDoubleClickEvent(),
   mouseMoveEvent(), QMouseEvent
 */
-void TrayIcon::mouseReleaseEvent(QMouseEvent *e)
+void TrayIcon::mouseReleaseEvent( QMouseEvent *e )
 {
-    switch (e->button()) {
-    case RightButton:
-	if (pop) {
-	    // Necessary to make keyboard focus
-	    // and menu closing work on Windows.
 #ifdef Q_WS_WIN
-	    pop->setActiveWindow();
-#endif
-	    pop->popup(e->globalPos());
-#ifdef Q_WS_WIN
-	    pop->setActiveWindow();
-#endif
-	    e->accept();
+// This is for Windows, where menus appear on mouse release
+	switch ( e->button() ) {
+		case RightButton:
+			if ( pop ) {
+				// Necessary to make keyboard focus
+				// and menu closing work on Windows.
+				pop->setActiveWindow();
+				pop->popup( e->globalPos() );
+				pop->setActiveWindow();
+				e->accept();
+			}
+			break;
+		case LeftButton:
+		case MidButton:
+			emit clicked( e->globalPos(), e->button() );
+			break;
+		default:
+			break;
 	}
-	break;
-    case LeftButton:
-    case MidButton:
-	emit clicked(e->globalPos(), e->button());
-	break;
-    default:
-	break;
-    }
-    e->ignore();
+#endif
+	e->ignore();
 }
 
 /*!
@@ -230,15 +269,20 @@ void TrayIcon::mouseReleaseEvent(QMouseEvent *e)
   \sa mousePressEvent(), mouseReleaseEvent(),
   mouseMoveEvent(), QMouseEvent
 */
-void TrayIcon::mouseDoubleClickEvent(QMouseEvent *e)
+void TrayIcon::mouseDoubleClickEvent( QMouseEvent *e)
 {
-    if (e->button() == LeftButton)
-	emit doubleClicked(e->globalPos());
-    e->ignore();
+  emit doubleClicked( e->globalPos(), e->button());
+  e->accept();
+}
+
+void TrayIcon::wheelEvent( QWheelEvent *e )
+{
+  emit wheelMoved( e->globalPos(), e->delta(), e->orientation() );
+  e->accept();
 }
 
 /*!
-  \fn void TrayIcon::clicked(const QPoint &p)
+  \fn void TrayIcon::clicked( const QPoint &p )
 
   This signal is emitted when the user clicks the system tray icon
   with the left mouse button, with \a p being the global mouse position
@@ -246,7 +290,7 @@ void TrayIcon::mouseDoubleClickEvent(QMouseEvent *e)
 */
 
 /*!
-  \fn void TrayIcon::doubleClicked(const QPoint &p)
+  \fn void TrayIcon::doubleClicked( const QPoint &p )
 
   This signal is emitted when the user double clicks the system tray
   icon with the left mouse button, with \a p being the global mouse position
@@ -256,18 +300,4 @@ void TrayIcon::mouseDoubleClickEvent(QMouseEvent *e)
 void TrayIcon::gotCloseEvent()
 {
 	closed();
-
-
-
-
-// EMACS-FORMAT-TAG
-//
-// Local Variables:
-// mode: C++
-// eval: (c-set-style "stroustrup")
-// eval: (c-set-offset 'access-label -2)
-// eval: (c-set-offset 'inclass '++)
-// c-basic-offset: 2
-// tab-width: 8
-// End:
 }
