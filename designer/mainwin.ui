@@ -414,7 +414,7 @@
                                 </property>
                                 <widget class="QToolButton">
                                     <property name="name">
-                                        <cstring>toolButton6</cstring>
+                                        <cstring>btnClearSearch</cstring>
                                     </property>
                                     <property name="text">
                                         <string></string>

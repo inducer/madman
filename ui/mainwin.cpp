@@ -207,6 +207,9 @@ void tMainWindow::initialize(const QString &filename_to_open)
 
   btnPlaylist->installEventFilter(this);
 
+  connect(btnClearSearch, SIGNAL(clicked()),
+          editSearch, SLOT(clear()));
+
   // various UI events --------------------------------------------------------
   connect(lstSets, SIGNAL(itemRenamed(QListViewItem *, int, const QString &)),
 	  this, SLOT(renamePlaylist(QListViewItem *, int, const QString &)));
