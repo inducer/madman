@@ -119,8 +119,6 @@ future ------------------------------------------------------------------------
 * Highlight current song leaves another marked song also selected.
 * Fix annoyance with clicking artist link twice.
 * Continuous AutoDJ from any source.
-* Convert to arch tree. 
-* Separate build tree.
 * Show count after letter in overview.
 * sort fields filled with random data?
 
@@ -153,6 +151,10 @@ MINOR IMPROVEMENTS:
 + Passive Popup now has Back and Forward buttons. (Guido Schlabitz) [done]
 + Added letterwise grouping of overview. (Guido Schlabitz) [done]
 * Added more information to passive popup by default. [done]
+* Convert to arch tree. [done]
+* Have separate build tree, one for maintenance mode and 
+  one for release. [done]
+* Preserve AutoDJ-on status across runs. [done]
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
@@ -197,6 +199,7 @@ BUGS FIXED:
   (encountered by Dave Sailer) [done]
 * Fixed generation of image_data.cpp and web_data.cpp. [done]
 * Fix AutoDJ score generation. (Shawn, patch-5) [done]
+* Made the main window use a stock icon, using proper alpha channel. [done]
 
 0.93 --------------------------------------------------------------------------
 

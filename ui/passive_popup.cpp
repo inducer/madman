@@ -80,7 +80,7 @@ tPassivePopup::tPassivePopup(const QString &text, unsigned msec,
   if (Mode < POPUP_FIRST || Mode >= POPUP_COUNT)
     Mode = POPUP_TOP_CENTER;
 
-  StateTime.start();
+  StartAnew = true;
   if (show_instantaneously)
   {
     State = SHOWING;
@@ -89,7 +89,7 @@ tPassivePopup::tPassivePopup(const QString &text, unsigned msec,
   else
   {
     State = APPEARING;
-    TotalStateMilliseconds = 300;
+    TotalStateMilliseconds = 500;
   }
 
   // calculate position
@@ -143,10 +143,16 @@ tPassivePopup::~tPassivePopup()
 
 void tPassivePopup::timer()
 {
+  if (StartAnew)
+  {
+    StateTime.start();
+    StartAnew = false;
+  }
+
   int elapsed = StateTime.elapsed();
   if (elapsed > TotalStateMilliseconds)
   {
-    StateTime.start();
+    StartAnew = true;
     switch (State)
     {
       case APPEARING:
@@ -156,7 +162,7 @@ void tPassivePopup::timer()
 	break;
       case SHOWING:
 	State = DISAPPEARING;
-	TotalStateMilliseconds = 300;
+	TotalStateMilliseconds = 500;
 	break;
       case DISAPPEARING:
 	Widget->hide();

@@ -59,6 +59,7 @@ class tPassivePopup : public QObject
     int				TotalStateMilliseconds;
     tPassivePopupMode           Mode;
     int				XPos, YPos, YEnd;
+    bool                        StartAnew;
 
     QWidget                     *Widget;
     QLabel                      *Label;

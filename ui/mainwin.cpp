@@ -112,6 +112,8 @@ tMainWindow::tMainWindow()
 
 void tMainWindow::initialize(const QString &filename_to_open)
 {
+  setIcon(getStockPixmap("icon.png"));
+
   setStockIcon(btnNewSet, "new.png");
   setStockIcon(btnCopySet, "copy.png");
   setStockIcon(btnBookmarkSet, "bookmark.png");
@@ -359,6 +361,10 @@ void tMainWindow::initialize(const QString &filename_to_open)
   // set up bogus popup so the arrow appears
   PlaylistButtonPopup = new QPopupMenu(this);
   btnPlaylist->setPopup(PlaylistButtonPopup);
+
+  // load auto dj status ------------------------------------------------------
+  actionPlaybackEnableAutoDJ->setOn(
+    ProgramBase.settings().readNumEntry("/madman/enable_auto_dj", 0) != 0);
 }
 
 
@@ -366,6 +372,8 @@ void tMainWindow::initialize(const QString &filename_to_open)
 
 tMainWindow::~tMainWindow()
 {
+  ProgramBase.settings().writeEntry("/madman/enable_auto_dj", EnableAutoDJ ? 1 : 0);
+
   if (splitter1->isShown())
     saveGeometry("full");
   else
