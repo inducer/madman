@@ -10,7 +10,7 @@ def printUsage():
   print "(C) Andreas Kloeckner 2003, released under the GNU GPL."
   print "See file COPYING for details."
   print
-  print "  %s <command> [parameters]" % sys.argv[ 0 ]
+  print "  %s <command> [parameters]" % sys.argv[0]
   print 
   print "where <command> can be any of the following:"
   print "  version"
@@ -53,43 +53,43 @@ def printUsage():
   print "  path, like so: 'Systematic Playlists/Never been listened to'"
 
 
-def parseSelection( arguments ):
-  if len( arguments ) < 1:
+def parseSelection(arguments):
+  if len(arguments) < 1:
     raise Exception, "Empty selection expression"
 
-  seltype = arguments[ 0 ]
+  seltype = arguments[0]
   if seltype == "criterion":
-    if len( arguments ) == 2:
-      return madmanremote.tCriterionSelection( arguments[ 1 ] )
-    elif len( arguments ) == 3:
-      return madmanremote.tCriterionSelection( arguments[ 1 ], arguments[ 3 ] )
+    if len(arguments) == 2:
+      return madmanremote.tCriterionSelection(arguments[1])
+    elif len(arguments) == 3:
+      return madmanremote.tCriterionSelection(arguments[1], arguments[2])
     else:
       raise Exception, "Invalid number of parameters for criterion selection"
   elif seltype == "uniqueid":
-    if len( arguments ) == 2:
-      return madmanremote.tUniqueIdSelection( int( arguments[ 1 ] ) )
+    if len(arguments) == 2:
+      return madmanremote.tUniqueIdSelection(int(arguments[1]))
     else:
       raise Exception, "Invalid number of parameters for unique_id selection"
   elif seltype == "current_playlist":
-    if len( arguments ) == 1:
+    if len(arguments) == 1:
       return madmanremote.tCurrentPlaylistSelection()
     else:
       raise Exception, "Invalid number of parameters for current_playlist selection"
   elif seltype == "playlist":
-    if len( arguments ) == 2:
-      return madmanremote.tPlaylistSelection( arguments[ 1 ] )
+    if len(arguments) == 2:
+      return madmanremote.tPlaylistSelection(arguments[1])
     else:
       raise Exception, "Invalid number of parameters for playlist selection"
   elif seltype == "current_song":
-    if len( arguments ) == 1:
+    if len(arguments) == 1:
       return madmanremote.tCurrentSongSelection()
     else:
       raise Exception, "Invalid number of parameters for current_song selection"
   elif seltype == "auto_dj":
-    if len( arguments ) == 1:
+    if len(arguments) == 1:
       return madmanremote.tAutoDJSelection()
-    elif len( arguments ) == 2:
-      return madmanremote.tAutoDJSelection( int( arguments[ 1 ] ) )
+    elif len(arguments) == 2:
+      return madmanremote.tAutoDJSelection(int(arguments[1]))
     else:
       raise Exception, "Invalid number of parameters for auto_dj selection"
   else:
@@ -98,7 +98,7 @@ def parseSelection( arguments ):
 
 
 
-if len( sys.argv ) == 1:
+if len(sys.argv) == 1:
   printUsage()
   sys.exit(1)
 
@@ -121,41 +121,41 @@ elif command == "next":
 elif command == "previous":
   remote.previous()
 elif command == "skip_to":
-  remote.skipTo( float( arguments[ 0 ] ) )
+  remote.skipTo(float(arguments[0]))
 
 elif command == "set_field":
-  remote.setField( int( arguments[ 0 ] ), arguments[ 1 ], arguments[ 2 ] )
+  remote.setField(int(arguments[0]), arguments[1], arguments[2])
 
 elif command == "count_songs":
-  selection = parseSelection( arguments[ 0: ] )
-  info = remote.getInfo( selection )
-  print len( info )
+  selection = parseSelection(arguments[0:])
+  info = remote.getInfo(selection)
+  print len(info)
 elif command == "get_info":
-  selection = parseSelection( arguments[ 0: ] )
-  print remote.request( "/madman/scripting/get_complete_record?%s" % selection.getURLFields() )
+  selection = parseSelection(arguments[0:])
+  print remote.request("/madman/scripting/get_complete_record?%s" % selection.getURLFields())
 elif command == "get_field":
-  selection = parseSelection( arguments[ 2: ] )
-  info = remote.getInfo( selection )
-  print info[ int( arguments[ 0 ] ) ][ arguments[ 1 ] ]
+  selection = parseSelection(arguments[2:])
+  info = remote.getInfo(selection)
+  print info[int(arguments[0])][arguments[1]]
 
 elif command == "play_now":
-  selection = parseSelection( arugments )
-  remote.playNow( selection )
+  selection = parseSelection(arguments)
+  remote.playNow(selection)
 elif command == "play_next":
-  selection = parseSelection( arguments )
-  remote.playNext( selection )
+  selection = parseSelection(arguments)
+  remote.playNext(selection)
 elif command == "play_eventually":
-  selection = parseSelection( arguments )
-  remote.playEventually( selection )
+  selection = parseSelection(arguments)
+  remote.playEventually(selection)
 
 elif command == "total_time":
-  if len( arguments ) >= 1 and arguments[ 0 ] == "--integer":
-    print int( remote.totalTime() )
+  if len(arguments) >= 1 and arguments[0] == "--integer":
+    print int(remote.totalTime())
   else:
     print remote.totalTime()
 elif command == "current_time":
-  if len( arguments ) >= 1 and arguments[ 0 ] == "--integer":
-    print int( remote.currentTime() )
+  if len(arguments) >= 1 and arguments[0] == "--integer":
+    print int(remote.currentTime())
   else:
     print remote.currentTime()
 elif command == "is_playing":
@@ -167,26 +167,26 @@ elif command == "clear_playlist":
   remote.clearPlaylist()
 
 elif command == "get_playlist_tree_xml":
-  if len( arguments ) == 0:
+  if len(arguments) == 0:
     result = remote.getPlaylistTreeXML()
-  elif len( arguments ) == 1:
-    result = remote.getPlaylistTreeXML( arguments[ 0 ] )
+  elif len(arguments) == 1:
+    result = remote.getPlaylistTreeXML(arguments[0])
   else:
-    result = remote.getPlaylistTreeXML( arguments[ 0 ], arguments[ 1 ] )
+    result = remote.getPlaylistTreeXML(arguments[0], arguments[1])
   print result
 
 elif command == "set_playlist_name":
-  remote.setPlaylistName( arguments[ 0 ], arguments[ 1 ] )
+  remote.setPlaylistName(arguments[0], arguments[1])
 elif command == "set_playlist_criterion":
-  remote.setPlaylistCriterion( arguments[ 0 ], arguments[ 1 ] )
+  remote.setPlaylistCriterion(arguments[0], arguments[1])
 elif command == "create_playlist":
-  remote.createPlaylist( arguments[ 0 ], arguments[ 1 ] )
+  remote.createPlaylist(arguments[0], arguments[1])
 elif command == "delete_playlist":
-  remote.deletePlaylist( arguments[ 0 ] )
+  remote.deletePlaylist(arguments[0])
 elif command == "add_song_to_playlist":
-  remote.addSongToPlaylist( arguments[ 0 ], arguments[ 1 ] )
+  remote.addSongToPlaylist(arguments[0], arguments[1])
 elif command == "remove_song_from_playlist":
-  remote.removeSongFromPlaylist( arguments[ 0 ], arguments[ 1 ] )
+  remote.removeSongFromPlaylist(arguments[0], arguments[1])
 
 else:
   print "unknown command."

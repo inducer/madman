@@ -1,6 +1,7 @@
 import httplib
 import urllib
 import codecs
+import os
 from string import *
 
 
@@ -81,8 +82,11 @@ class tAutoDJSelection(tSelection):
 
 
 class tRemote:
-  def __init__(self, host = "localhost", port = 51533):
-    self.Host = host
+  def __init__(self, host = None, port = 51533):
+    if host is None:
+      self.Host = os.getenv("MADMANHOST", "localhost")
+    else:
+      self.Host = host
     self.Port = port
     self.decodeUtf8 = codecs.getdecoder("utf_8")
     self.getVersion()

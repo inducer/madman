@@ -124,6 +124,8 @@ Patch credits (if not mentioned above):
 * passive popup ending up blank?
 * Fix flow of control for setFieldText to not rely on exceptions.
 * Mood/CustomN/... reflection in songs?
++ Customize time for song popup. (sugg. by Dave Sailer)
+  (via .rc)
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -224,6 +226,7 @@ BUGS FIXED:
 * Made sure AutoDJ works on 64 bit, applied Kyle Liddell's patch. [done]
 * Keep scanning even when an unreadable directory is encountered.
   (patch by Benjamin Montgomery <bmontgom@gmail.com>)
+* Fixed a few remote bugs. ("patch" by David Blackman)
 
 0.93 --------------------------------------------------------------------------
 
