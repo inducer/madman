@@ -219,6 +219,8 @@ BUGS FIXED:
 * Fixed a crash when trying to edit a tag and no song is selected.
 * Make sure XMMS doesn't get started automatically. [done]
 * Made sure AutoDJ works on 64 bit, applied Kyle Liddell's patch. [done]
+* Keep scanning even when an unreadable directory is encountered.
+  (patch by Benjamin Montgomery <bmontgom@gmail.com>)
 
 0.93 --------------------------------------------------------------------------
 

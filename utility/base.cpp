@@ -307,7 +307,12 @@ void enumerateFiles(const string &directory, vector<string> &result, tProgress *
 
   dir = opendir(realdir.c_str());
   if (dir == NULL)
-    throw runtime_error(("could not open directory: "+directory).c_str());
+  {
+    // maybe add something so that the error is displayed in the GUI??
+    cerr
+      << "*** Failed to open directory: " << realdir.c_str() << endl;
+	 return;
+  }
 
   try
   {
