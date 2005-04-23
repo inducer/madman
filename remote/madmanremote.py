@@ -126,8 +126,9 @@ class tRemote:
     self.request("/madman/scripting/skip_to?seconds=%f" % seconds)
 
   def setField(self, uid, field, value):
-    return self.request("/madman/scripting/set_field?uniqueid=%d&field=%s&value=%s" % (
-      uid, field, value))
+    return self.request("/madman/scripting/set_field" \
+                        "?uniqueid=%d&field=%s&value=%s" % \
+                        ( uid, field, urllib.quote_plus(value)))
 
   def getInfo(self, selection):
     data = self.request("/madman/scripting/get_complete_record?%s" % selection.getURLFields())

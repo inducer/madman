@@ -102,19 +102,17 @@ future ------------------------------------------------------------------------
   DOS line endings.) (Jon Burgess)
 + Added an XDG compliant desktop file. (Fix for icon) (Jaako H Kyro)
 + Show all songs in current file's folder. (Xavier ?)
-+ Filter on this field/add AND/add OR. (Adam Ward)
-
-* ~pathname, ~filename_without_path
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Show count after letter in overview.
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
 * See why AutoDJ was wrong with multiple selections from the same score set.
-* Locking. (sugg. by Christian Hammers)
 + %title_or_filename% (sugg. by Kyoshiro)
 * passive popup ending up blank?
 * Fix flow of control for setFieldText to not rely on exceptions.
+* Worry about properly quoting/unicode issues in remote.
+* Fix Trolltech Inline rename breakage.
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -163,6 +161,10 @@ MINOR IMPROVEMENTS:
   the play button. [done]
 * Don't resolve symlinks for media directories.
   (sugg. by Kyle Liddell) [done]
+* Restructured like songs menu.
+* Added ~pathname, ~filename_without_path criteria. [done]
+* Locking. (sugg. by Christian Hammers)
+
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.

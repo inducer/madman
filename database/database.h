@@ -45,6 +45,7 @@ class tDatabase : public QObject, public tNoncopyable
     Q_OBJECT
 
     auto_ptr<tPlaylistNode> PlaylistTree;
+    auto_ptr<tFileLock> FileLock;
 
   public:
     tDirectoryList DirectoryList;
@@ -61,7 +62,7 @@ class tDatabase : public QObject, public tNoncopyable
 
     void clear();
     void startNew();
-    void load(const QString &filename, tProgress *progress = NULL);
+    void load(const QString &filename, bool break_lock = false, tProgress *progress = NULL);
     void save(const QString &filename, tProgress *progress = NULL);
 
     void noticePlaylistTreeChanged();

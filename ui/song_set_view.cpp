@@ -946,15 +946,30 @@ QPopupMenu *tSongSetViewManager::buildPopupMenu()
 
   // Like songs ---------------------------------------------------------------
   QPopupMenu *like_songs_menu = new QPopupMenu(&ListView);
-  like_songs_menu->insertItem(tr("Play now all by this artist"), this, SLOT(playNowAllByThisArtist()));
-  like_songs_menu->insertItem(tr("Play next all by this artist"), this, SLOT(playNextAllByThisArtist()));
-  like_songs_menu->insertItem(tr("Play eventually all by this artist"), this, SLOT(playEventuallyAllByThisArtist()));
-  like_songs_menu->insertItem(tr("View all by this artist"), this, SLOT(viewAllByThisArtist()));
-  like_songs_menu->insertSeparator();
-  like_songs_menu->insertItem(tr("Play now all on this album"), this, SLOT(playNowAllOnThisAlbum()));
-  like_songs_menu->insertItem(tr("Play next all on this album"), this, SLOT(playNextAllOnThisAlbum()));
-  like_songs_menu->insertItem(tr("Play eventually all on this album"), this, SLOT(playEventuallyAllOnThisAlbum()));
-  like_songs_menu->insertItem(tr("View all on this album"), this, SLOT(viewAllOnThisAlbum()));
+
+  QPopupMenu *ls_action_menu = new QPopupMenu(&ListView);
+  ls_action_menu->insertItem(tr("Play now"), this, SLOT(playNowAllByThisArtist()));
+  ls_action_menu->insertItem(tr("Play next"), this, SLOT(playNextAllByThisArtist()));
+  ls_action_menu->insertItem(tr("Play eventually"), this, SLOT(playEventuallyAllByThisArtist()));
+  ls_action_menu->insertItem(tr("Restrict view"), this, SLOT(restrictViewToThisArtist()));
+
+  like_songs_menu->insertItem(tr("&By this artist"), ls_action_menu);
+
+  ls_action_menu = new QPopupMenu(&ListView);
+  ls_action_menu->insertItem(tr("Play now"), this, SLOT(playNowAllOnThisAlbum()));
+  ls_action_menu->insertItem(tr("Play next"), this, SLOT(playNextAllOnThisAlbum()));
+  ls_action_menu->insertItem(tr("Play eventually"), this, SLOT(playEventuallyAllOnThisAlbum()));
+  ls_action_menu->insertItem(tr("Restrict view"), this, SLOT(restrictViewToThisAlbum()));
+
+  like_songs_menu->insertItem(tr("&On this album"), ls_action_menu);
+
+  ls_action_menu = new QPopupMenu(&ListView);
+  ls_action_menu->insertItem(tr("Play now"), this, SLOT(playNowAllInThisDirectory()));
+  ls_action_menu->insertItem(tr("Play next"), this, SLOT(playNextAllInThisDirectory()));
+  ls_action_menu->insertItem(tr("Play eventually"), this, SLOT(playEventuallyAllInThisDirectory()));
+  ls_action_menu->insertItem(tr("Restrict view"), this, SLOT(restrictViewToThisDirectory()));
+
+  like_songs_menu->insertItem(tr("&In this directory"), ls_action_menu);
 
   menu->insertItem(tr("&Songs like this one"), like_songs_menu);
 
@@ -1142,9 +1157,9 @@ void tSongSetViewManager::rate(int rating)
 
 
 
-void tSongSetViewManager::viewByCriterion(const QString &crit)
+void tSongSetViewManager::restrictViewByCriterion(const QString &crit)
 {
-  emit notifySearchChangeRequested(crit);
+  emit notifySearchChangeRequested(crit, true);
 }
 
 
@@ -1159,6 +1174,8 @@ void tSongSetViewManager::playByCriterion(const QString &crit, tPlayWhen when)
 
   tSongList list;
   set.render(list);
+
+  sortBeforePlay(list);
 
   switch (when)
   {
@@ -1446,6 +1463,19 @@ QString tSongSetViewManager::getCurrentAlbumCriterion()
   return QString("~artist(complete:%1)&~album(complete:%2)")
     .arg(quoteString(hlsong->artist()))
     .arg(quoteString(hlsong->album()));
+}
+
+
+
+
+QString tSongSetViewManager::getCurrentDirectoryCriterion()
+{
+  tSong *hlsong = ListView.highlightedSong();
+  if (hlsong == NULL)
+    return QString::null;
+
+  return QString("~pathname(complete:%1)")
+    .arg(quoteString(QFile::decodeName(hlsong->pathname().c_str())));
 }
 
 
@@ -1769,6 +1799,19 @@ void tSearchViewManager::sortingChanged(tSongField field, bool ascending)
         tProgramBase::preferences().SortingPreferences.SecondarySortField[field],
         tProgramBase::preferences().SortingPreferences.TertiarySortField[field]
         );
+}
+
+
+
+
+void tSearchViewManager::sortBeforePlay(tSongList &list)
+{
+  if (DoDisplaySort)
+  {
+    sort(list, SortField, tProgramBase::preferences());
+    if (!Ascending)
+      std::reverse(list.begin(), list.end());
+  }
 }
 
 

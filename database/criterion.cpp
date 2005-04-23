@@ -1,6 +1,6 @@
 /*
 madman - a music manager
-Copyright (C) 2004  Andreas Kloeckner <ak@ixion.net>
+Copyright (C) 2004-2005  Andreas Kloeckner
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 #include <qapplication.h>
+#include <qfile.h>
 
 #include "database/criterion.h"
 #include "database/song_set.h"
@@ -491,7 +492,8 @@ namespace
       { }
       float matchDegree(const tSong *song) const
       {
-	return TextCriterion->match(QString::fromUtf8(song->filename().c_str()));
+	return TextCriterion->match(
+          QFile::decodeName(song->filename().c_str()));
       }
   };
 
@@ -507,7 +509,7 @@ namespace
       { }
       float matchDegree(const tSong *song) const
       {
-	return TextCriterion->match(QString::fromUtf8(song->filenameOnly().c_str()));
+	return TextCriterion->match(QFile::decodeName(song->filenameOnly().c_str()));
       }
   };
 
@@ -523,7 +525,7 @@ namespace
       { }
       float matchDegree(const tSong *song) const
       {
-	return TextCriterion->match(QString::fromUtf8(song->pathname().c_str()));
+	return TextCriterion->match(QFile::decodeName(song->pathname().c_str()));
       }
   };
 

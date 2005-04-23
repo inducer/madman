@@ -224,10 +224,10 @@ void tMainWindow::initialize(const QString &filename_to_open)
 	  this, SLOT(searchChanged(const QString &)));
   connect(lstOverview, SIGNAL(selectionChanged(QListViewItem *)),
 	  this, SLOT(overviewSelectionChanged(QListViewItem *)));
-  connect(&SearchViewManager, SIGNAL(notifySearchChangeRequested(const QString &)),
-	  editSearch, SLOT(setText(const QString &)));
-  connect(&PlaylistEditor, SIGNAL(notifySearchChangeRequested(const QString &)),
-	  editSearch, SLOT(setText(const QString &)));
+  connect(&SearchViewManager, SIGNAL(notifySearchChangeRequested(const QString &, bool)),
+	  this, SLOT(processSearchChangeRequest(const QString &, bool)));
+  connect(&PlaylistEditor, SIGNAL(notifySearchChangeRequested(const QString &, bool)),
+	  this, SLOT(processSearchChangeRequest(const QString &, bool)));
   connect(&PlaylistEditor, SIGNAL(notifySongSetChanged()),
 	  this, SLOT(noticeSongSetChanged()));
 
@@ -327,12 +327,7 @@ void tMainWindow::initialize(const QString &filename_to_open)
     if (!FilenameValid)
       throw runtime_error(QString2string(tr("No startup file found")));
 
-    auto_ptr<tProgressDialog> progress(new tProgressDialog(this, false));
-    progress->setWhat(tr("Loading database..."));
-    new_db->load(CurrentFilename, progress.get());
-
-    if (ProgramBase.preferences().ScanAtStartup)
-      rescan(new_db.get());
+    loadDBWithBreakLockInteraction(*new_db, CurrentFilename);
 
     setDatabase(new_db.release());
   }
@@ -679,9 +674,7 @@ void tMainWindow::fileOpen()
 
     auto_ptr<tDatabase> new_db(new tDatabase);
 
-    auto_ptr<tProgressDialog> progress(new tProgressDialog(this, false));
-    progress->setWhat(tr("Loading database..."));
-    new_db->load(filename, progress.get());
+    loadDBWithBreakLockInteraction(*new_db, filename);
 
     CurrentFilename = filename;
     FilenameValid = true;
@@ -2299,6 +2292,62 @@ void tMainWindow::noticeSongModified(const tSong *song, tSongField field)
     updateCurrentSongInfo();
     updateTrayIconStatus();
     updateWindowCaption();
+  }
+}
+
+
+
+
+void tMainWindow::processSearchChangeRequest(const QString &crit, bool restrict)
+{
+  if (restrict)
+  {
+    // this will never be perfect...
+    if (editSearch->text().length() > 0)
+      editSearch->setText(editSearch->text() + "&" + crit);
+    else
+      editSearch->setText(crit);
+  }
+  else
+    editSearch->setText(crit);
+}
+
+
+
+
+void tMainWindow::loadDBWithBreakLockInteraction(
+  tDatabase &db, const QString &filename)
+{
+  bool break_lock = false;
+  while (true)
+  {
+    try
+    {
+      auto_ptr<tProgressDialog> progress(new tProgressDialog(this, false));
+      progress->setWhat(tr("Loading database..."));
+      db.load(filename, break_lock, progress.get());
+
+      if (ProgramBase.preferences().ScanAtStartup)
+        rescan(&db);
+      return;
+    }
+    catch (tFileLocked &ex)
+    {
+      int result = QMessageBox::question(
+        this,
+        "madman",
+        tr("File %1 was locked when madman tried to read it."
+           "This might be because another copy of madman is "
+           "accessing the file.\n"
+           "What do you want to do?").arg(filename),
+        tr("Cancel"),
+        tr("Retry"),
+        tr("Break the lock"));
+      if (result == 0)
+        throw;
+      else if (result == 2)
+        break_lock = true;
+    }
   }
 }
 

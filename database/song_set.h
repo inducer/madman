@@ -69,7 +69,6 @@ class tSongSet : public QObject
      */
     void setSongCollection(tSongCollection *collection);
 
-
     virtual void render(tSongList &rendering, tProgress *progess = NULL ) const = 0;
     void render(tConstSongList &rendering, tProgress *progess = NULL ) const;
 

@@ -24,13 +24,53 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "database/song.h"
 #include <qregexp.h>
 #include <stdexcept>
+#include <cstdio>
 #include <dirent.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include "utility/progress.h"
 
 
 
 
+// tFileLock ----------------------------------------------------
+tFileLock::tFileLock(const string &name, bool break_lock)
+{
+  LockName = name + "-lock";
+
+  if (access(LockName.c_str(), F_OK) == 0)
+  {
+    // the file exists
+    if (break_lock)
+    {
+      if (unlink(LockName.c_str()))
+        throw tRuntimeError("failed to delete lock file");
+    }
+    else
+      throw tFileLocked(name);
+  }
+
+  FILE *lock = fopen(LockName.c_str(), "w");
+  if (lock == NULL)
+    throw tRuntimeError("failed to create lock file");
+  fclose(lock);
+}
+
+
+
+
+
+tFileLock::~tFileLock()
+{
+  if (unlink(LockName.c_str()))
+    throw tRuntimeError("failed to delete lock file");
+}
+
+
+
+
+
+// utility routines ---------------------------------------------
 bool hasAttribute(const char *name, const char **attributes)
 {
   while (*attributes && strcmp(name, *attributes) != 0)
@@ -751,17 +791,6 @@ bool isValidUtf8(string const &victim)
   return true;
 }
 
-
-
-
-
-QString filename2QString(const string &fn)
-{
-  if (isValidUtf8(fn))
-    return QString::fromUtf8(fn.c_str());
-  else
-    return QString::fromLatin1(fn.c_str());
-}
 
 
 

@@ -90,6 +90,41 @@ class tProgress;
 
 
 
+class tRuntimeError : public runtime_error
+{
+  public:
+    tRuntimeError(const QString &err)
+      : runtime_error(string(err.utf8()))
+    {
+    }
+};
+
+
+
+
+class tFileLocked : public runtime_error 
+{ 
+  public:
+    tFileLocked(const string &filename)
+      : runtime_error(filename + " is locked")
+      { }
+};
+
+
+
+
+class tFileLock
+{
+    string LockName;
+
+  public:
+    tFileLock(const string &name, bool break_lock = false);
+    ~tFileLock();
+};
+
+
+
+
 bool hasAttribute(const char *name, const char **attributes);
 const char *lookupAttributeUtf8(const char *name, const char **attributes);
 QString lookupAttribute(const char *name, const char **attributes);
@@ -117,18 +152,6 @@ string encodeBase64(const string &src);
 string decodeBase64(const string &src);
 string sanitizeUtf8(string const &victim);
 bool isValidUtf8(string const &victim);
-QString filename2QString(const string &fn);
-
-
-
-class tRuntimeError : public runtime_error
-{
-  public:
-    tRuntimeError(const QString &err)
-      : runtime_error(string(err.utf8()))
-    {
-    }
-};
 
 
 

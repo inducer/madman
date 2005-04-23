@@ -1183,9 +1183,9 @@ QString tSong::fieldText(tSongField field) const
       case FIELD_YEAR:
 	return year();
       case FIELD_FILE:
-	return filename2QString(filenameOnly().c_str());
+	return QFile::decodeName(filenameOnly().c_str());
       case FIELD_PATH:
-	return filename2QString(pathname().c_str());
+	return QFile::decodeName(pathname().c_str());
       case FIELD_SIZE:
 	return QString::number(fileSize());
 

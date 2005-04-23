@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
+#include <qfile.h>
 #include <qregexp.h>
 #include <qapplication.h>
 #include "database/song_list_tools.h"
@@ -302,7 +303,7 @@ tSongListSummary getSongListSummary(tSongList &list)
   result.DurationSeconds = int(duration);
 
   if (list.size())
-    result.FirstFilename = filename2QString(list[0]->filename());
+    result.FirstFilename = QFile::decodeName(list[0]->filename().c_str());
   return result;
 }
 

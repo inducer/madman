@@ -198,6 +198,7 @@ class tMainWindow : public tMainWindowBase
     void trayIconClicked(const QPoint&, int);
     void trayIconWheelMoved(const QPoint&, int delta, Qt::Orientation orient);
 
+  protected:
     bool eventFilter(QObject *o, QEvent *e);
 
   private slots:
@@ -232,6 +233,10 @@ class tMainWindow : public tMainWindowBase
     void doContinuousAutoDJ();
 
     void noticeSongModified(const tSong *song, tSongField field);
+
+    void processSearchChangeRequest(const QString &crit, bool restrict);
+    void loadDBWithBreakLockInteraction(
+      tDatabase &db, const QString &filename);
 };
 
 

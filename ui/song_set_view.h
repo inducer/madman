@@ -239,17 +239,21 @@ class tSongSetViewManager : public QObject
     void rate5() { rate(5); } 
     void rate(int rating);
 
-    void viewByCriterion(const QString &crit);
+    void restrictViewByCriterion(const QString &crit);
     void playByCriterion(const QString &crit, tPlayWhen when);
 
     void playNowAllByThisArtist() { playByCriterion(getCurrentArtistCriterion(), PLAY_NOW); }
     void playNextAllByThisArtist() { playByCriterion(getCurrentArtistCriterion(), PLAY_NEXT); }
     void playEventuallyAllByThisArtist() { playByCriterion(getCurrentArtistCriterion(), PLAY_EVENTUALLY); }
-    void viewAllByThisArtist() { viewByCriterion(getCurrentArtistCriterion()); }
+    void restrictViewToThisArtist() { restrictViewByCriterion(getCurrentArtistCriterion()); }
     void playNowAllOnThisAlbum() { playByCriterion(getCurrentAlbumCriterion(), PLAY_NOW); }
     void playNextAllOnThisAlbum() { playByCriterion(getCurrentAlbumCriterion(), PLAY_NEXT); }
     void playEventuallyAllOnThisAlbum() { playByCriterion(getCurrentAlbumCriterion(), PLAY_EVENTUALLY); }
-    void viewAllOnThisAlbum() { viewByCriterion(getCurrentAlbumCriterion()); }
+    void restrictViewToThisAlbum() { restrictViewByCriterion(getCurrentAlbumCriterion()); }
+    void playNowAllInThisDirectory() { playByCriterion(getCurrentDirectoryCriterion(), PLAY_NOW); }
+    void playNextAllInThisDirectory() { playByCriterion(getCurrentDirectoryCriterion(), PLAY_NEXT); }
+    void playEventuallyAllInThisDirectory() { playByCriterion(getCurrentDirectoryCriterion(), PLAY_EVENTUALLY); }
+    void restrictViewToThisDirectory() { restrictViewByCriterion(getCurrentDirectoryCriterion()); }
 
     void resetStatistics();
 
@@ -272,12 +276,19 @@ class tSongSetViewManager : public QObject
     virtual void sortingChanged(tSongField field, bool ascending) { }
 
   signals:
-    void notifySearchChangeRequested(const QString &);
+    /** If \c restrict is set, this will have the effect of 
+     * restricting the current view. Otherwise, the string
+     * argument will be set as the new criterion.
+     */
+    void notifySearchChangeRequested(const QString &, bool restrict);
     void notifySongSetChanged();
 
   protected:
     QString getCurrentArtistCriterion();
     QString getCurrentAlbumCriterion();
+    QString getCurrentDirectoryCriterion();
+
+    virtual void sortBeforePlay(tSongList &list) { }
 
     friend class tSongListViewItem;
 };
@@ -372,6 +383,9 @@ class tSearchViewManager : public tSongSetViewManager
 
   signals:
     void add(tSongList const &);
+
+  protected:
+    void sortBeforePlay(tSongList &list);
 };
 
 

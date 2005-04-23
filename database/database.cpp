@@ -338,6 +338,7 @@ void tDatabase::setPlaylistTree(tPlaylistNode *node)
 
 void tDatabase::clear()
 {
+  FileLock = auto_ptr<tFileLock>();
   setPlaylistTree(NULL);
 
   SongCollection.clear();
@@ -408,10 +409,13 @@ void tDatabase::startNew()
 
 
 
-void tDatabase::load(const QString &filename, tProgress *progress)
+void tDatabase::load(const QString &filename, bool break_lock, tProgress *progress)
 {
   clear();
   QFile dbfile(filename);
+
+  auto_ptr<tFileLock> my_new_lock(
+    new tFileLock(QFile::encodeName(filename).data(), break_lock));
 
   if (dbfile.open(IO_ReadOnly))
   {
@@ -448,6 +452,7 @@ void tDatabase::load(const QString &filename, tProgress *progress)
 
     XML_ParserFree(parser);
     dbfile.close();
+    FileLock = my_new_lock;
   }
   else
     throw tRuntimeError(qApp->translate("ErrorMessages", "Database file not accessible: %1").arg(filename));
@@ -508,6 +513,7 @@ void tDatabase::save(const QString &filename, tProgress *progress)
 void tDatabase::noticePlaylistTreeChanged()
 {
   emit notifyPlaylistTreeChanged();
+}
 
 
 
@@ -522,4 +528,3 @@ void tDatabase::noticePlaylistTreeChanged()
 // c-basic-offset: 2
 // tab-width: 8
 // End:
-}
