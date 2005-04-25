@@ -1,6 +1,6 @@
 /*
 madman - a music manager
-Copyright (C) 2003  Andreas Kloeckner <mathem@tiker.net>
+Copyright (C) 2003-2005 Andreas Kloeckner
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -194,6 +194,7 @@ namespace
     QString last_entry = QString::null,
             last_alphanum = QString::null;
 
+    unsigned alphanum_count = 0;
     int distinct_count = 0;
 
     tSongList::iterator first = songs.begin(), last = songs.end();
@@ -218,17 +219,21 @@ namespace
 	.arg(getFieldIdentifier(field1)) 
 	.arg(quoteString(this_entry));
 	
-      if (!group_alphanumerically || belongs_to_none)
-        alphanum_item = parent;
-      else 
+      if (group_alphanumerically && !belongs_to_none)
       {
         QChar first_char = firstLetterOrNumber(this_nonnormalized_entry);
         
+        QString alpha_criterion = QString("%1~%2(startswith:%3)")
+          .arg(critprefix)
+          .arg(getFieldIdentifier(field1)) 
+          .arg(first_char);
+
+        tOverviewItem *new_alphanum_item = NULL;
 	if (first_char.isLetter())
 	{      
           if (last_alphanum != first_char)
           {      
-            alphanum_item = new tOverviewItem(parent, alphanum_item, first_char, QString::null);
+            new_alphanum_item = new tOverviewItem(parent, alphanum_item, first_char, alpha_criterion);
 	    last_alphanum = first_char;
 	  }
 	}
@@ -236,25 +241,43 @@ namespace
 	{
 	  if (last_alphanum != "0..9")
 	  {
-	    alphanum_item = new tOverviewItem(parent, alphanum_item, "0..9", QString::null);
+	    new_alphanum_item = new tOverviewItem(parent, alphanum_item, "0..9", alpha_criterion);
 	    last_alphanum = "0..9";
 	  }
 	}
+        if (new_alphanum_item)
+        {
+          if (alphanum_item)
+            alphanum_item->setText(0,
+                                   QString("%1 (%2)")
+                                   .arg(alphanum_item->text(0))
+                                   .arg(alphanum_count));
+          alphanum_item = new_alphanum_item;
+          alphanum_count = 0;
+        }
       }          
          
       QListViewItem *entry_item = new tOverviewItem(
-	  alphanum_item, last_item,
+	  belongs_to_none || !alphanum_item ? parent : alphanum_item, last_item,
 	  QString("%1 (%2)")
 	    .arg(this_nonnormalized_entry)
 	    .arg(this_songs.size()), 
 	    criterion);
 
-      if (field2 != FIELD_COUNT)
-	buildOverview(this_songs, field2, FIELD_COUNT, entry_item, criterion+"&", false);
+      if (field2 != FIELD_INVALID)
+	buildOverview(this_songs, field2, FIELD_INVALID, entry_item, criterion+"&", false);
 
       last_item = entry_item;
       distinct_count++;
+      alphanum_count += this_songs.size();
     }
+
+    if (alphanum_item)
+      alphanum_item->setText(0, 
+        QString(" %1 (%2)")
+        .arg(alphanum_item->text(0))
+        .arg(alphanum_count));
+
     return distinct_count;
   }
 }
@@ -320,7 +343,7 @@ void tAlbumOverviewItem::addExpansion()
   tSongList songs;
   FOREACH_CONST(first, Database.SongCollection, tSongCollection)
     songs.push_back(*first);
-  buildOverview(songs, FIELD_ALBUM, FIELD_COUNT, this, "", GroupAlphanumerically);
+  buildOverview(songs, FIELD_ALBUM, FIELD_INVALID, this, "", GroupAlphanumerically);
 }
 
 
@@ -351,7 +374,7 @@ void tGenreOverviewItem::addExpansion()
   tSongList songs;
   FOREACH_CONST(first, Database.SongCollection, tSongCollection)
     songs.push_back(*first);
-  buildOverview(songs, FIELD_GENRE, FIELD_COUNT, this, false);
+  buildOverview(songs, FIELD_GENRE, FIELD_INVALID, this, false);
 }
 
 

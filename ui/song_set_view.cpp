@@ -127,24 +127,30 @@ tSongListView::tSongListView(QWidget *parent, const char *name)
   ColumnToField.resize(FIELD_COUNT);
   FieldWidths.resize(FIELD_COUNT);
 
-  ShownColumns = 0;
+  tSongField default_fields[] = 
+    {FIELD_ARTIST, 
+     FIELD_TITLE_OR_FILENAME,
+     FIELD_ALBUM, 
+     FIELD_TRACKNUMBER,
+     FIELD_DURATION,
+     FIELD_RATING,
+     FIELD_INVALID
+    };
+
   for (int field = 0; field < FIELD_COUNT; field++)
   {
-    if (field == FIELD_ARTIST || 
-        field == FIELD_TITLE ||
-	field == FIELD_ALBUM ||
-        field == FIELD_TRACKNUMBER ||
-        field == FIELD_DURATION ||
-        field == FIELD_RATING)
-    {
-      FieldToColumn[ field ] = ShownColumns;
-      ColumnToField[ ShownColumns ] = field;
-      ShownColumns++;
-    }
-    else
-      FieldToColumn[ field ] = -1;
+    FieldToColumn[field] = -1;
+    FieldWidths[field] = 100;
+  }
 
-    FieldWidths[ field ] = 100;
+  ShownColumns = 0;
+
+  for (unsigned i = 0; default_fields[i] != FIELD_INVALID; i++)
+  {
+    tSongField f = default_fields[i];
+    FieldToColumn[f] = ShownColumns;
+    ColumnToField[ShownColumns] = f;
+    ShownColumns++;
   }
 
   connect(

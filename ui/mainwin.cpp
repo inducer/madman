@@ -2336,7 +2336,7 @@ void tMainWindow::loadDBWithBreakLockInteraction(
       int result = QMessageBox::question(
         this,
         "madman",
-        tr("File %1 was locked when madman tried to read it."
+        tr("The file\n%1\nwas locked when madman tried to read it. \n"
            "This might be because another copy of madman is "
            "accessing the file.\n"
            "What do you want to do?").arg(filename),

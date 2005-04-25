@@ -86,6 +86,8 @@ future ------------------------------------------------------------------------
 + Integrate MPD (musicpd.org)
 * Mood/CustomN/... reflection in songs?
 * Mail this MP3 plugin (suggested by "oi man")
++ Tag editing window. (suggested by Duke/Matt)
++ Threshold for Overview/Do not show below n songs. (suggested by Duke/Matt)
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -104,15 +106,14 @@ future ------------------------------------------------------------------------
 + Show all songs in current file's folder. (Xavier ?)
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
-* Show count after letter in overview.
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
 * See why AutoDJ was wrong with multiple selections from the same score set.
-+ %title_or_filename% (sugg. by Kyoshiro)
-* passive popup ending up blank?
 * Fix flow of control for setFieldText to not rely on exceptions.
 * Worry about properly quoting/unicode issues in remote.
-* Fix Trolltech Inline rename breakage.
+* RESCANAFTER not working? (Duke/Matt)
+* Avoid column futzing.
+* Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -164,7 +165,7 @@ MINOR IMPROVEMENTS:
 * Restructured like songs menu.
 * Added ~pathname, ~filename_without_path criteria. [done]
 * Locking. (sugg. by Christian Hammers)
-
++ FIELD_TITLE_OR_FILENAME (sugg. by Kyoshiro)
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.

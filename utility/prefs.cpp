@@ -132,10 +132,10 @@ void tPreferences::save(QSettings &settings)
   WRITE_BOOL("http_browsing_enabled", HttpBrowsingEnabled);
   WRITE_BOOL("http_restrict_to_localhost", HttpRestrictToLocalhost);
 
-  settings.writeEntry("/madman/tray_tooltip_format", TrayTooltipFormat );
-  settings.writeEntry("/madman/passive_popup_format_v2", PassivePopupFormat);
-  settings.writeEntry("/madman/caption_format", CaptionFormat );
-  settings.writeEntry("/madman/playlist_menu_format", PlaylistMenuFormat );
+  settings.writeEntry("/madman/tray_tooltip_format_v2", TrayTooltipFormat );
+  settings.writeEntry("/madman/passive_popup_format_v3", PassivePopupFormat);
+  settings.writeEntry("/madman/caption_format_v2", CaptionFormat );
+  settings.writeEntry("/madman/playlist_menu_format_v2", PlaylistMenuFormat );
 
   unsigned i = 0;
   settings.writeEntry("/madman/auto_dj/score_adjustment_count", (int) AutoDJPreferences.ScoringRuleList.size());
@@ -218,13 +218,12 @@ void tPreferences::load(QSettings &settings)
   READ_BOOL("http_browsing_enabled", HttpBrowsingEnabled, 1);
   READ_BOOL("http_restrict_to_localhost", HttpRestrictToLocalhost, 1);
 
-  TrayTooltipFormat = settings.readEntry("/madman/tray_tooltip_format", "%title% - %artist%");
-  PassivePopupFormat = settings.readEntry("/madman/passive_popup_format", "%title%%newline%%artist%");
+  TrayTooltipFormat = settings.readEntry("/madman/tray_tooltip_format_v2", "%title_or_filename% - %artist%");
   PassivePopupFormat = settings.readEntry(
-    "/madman/passive_popup_format_v2", 
-    "%title% (%duration%)%newline%%artist%%newline%Rating: %rating%%newline%");
-  CaptionFormat = settings.readEntry("/madman/caption_format", "%title% - %artist% [%databasename%]");
-  PlaylistMenuFormat = settings.readEntry("/madman/playlist_menu_format", "%title% - %artist% (%rating%)");
+    "/madman/passive_popup_format_v3", 
+    "%title_or_filename% (%duration%)%newline%%artist%");
+  CaptionFormat = settings.readEntry("/madman/caption_format_v2", "%title_or_filename% - %artist% [%databasename%]");
+  PlaylistMenuFormat = settings.readEntry("/madman/playlist_menu_format_v2", "%title_or_filename% - %artist% (%rating%)");
 
   // auto dj ------------------------------------------------------------------
   unsigned criteria_count = 

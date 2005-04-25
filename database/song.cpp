@@ -104,6 +104,7 @@ namespace
       tag->setArtist(conv_value);
       break;
     case FIELD_TITLE:
+    case FIELD_TITLE_OR_FILENAME:
       tag->setTitle(conv_value);
       break;
     case FIELD_ALBUM:
@@ -467,6 +468,7 @@ QString getFieldName(tSongField field)
     case FIELD_CUSTOM1: return qApp->translate("FieldDescriptions", "Custom1");
     case FIELD_CUSTOM2: return qApp->translate("FieldDescriptions", "Custom2");
     case FIELD_CUSTOM3: return qApp->translate("FieldDescriptions", "Custom3");
+    case FIELD_TITLE_OR_FILENAME: return qApp->translate("FieldDescriptions", "Title/Filename");
     default: return qApp->translate("FieldDescriptions", "<unknown>");
   }
 }
@@ -504,6 +506,7 @@ QString getFieldIdentifier(tSongField field)
     case FIELD_CUSTOM1: return "custom1";
     case FIELD_CUSTOM2: return "custom2";
     case FIELD_CUSTOM3: return "custom3";
+    case FIELD_TITLE_OR_FILENAME: return "title_or_filename";
 default: 
       throw tRuntimeError("Invalid field id in getFieldIdentifier");
   }
@@ -515,35 +518,12 @@ default:
 
 tSongField getFieldFromIdentifier(const QString &field)
 {
-  if (field == "artist") return FIELD_ARTIST;
-  else if (field == "performer") return FIELD_PERFORMER;
-  else if (field == "title") return FIELD_TITLE;
-  else if (field == "album") return FIELD_ALBUM;
-  else if (field == "tracknumber") return FIELD_TRACKNUMBER;
-  else if (field == "duration") return FIELD_DURATION;
-  else if (field == "genre") return FIELD_GENRE;
-  else if (field == "fullplaycount") return FIELD_FULLPLAYCOUNT;
-  else if (field == "partialplaycount") return FIELD_PARTIALPLAYCOUNT;
-  else if (field == "playcount") return FIELD_PLAYCOUNT;
-  else if (field == "lastplayed") return FIELD_LASTPLAYED;
-  else if (field == "rating") return FIELD_RATING;
-  else if (field == "year") return FIELD_YEAR;
-  else if (field == "file") return FIELD_FILE;
-  else if (field == "path") return FIELD_PATH;
-  else if (field == "size") return FIELD_SIZE;
-  else if (field == "existssince") return FIELD_EXISTSSINCE;
-  else if (field == "lastmodified") return FIELD_LASTMODIFIED;
-  else if (field == "mimetype") return FIELD_MIMETYPE;
-  else if (field == "uniqueid") return FIELD_UNIQUEID;
-  else if (field == "mood") return FIELD_MOOD;
-  else if (field == "tempo") return FIELD_TEMPO;
-  else if (field == "custom1") return FIELD_CUSTOM1;
-  else if (field == "custom2") return FIELD_CUSTOM2;
-  else if (field == "custom3") return FIELD_CUSTOM3;
-  else 
+  for (int f = 0; f < FIELD_COUNT; f++)
   {
-    throw tRuntimeError("Invalid field id in getFieldFromIdentifier");
+    if (field == getFieldIdentifier((tSongField) f))
+      return (tSongField) f;
   }
+  throw tRuntimeError("Invalid field id in getFieldFromIdentifier");
 }
 
 
@@ -578,7 +558,7 @@ QString substituteSongFields(QString const &format, tSong *song, bool human_read
 string substituteSongFieldsUtf8(QString const &format, tSong *song, 
                                 bool human_readable, bool shell_quote)
 {
-  string result = format;
+  string result = format.utf8().data();
 
   for (unsigned i = 0; i < FIELD_COUNT; i++)
   {
@@ -844,6 +824,18 @@ QString tSong::custom3() const
 {
   ensureInfoIsThere();
   return Custom3;
+}
+
+
+QString tSong::titleOrFilename() const
+{
+  if (title().length() == 0)
+  {
+    return QFile::decodeName(
+      stripPath(stripExtension(filename())).c_str());
+  }
+  else
+    return title();
 }
 
 
@@ -1208,6 +1200,9 @@ QString tSong::fieldText(tSongField field) const
 	return custom2();
       case FIELD_CUSTOM3:
 	return custom3();
+
+      case FIELD_TITLE_OR_FILENAME:
+        return titleOrFilename();
 
       default:
 	throw tRuntimeError("Invalid field in fieldText");
@@ -2148,7 +2143,7 @@ void  tM4ASong::stripTagInternal()
 
 
 
-//tTaglessSong ---------------------------------------------------------------
+// tTaglessSong --------------------------------------------------------------
 class tTaglessSong : public tSong
 {
   public:
@@ -2163,8 +2158,8 @@ class tTaglessSong : public tSong
 
 void tTaglessSong::readInfo() const
 {
-  tFilename::size_type slash_pos = filename().rfind("/");
-  QString name = string2QString(filename().substr(slash_pos+1));
+  QString name = QFile::decodeName(
+    stripPath(stripExtension(filename())).c_str());
   assignAndCheckForModification(this,SongCollection,
                                 const_cast<tTaglessSong *>(this)->Title,
                                 name, FIELD_TITLE);

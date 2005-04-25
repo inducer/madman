@@ -152,6 +152,8 @@ string encodeBase64(const string &src);
 string decodeBase64(const string &src);
 string sanitizeUtf8(string const &victim);
 bool isValidUtf8(string const &victim);
+tFilename stripPath(const tFilename &fn);
+tFilename stripExtension(const tFilename &fn);
 
 
 

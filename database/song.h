@@ -68,12 +68,11 @@ enum tSongField {
   FIELD_CUSTOM1 = 22,
   FIELD_CUSTOM2 = 23,
   FIELD_CUSTOM3 = 24,
+
+  FIELD_TITLE_OR_FILENAME = 25,
   
-  FIELD_REAL_COUNT = 25,
-   
+  FIELD_COUNT = 26,
   
-  FIELD_EXTRA_FIRST = (FIELD_REAL_COUNT),
-  FIELD_COUNT = (FIELD_REAL_COUNT + 0),
   FIELD_INVALID = 0x100000
 };
 
@@ -157,6 +156,8 @@ class tSong
     QString custom1() const;
     QString custom2() const;
     QString custom3() const;
+
+    QString titleOrFilename() const;
     
     float duration() const;
 

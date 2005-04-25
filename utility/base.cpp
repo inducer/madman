@@ -795,6 +795,30 @@ bool isValidUtf8(string const &victim)
 
 
 
+tFilename stripPath(const tFilename &fn)
+{
+  tFilename::size_type slash_pos = fn.rfind("/");
+  if (slash_pos == tFilename::npos)
+    return fn;
+  else
+    return fn.substr(slash_pos+1);
+}
+
+
+
+
+tFilename stripExtension(const tFilename &fn)
+{
+  tFilename::size_type dot_pos = fn.rfind(".");
+  if (dot_pos == tFilename::npos)
+    return fn;
+  else
+    return fn.substr(0,dot_pos);
+}
+
+
+
+
 // tProfiler ------------------------------------------------------------------
 tProfiler::tProfiler(const QString &name)
 : Name(name)

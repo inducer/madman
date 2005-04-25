@@ -118,6 +118,7 @@ namespace
   MAKE_STRING_SONG_LESS(tCustom1Less, custom1);
   MAKE_STRING_SONG_LESS(tCustom2Less, custom2);
   MAKE_STRING_SONG_LESS(tCustom3Less, custom3);
+  MAKE_STRING_SONG_LESS(tTitleOrFilenameLess, titleOrFilename);
   MAKE_CXX_STRING_SONG_LESS(tFilenameLess, filenameOnly);
   MAKE_CXX_STRING_SONG_LESS(tPathLess, pathname);
   MAKE_STRING_SONG_LESS(tMimeTypeLess, mimeType);
@@ -198,6 +199,7 @@ static void sortSingle(tSongList &list, tSongField field)
     case FIELD_CUSTOM1 : stable_sort(list.begin(), list.end(), tCustom1Less()); break;
     case FIELD_CUSTOM2 : stable_sort(list.begin(), list.end(), tCustom2Less()); break;
     case FIELD_CUSTOM3 : stable_sort(list.begin(), list.end(), tCustom3Less()); break;
+    case FIELD_TITLE_OR_FILENAME : stable_sort(list.begin(), list.end(), tTitleOrFilenameLess()); break;
     default:
       throw tRuntimeError(
         qApp->translate("ErrorMessages",
@@ -237,6 +239,7 @@ static tLessBase *getLess(tSongField field)
     case FIELD_CUSTOM1 : return new tCustom1Less;
     case FIELD_CUSTOM2 : return new tCustom2Less;
     case FIELD_CUSTOM3 : return new tCustom3Less;
+    case FIELD_TITLE_OR_FILENAME : return new tTitleOrFilenameLess;
     case FIELD_INVALID: return NULL;
     default:
       throw tRuntimeError(
