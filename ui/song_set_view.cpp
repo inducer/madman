@@ -51,6 +51,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ui/song_set_view.h"
 #include "ui/mainwin.h"
 #include "ui/auto_tag.h"
+#include "ui/progress_impl.h"
 
 
 
@@ -1418,8 +1419,22 @@ void tSongSetViewManager::pluginActivated(int id)
 	    first->run(tProgramBase::settings(), selection);
 	    if (first->RescanAfter)
 	    {
-	      // FIXME revive
-	      // ProgramBase.rescan();
+              try
+              {
+                auto_ptr<tProgressDialog> progress(
+                  new tProgressDialog(ListView.topLevelWidget(), 
+                                      false));
+                tProgramBase::database().SongCollection.scan(
+                  tProgramBase::database().DirectoryList, progress.get());
+              }
+              catch (exception &ex)
+              {
+                QMessageBox::warning(
+                  ListView.topLevelWidget(), 
+                  tr("madman"),
+                  tr("Error while rescanning:\n%1").arg(ex.what()), 
+                  QMessageBox::Ok, QMessageBox::NoButton);
+              }
 	    }
 	  }
 	  return;

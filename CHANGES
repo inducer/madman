@@ -105,7 +105,6 @@ future ------------------------------------------------------------------------
 + M3U export wizard. (Consider: relative paths, "/" path delimiter,
   DOS line endings.) (Jon Burgess)
 + Added an XDG compliant desktop file. (Fix for icon) (Jaako H Kyro)
-+ Show all songs in current file's folder. (Xavier ?)
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Avoid automatic window resize on very long song titles.
@@ -113,7 +112,6 @@ future ------------------------------------------------------------------------
 * See why AutoDJ was wrong with multiple selections from the same score set.
 * Fix flow of control for setFieldText to not rely on exceptions.
 * Worry about properly quoting/unicode issues in remote.
-* RESCANAFTER not working? (Duke/Matt)
 * Avoid column futzing.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
 
@@ -168,6 +166,7 @@ MINOR IMPROVEMENTS:
 * Added ~pathname, ~filename_without_path criteria. [done]
 * Locking. (sugg. by Christian Hammers)
 + FIELD_TITLE_OR_FILENAME (sugg. by Kyoshiro)
++ Show all songs in current file's folder. (Xavier ?)
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
@@ -235,7 +234,8 @@ BUGS FIXED:
 + Customize time for song popup. (sugg. by Dave Sailer)
   (via .rc) [done]
 * Fixed a crash when requesting an AutoDJ selection in
- the web server. (reported by Walter King.)
+  the web server. (reported by Walter King.)
+* Fixed/revived RESCANAFTER in plugins? (Duke/Matt)
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>
