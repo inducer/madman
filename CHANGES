@@ -232,6 +232,8 @@ BUGS FIXED:
 * Mousewheel on tray icon allows forward/back. [done]
 + Customize time for song popup. (sugg. by Dave Sailer)
   (via .rc) [done]
+* Fixed a crash when requesting an AutoDJ selection in
+  the web server. (reported by Walter King.)
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>

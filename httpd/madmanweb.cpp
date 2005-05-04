@@ -277,12 +277,13 @@ void getSongSelection(const QUrl &url, tSongList &list)
   }
   else if (type == "autodj")
   {
-    tSearchSongSet set;
-    set.setSongCollection(&tProgramBase::database().SongCollection);
-    set.setCriterion("~all");
-    set.reevaluateCriterion();
+    auto_ptr<tSearchSongSet> set(new tSearchSongSet);
+    set->setSongCollection(&tProgramBase::database().SongCollection);
+    set->setCriterion("~all");
+    set->reevaluateCriterion();
 
-    tAutoDJ dj(tProgramBase::preferences().AutoDJPreferences, &set);
+    tAutoDJ dj(tProgramBase::preferences().AutoDJPreferences, set.get());
+    set.release();
     dj.selectSongs(list, 
 	getOptionalQueryInteger(url, "song_count", 20));
   }
