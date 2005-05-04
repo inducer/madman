@@ -96,8 +96,17 @@ void tSongCollection::rereadTags(tProgress *progress)
   FOREACH(first, SongList, tSongList)
   {
     cout << "read tag: " << (*first)->filename() << endl;
-    (*first)->invalidateCache();
-    (*first)->ensureInfoIsThere();
+    try
+    {
+      (*first)->invalidateCache();
+      (*first)->ensureInfoIsThere();
+    }
+    catch (runtime_error &ex)
+    {
+      cerr 
+        << "*** error while reading tags from " << (*first)->filename() << ":"<< endl
+        << "    " << ex.what() << endl;
+    }
 
     ++index;
     if (index % 10 == 0)
