@@ -113,7 +113,7 @@ tMainWindow::tMainWindow()
 
 void tMainWindow::initialize(const QString &filename_to_open)
 {
-  setIcon(getStockPixmap("icon.png"));
+  setIcon(getStockPixmap("madman.png"));
 
   setStockIcon(btnNewSet, "new.png");
   setStockIcon(btnCopySet, "copy.png");

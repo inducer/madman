@@ -328,9 +328,24 @@ plugin_list = glob.glob(os.path.join("plugins", "[a-z]*"))
 plugin_list = filter(lambda x: x.find("example") == -1, plugin_list)
 env.Install("$install_to/lib/madman/plugins", plugin_list)
 
+# install a menu entry -------------------------------------
+def replace_installdir(target, source, env):
+  rep = source[0].get_contents()
+  rep = rep.replace("INSTALLDIR", env.subst("$install_to"))
+  file(target[0].get_abspath(), "w").write(rep)
+
+desktop_builder = Builder(action = replace_installdir)
+env.Append(BUILDERS = { "DesktopFile": desktop_builder })
+env.DesktopFile("madman.desktop", "madman.desktop.in")
+
 env.Alias("install", "$install_to/bin")
 env.Alias("install", "$install_to/lib/madman/plugins")
+env.Alias("install", "$install_to/share/pixmaps")
+env.Alias("install", "$install_to/share/applications")
+env.Install("$install_to/share/pixmaps", "designer/images/madman.png")
+env.Install("$install_to/share/applications", "madman.desktop")
 
+# call subfiles --------------------------------------------
 for dir in ["expat", "utility", "database", 
             "httpd/webdata", "httpd", 
             "designer/images", "designer",

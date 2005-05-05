@@ -14,7 +14,6 @@ far future --------------------------------------------------------------------
 * Don't put songs in playlist that are already in there
   (confusion-proof UI?) (sugg. by Johan Forsberg)
 + One-time commit feature for tag writes. (sugg. by Johan Forsberg)
-* Deeper overview hierarchies (maybe). (sugg. by Michael Albert)
 
 future ------------------------------------------------------------------------
 + Maybe add little builtin player.
@@ -104,7 +103,6 @@ future ------------------------------------------------------------------------
 * Be able to parse relative M3U files. (sugg. by Jon Burgess)
 + M3U export wizard. (Consider: relative paths, "/" path delimiter,
   DOS line endings.) (Jon Burgess)
-+ Added an XDG compliant desktop file. (Fix for icon) (Jaako H Kyro)
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Avoid automatic window resize on very long song titles.
@@ -167,6 +165,7 @@ MINOR IMPROVEMENTS:
 * Locking. (sugg. by Christian Hammers)
 + FIELD_TITLE_OR_FILENAME (sugg. by Kyoshiro)
 + Show all songs in current file's folder. (Xavier ?)
++ Added an XDG compliant desktop file. (Jaako H Kyro)
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.

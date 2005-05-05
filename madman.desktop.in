@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=madman
+GenericName=Music Manager
+Comment=A music manager with powerful search capabilities
+Terminal=false
+Exec=INSTALLDIR/bin/madman
+Type=Application
+Icon=INSTALLDIR/share/pixmaps/madman.png
+Categories=KDE;GNOME;Application;Utility;AudioVideo;X-Red-Hat-Base;

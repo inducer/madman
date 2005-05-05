@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Madman Media Library Tool
-Comment=A powerful jukebox using XMMS for playing content
-Exec=madman
-Type=Application
-Icon=helixplayer.xpm
-Categories=GNOME;Application;AudioVideo;;X-Red-Hat-Base;
