@@ -136,6 +136,10 @@
         <translation>Fehler beim Schreiben des Tags:
 %1</translation>
     </message>
+    <message>
+        <source>Invalid field id %1 while sorting list of songs</source>
+        <translation>Ungültige Feld-ID beim Sortieren der Liedliste</translation>
+    </message>
 </context>
 <context>
     <name>FieldDescriptions</name>
@@ -226,6 +230,37 @@
     <message>
         <source>Unique ID</source>
         <translation>Eindeutige ID</translation>
+    </message>
+    <message>
+        <source>Mood</source>
+        <translation>Stimmung</translation>
+    </message>
+    <message>
+        <source>Tempo</source>
+        <translation>Tempo</translation>
+    </message>
+    <message>
+        <source>Custom1</source>
+        <translation>Benutzer1</translation>
+    </message>
+    <message>
+        <source>Custom2</source>
+        <translation>Benutzer2</translation>
+    </message>
+    <message>
+        <source>Custom3</source>
+        <translation>Benutzer3</translation>
+    </message>
+    <message>
+        <source>Title/Filename</source>
+        <translation>Titel/Dateiname</translation>
+    </message>
+</context>
+<context>
+    <name>Overview</name>
+    <message>
+        <source>&lt;none&gt;</source>
+        <translation>&lt;kein&gt;</translation>
     </message>
 </context>
 <context>
@@ -399,7 +434,7 @@ In true open source spirit, some code was shamelessly stolen from the following 
 &lt;li&gt; Justin Karneges (Psi&apos;s system tray code)
 &lt;li&gt; The CrystalSVG icon theme (most of the new icons)
 &lt;/ul&gt;</source>
-        <translation>madman was brought to you by:
+        <translation type="obsolete">madman was brought to you by:
 &lt;ul&gt;
 &lt;li&gt; Andreas Kl&amp;ouml;ckner &amp;lt;inducer@users.sf.net&amp;gt;
 &lt;/ul&gt;
@@ -1117,6 +1152,50 @@ Public License instead of this License.
         <source>Alt+O</source>
         <translation>Alt+O</translation>
     </message>
+    <message>
+        <source>madman was brought to you by:
+&lt;ul&gt;
+&lt;li&gt; Andreas Kl&amp;ouml;ckner &amp;lt;inducer@users.sf.net&amp;gt;
+&lt;/ul&gt;
+with plenty of help from:
+&lt;ul&gt;
+&lt;li&gt; Shawn Willden (Auto DJ rewrite)
+&lt;li&gt; Guido Schlabitz (bunch&apos;o&apos;patches :-)
+&lt;li&gt; Walter King (M4A support, tagless songs, various patches)
+&lt;li&gt; Christian Plagemann (new artwork)
+&lt;li&gt; Felipe Rivera (new icons)
+&lt;li&gt; Jon Burgess (bug fixes, suggestions)
+&lt;li&gt; Josie Walker (prerelease QA, the woman&apos;s touch&amp;trade;)
+&lt;/ul&gt;
+In true open source spirit, some code was shamelessly stolen from the following renowned sources:
+&lt;ul&gt;
+&lt;li&gt; Makoto Matsumoto and Takuji Nishimura (the Mersenne Twister random number generator)
+&lt;li&gt; Justin Karneges (Psi&apos;s system tray code)
+&lt;li&gt; The CrystalSVG icon theme (most of the new icons)
+&lt;li&gt; The SCons build system.
+&lt;/ul&gt;</source>
+        <translation>madman wurde erstellt von:
+&lt;ul&gt;
+&lt;li&gt; Andreas Kl&amp;ouml;ckner &amp;lt;inform@tiker.net&amp;gt;
+&lt;/ul&gt;
+unter Mithilfe von:
+&lt;ul&gt;
+&lt;li&gt; Shawn Willden (Neuerstellung des AutoDJ)
+&lt;li&gt; Guido Schlabitz (bunch&apos;o&apos;patches :-)
+&lt;li&gt; Walter King (Unterstützung für M4A, Lieder ohne Tags, einige Patches)
+&lt;li&gt; Christian Plagemann (Neue Grafiekn)
+&lt;li&gt; Felipe Rivera (Neue Symbole)
+&lt;li&gt; Jon Burgess (bug fixes, suggestions)
+&lt;li&gt; Josie Walker (prerelease QA, the woman&apos;s touch&amp;trade;)
+&lt;/ul&gt;
+Nach rechter Open-Source-Art haben wir Code von den folgenden Quellen &quot;geborgt&quot;:
+&lt;ul&gt;
+&lt;li&gt; Makoto Matsumoto and Takuji Nishimura (der Mersenne-Twister-Zufallsgenerator)
+&lt;li&gt; Justin Karneges (Tray-Code aus Psi&apos;s)
+&lt;li&gt; The CrystalSVG icon theme (Die meisten der neuen Symbole)
+&lt;li&gt; Das SCons-Buildsystem.
+&lt;/ul&gt;</translation>
+    </message>
 </context>
 <context>
     <name>tAllSongsViewManager</name>
@@ -1193,6 +1272,13 @@ Public License instead of this License.
     <message>
         <source>Alt+C</source>
         <translation>Alt+C</translation>
+    </message>
+</context>
+<context>
+    <name>tDatabase</name>
+    <message>
+        <source>Error in XML Parser: %1 - line %2</source>
+        <translation>Fehler im XML-Parser: %1 - line %2</translation>
     </message>
 </context>
 <context>
@@ -1657,6 +1743,62 @@ Grund: %1</translation>
         <source>from &lt;a href=&quot;album&quot;&gt;%1&lt;/a&gt; by &lt;a href=&quot;artist&quot;&gt;%2&lt;/a&gt;</source>
         <translation>auf &lt;a href=&quot;album&quot;&gt;%1&lt;/a&gt; von &lt;a href=&quot;artist&quot;&gt;%2&lt;/a&gt;</translation>
     </message>
+    <message>
+        <source>madman AutoDJ</source>
+        <translation>madman AutoDJ</translation>
+    </message>
+    <message>
+        <source>Search expression</source>
+        <translation>Suchausdruck</translation>
+    </message>
+    <message>
+        <source>Error in search expression:
+%1</source>
+        <translation>Fehler im Suchausdruck:
+%1</translation>
+    </message>
+    <message>
+        <source>There is no currently selected playlist.</source>
+        <translation>Es gibt keine gegenwärtig ausgewählte Playlist.</translation>
+    </message>
+    <message>
+        <source>Can&apos;t pick an empty playlist as AutoDJ source.</source>
+        <translation>Eine leere Playlist kann nicht als Quelle für AutoDJ ausgewählt werden.</translation>
+    </message>
+    <message>
+        <source>madman presently doesn&apos;t know what it is supposed to play since there is no search result.
+Maybe you need to add songs to the database or try a different search.</source>
+        <translation>madman hat im Moment keine Ahnung, was er spielen soll, da es keine Suchergebnisse gibt.
+Vielleicht sollten Sie Lieder zur Datenbank hinzufügen oder eine andere Suche verwenden.</translation>
+    </message>
+    <message>
+        <source>AutoDJ error: %1</source>
+        <translation>AutoDJ-Fehler: %1</translation>
+    </message>
+    <message>
+        <source>The file
+%1
+was locked when madman tried to read it. 
+This might be because another copy of madman is accessing the file.
+What do you want to do?</source>
+        <translation>Die Datei
+%1
+war gesperrt, als madman versuchte, sie zu lesen. 
+Das könnte daran liegen, dass eine andere Instanz von madman auf diese Datei zugreift.
+Was möchten Sie tun?</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Retry</source>
+        <translation>Nochmal versuchen</translation>
+    </message>
+    <message>
+        <source>Break the lock</source>
+        <translation>Die Sperre brechen</translation>
+    </message>
 </context>
 <context>
     <name>tMainWindowBase</name>
@@ -2076,6 +2218,26 @@ Grund: %1</translation>
         <source>AutoDJ 20 songs</source>
         <translation>AutoDJ 20 Lieder</translation>
     </message>
+    <message>
+        <source>Play entire Playlist</source>
+        <translation>Die ganze Playlist spielen</translation>
+    </message>
+    <message>
+        <source>AutoDJ Source</source>
+        <translation>AutoDJ-Quelle</translation>
+    </message>
+    <message>
+        <source>All songs</source>
+        <translation>Alle Lieder</translation>
+    </message>
+    <message>
+        <source>From Search...</source>
+        <translation>Aus Suche...</translation>
+    </message>
+    <message>
+        <source>From Selected Playlist</source>
+        <translation>Aus ausgewählter Playlist</translation>
+    </message>
 </context>
 <context>
     <name>tMultilineEditor</name>
@@ -2120,6 +2282,14 @@ Grund: %1</translation>
     <message>
         <source>Hide</source>
         <translation>Verstecken</translation>
+    </message>
+</context>
+<context>
+    <name>tPlayerFacade</name>
+    <message>
+        <source>Failed to ensure that valid player status information can be obtained.</source>
+        <translation>Konnte nicht sicherstellen, dass gültige Abspielprogramm-Status-Informationen
+eingeholt werden können.</translation>
     </message>
 </context>
 <context>
@@ -2350,7 +2520,7 @@ Grund: %1</translation>
     </message>
     <message>
         <source>Enable Passive Popup Song Announcements</source>
-        <translation>Lieder durch passive Popups ankündigen</translation>
+        <translation type="obsolete">Lieder durch passive Popups ankündigen</translation>
     </message>
     <message>
         <source>&lt;b&gt;MP3 tag standard&lt;/b&gt;</source>
@@ -2496,6 +2666,38 @@ Mehrgliedrige Sortierungen dauern etwas länger als eingliedrige.
     <message>
         <source>Alt+C</source>
         <translation>Alt+C</translation>
+    </message>
+    <message>
+        <source>&amp;Passive Popup song announcements</source>
+        <translation>&amp;Passive Liedankündigungen</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Ausgeschaltet</translation>
+    </message>
+    <message>
+        <source>Top Left Corner</source>
+        <translation>Obere linke Ecke</translation>
+    </message>
+    <message>
+        <source>Top Center</source>
+        <translation>Oben in der Mitte</translation>
+    </message>
+    <message>
+        <source>Top Right Corner</source>
+        <translation>Obere rechte Ecke</translation>
+    </message>
+    <message>
+        <source>Bottom Left Corner</source>
+        <translation>Untere linke Ecke</translation>
+    </message>
+    <message>
+        <source>Bottom Center</source>
+        <translation>Unten in der Mitte</translation>
+    </message>
+    <message>
+        <source>Bottom Right Corner</source>
+        <translation>Untere rechte Ecke</translation>
     </message>
 </context>
 <context>
@@ -2726,35 +2928,35 @@ Mehrgliedrige Sortierungen dauern etwas länger als eingliedrige.
     </message>
     <message>
         <source>Play now all by this artist</source>
-        <translation>Jetzt alles von diesem Künstler spielen</translation>
+        <translation type="obsolete">Jetzt alles von diesem Künstler spielen</translation>
     </message>
     <message>
         <source>Play next all by this artist</source>
-        <translation>Alles von diesem Künstler als nächstes abspielen</translation>
+        <translation type="obsolete">Alles von diesem Künstler als nächstes abspielen</translation>
     </message>
     <message>
         <source>Play eventually all by this artist</source>
-        <translation>Alles von diesem Künstler später abspielen</translation>
+        <translation type="obsolete">Alles von diesem Künstler später abspielen</translation>
     </message>
     <message>
         <source>View all by this artist</source>
-        <translation>Alles von diesem Künstler ansehen</translation>
+        <translation type="obsolete">Alles von diesem Künstler ansehen</translation>
     </message>
     <message>
         <source>Play now all on this album</source>
-        <translation>Alles auf diesem Album sofort abspielen</translation>
+        <translation type="obsolete">Alles auf diesem Album sofort abspielen</translation>
     </message>
     <message>
         <source>Play next all on this album</source>
-        <translation>Alles auf diesem Album als nächstes abspielen</translation>
+        <translation type="obsolete">Alles auf diesem Album als nächstes abspielen</translation>
     </message>
     <message>
         <source>Play eventually all on this album</source>
-        <translation>Alles auf diesem Album später abspielen</translation>
+        <translation type="obsolete">Alles auf diesem Album später abspielen</translation>
     </message>
     <message>
         <source>View all on this album</source>
-        <translation>Alles auf diesem Album ansehen</translation>
+        <translation type="obsolete">Alles auf diesem Album ansehen</translation>
     </message>
     <message>
         <source>&amp;Songs like this one</source>
@@ -2809,6 +3011,47 @@ Mehrgliedrige Sortierungen dauern etwas länger als eingliedrige.
 %1</source>
         <translation>Fehler beim Entfernen des Tags:
 %1</translation>
+    </message>
+    <message>
+        <source>Play now</source>
+        <translation>Jetzt spielen</translation>
+    </message>
+    <message>
+        <source>Play next</source>
+        <translation>Als nächstes spielen</translation>
+    </message>
+    <message>
+        <source>Play eventually</source>
+        <translation>Später spielen</translation>
+    </message>
+    <message>
+        <source>Restrict view</source>
+        <translation>Ansicht einschränken</translation>
+    </message>
+    <message>
+        <source>&amp;By this artist</source>
+        <translation>&amp;Von diesem Künstler</translation>
+    </message>
+    <message>
+        <source>&amp;On this album</source>
+        <translation>&amp;Auf diesem Album</translation>
+    </message>
+    <message>
+        <source>&amp;In this directory</source>
+        <translation>&amp;In diesem Verzeichnis</translation>
+    </message>
+    <message>
+        <source>Error while rescanning:
+%1</source>
+        <translation>Fehler beim Durchsuchen:
+%1</translation>
+    </message>
+</context>
+<context>
+    <name>tXMMSPlayer</name>
+    <message>
+        <source>Error getting playlist length, negative value from XMMS</source>
+        <translation>Fehler beim Holen der Abspiellistenlänge, negativer Rückgabewert von XMMS</translation>
     </message>
 </context>
 </TS>
