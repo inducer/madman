@@ -37,7 +37,7 @@ class tCriterionSelection(tSelection):
   def __init__(self, criterion, sort_by = None):
       fields = [ 
 	("selection_type", "criterion"),
-	("criterion", criterion) 
+	("criterion", unicode(criterion).encode("utf8")) 
 	]
       if sort_by is not None:
 	fields.append(("sort_by", sort_by))
@@ -59,7 +59,7 @@ class tPlaylistSelection(tSelection):
   def __init__(self, name):
     fields = [ 
       ("selection_type", "playlist"),
-      ("playlist_name", name) 
+      ("playlist_name", unicode(name).encode("utf8")) 
       ]
     self.Fields = urllib.urlencode(fields, 1)
 
@@ -128,7 +128,7 @@ class tRemote:
   def setField(self, uid, field, value):
     return self.request("/madman/scripting/set_field" \
                         "?uniqueid=%d&field=%s&value=%s" % \
-                        ( uid, field, urllib.quote_plus(value)))
+                        (uid, field, urllib.quote_plus(unicode(value).encode("utf8"))))
 
   def getInfo(self, selection):
     data = self.request("/madman/scripting/get_complete_record?%s" % selection.getURLFields())
@@ -158,7 +158,7 @@ class tRemote:
 
   def playEventually(self, selection):
     self.request("/madman/scripting/play_eventually?%s" % selection.getURLFields())
-
+  
   def totalTime(self):
     return float(self.request("/madman/scripting/total_time"))
 
@@ -178,7 +178,7 @@ class tRemote:
     fields = [ ]
 
     if root is not None:
-      fields.append(("root", root))
+      fields.append(("root", unicode(root).encode("utf8")))
     if depth is not None:
       fields.append(("depth", str(depth)))
 
@@ -186,41 +186,41 @@ class tRemote:
 
   def setPlaylistName(self, qual_name, new_name):
     fields = [
-      ("qualifiedname", qual_name),
-      ("newname", new_name) ]
+      ("qualifiedname", unicode(qual_name).encode("utf8")),
+      ("newname", unicode(new_name).encode("utf8")) ]
 
     return self.request("/madman/scripting/playlist_tree/set_playlist_name?%s" % urllib.urlencode(fields, 1))
 
   def setPlaylistCriterion(self, qual_name, criterion):
     fields = [
-      ("qualifiedname", qual_name),
-      ("criterion", criterion) ]
+      ("qualifiedname", unicode(qual_name).encode("utf8")),
+      ("criterion", unicode(criterion).encode("utf8")) ]
 
     return self.request("/madman/scripting/playlist_tree/set_playlist_criterion?%s" % urllib.urlencode(fields, 1))
 
   def createPlaylist(self, qual_parent, new_name):
     fields = [
-      ("qualifiedparent", qual_parent),
-      ("newname", new_name) ]
+      ("qualifiedparent", unicode(qual_parent).encode("utf8")),
+      ("newname", unicode(new_name).encode("utf8")) ]
 
     return self.request("/madman/scripting/playlist_tree/create_playlist?%s" % urllib.urlencode(fields, 1))
 
   def deletePlaylist(self, qual_name):
     fields = [
-      ("qualifiedname", qual_name) ]
+      ("qualifiedname", unicode(qual_name).encode("utf8")) ]
 
     return self.request("/madman/scripting/playlist_tree/delete_playlist?%s" % urllib.urlencode(fields, 1))
 
   def addSongToPlaylist(self, qual_name, uniqueid):
     fields = [
-      ("qualifiedname", qual_name),
+      ("qualifiedname", unicode(qual_name).encode("utf8")),
       ("uniqueid", uniqueid) ]
 
     return self.request("/madman/scripting/playlist_tree/add_song_to_playlist?%s" % urllib.urlencode(fields, 1))
 
   def removeSongFromPlaylist(self, qual_name, uniqueid):
     fields = [
-      ("qualifiedname", qual_name),
+      ("qualifiedname", unicode(qual_name).encode("utf8")),
       ("uniqueid", uniqueid) ]
 
     return self.request("/madman/scripting/playlist_tree/remove_song_from_playlist?%s" % urllib.urlencode(fields, 1))

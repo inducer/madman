@@ -109,8 +109,7 @@ future ------------------------------------------------------------------------
   (sugg. by Johan Forsberg)
 * See why AutoDJ was wrong with multiple selections from the same score set.
 * Fix flow of control for setFieldText to not rely on exceptions.
-* Worry about properly quoting/unicode issues in remote.
-* Avoid column futzing.
+* Make sure width gets recalculated after adding field.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
 
 MAJOR CHANGES:
@@ -166,6 +165,7 @@ MINOR IMPROVEMENTS:
 + FIELD_TITLE_OR_FILENAME (sugg. by Kyoshiro)
 + Show all songs in current file's folder. (Xavier ?)
 + Added an XDG compliant desktop file. (Jaako H Kyro)
+* Fixed proper quoting/unicode issues in remote.
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.

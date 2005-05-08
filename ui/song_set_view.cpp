@@ -160,14 +160,6 @@ tSongListView::tSongListView(QWidget *parent, const char *name)
 
   horizontalHeader()->installEventFilter(this);
   viewport()->installEventFilter(this);
-
-  // Fields menu --------------------------------------------------------------
-  FieldVisibilityMenu = new QPopupMenu(this);
-  for (unsigned i = 0; i < FIELD_COUNT; i++)
-  {
-    QAction *action = new tVisibilityAction(FieldVisibilityMenu, this, (tSongField) i);
-    action->addTo(FieldVisibilityMenu);
-  }
 }
 
 
@@ -179,6 +171,14 @@ void tSongListView::initialize()
 
   connect(&tProgramBase::preferences().Player, SIGNAL(currentSongChanged()),
       this, SLOT(currentSongChanged()));
+
+  // Fields menu --------------------------------------------------------------
+  FieldVisibilityMenu = new QPopupMenu(this);
+  for (unsigned i = 0; i < FIELD_COUNT; i++)
+  {
+    QAction *action = new tVisibilityAction(FieldVisibilityMenu, this, (tSongField) i);
+    action->addTo(FieldVisibilityMenu);
+  }
 }
 
 
