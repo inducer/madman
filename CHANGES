@@ -111,6 +111,7 @@ future ------------------------------------------------------------------------
 * Fix flow of control for setFieldText to not rely on exceptions.
 * Make sure width gets recalculated after adding field.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
+* File extension scanning needs to stop at closest "/".
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -235,6 +236,8 @@ BUGS FIXED:
 * Fixed a crash when requesting an AutoDJ selection in
   the web server. (reported by Walter King.)
 * Fixed/revived RESCANAFTER in plugins? (Duke/Matt)
+* In SAX error handling, just skip the song if we catch an
+  exception in its creation, instead of aborting. (Reported by "Anarcat".)
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>

@@ -96,7 +96,18 @@ void tSAXDatabaseHandler::startElement(const XML_Char *name, const XML_Char **at
     switch (CurrentMode)
     {
       case SONGS:
-	Database.SongCollection.insert(deserializeSong(attributes), true);
+        try
+        {
+          Database.SongCollection.insert(deserializeSong(attributes), true);
+        }
+        catch (exception &ex)
+        {
+          cerr 
+            << "*** WHOOPS" << endl
+            << "The sax start element handler for a song threw an exception:" << endl
+            << ex.what() << endl
+            << "Skipping this song." << endl;
+        }
 	return;
       case SONG_SET_RENDERING:
       case SONG_SET_NEGATIVE_SET:
@@ -282,7 +293,7 @@ void startExpatElement(void *data, const XML_Char *el, const XML_Char **attr)
 {
   try
   {
-  reinterpret_cast<tSAXDatabaseHandler *>(data)->startElement(el, attr);
+    reinterpret_cast<tSAXDatabaseHandler *>(data)->startElement(el, attr);
   }
   catch (exception &ex)
   {

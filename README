@@ -33,11 +33,13 @@ To build madman, you need
   [Debian pacakge: libqt3-mt-dev, NOT libqt3-dev]
   
 - TagLib [http://developer.kde.org/~wheeler/taglib.html]
-  Current CVS TagLib. (TagLib's CVS is within KDE's kdesupport
-  module)
+  Version 1.3 or later.
   [Debian package: libtag1-dev]
   *** Plain TagLib 1.1 will appear to compile, but give you 
       relocation errors later on. 
+
+- libmp4-dev (optional) (http://www.audiocoding.com)
+  [Debian package: libmp4-dev]
 
 First, you need to know that madman does not use the common autoconf/automake 
 build system that many other projects use, mostly for technical reasons.
@@ -92,11 +94,13 @@ Here's how it works:
    building, which would look something like this:
 
    scons: Reading SConscript files ...
-   Checking for Qt at /usr/share/qt3... ok
+   Checking for qt at /usr/share/qt3 (with lib) failed
+   Checking for qt-mt at /usr/share/qt3 (with lib) ok
    Checking for xmms... ok
    Checking for glib... ok
    Checking for C++ header file taglib.h... yes
    Checking for main() in C++ library tag... yes
+   Checking for C++ header file mp4.h... no
    scons: done reading SConscript files.
    scons: Building targets ...
 
