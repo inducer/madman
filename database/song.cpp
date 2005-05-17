@@ -39,11 +39,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <mpegfile.h>
 #include <flacfile.h>
 #include <vorbisfile.h>
+#include <mpcfile.h>
 
 #include <id3v1tag.h>
 #include <id3v2tag.h>
 #include <xiphcomment.h>
 #include <id3v2frame.h>
+#include <apetag.h>
 
 #include <textidentificationframe.h>
 
@@ -55,6 +57,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <faad.h>
 #include <fcntl.h>
 #endif
+
+
+
+
+#define MADMAN_TAGLIB_VERSION \
+  ((TAGLIB_MAJOR_VERSION << 16) | \
+   (TAGLIB_MINOR_VERSION << 8) | \
+   (TAGLIB_PATCH_VERSION))
+
+#if (MADMAN_TAGLIB_VERSION >= 0x010301)
+    #define MADMAN_ENABLE_APE
+#endif
+
 
 
 // private helpers ------------------------------------------------------------
@@ -1555,43 +1570,41 @@ void tMP3Song::setFieldText(tSongField field, QString const &value)
 
   using namespace TagLib;
 
-  {
-    MPEG::File my_mp3(filename().c_str());
-    if (!my_mp3.isOpen())
-      throw runtime_error("Failed to open MP3 file");
-    if (!my_mp3.isValid())
-      throw runtime_error("File is probably not a valid MPEG stream");
-    if (my_mp3.readOnly())
-      throw runtime_error("Failed to open MP3 file for writing");
+  MPEG::File my_mp3(filename().c_str());
+  if (!my_mp3.isOpen())
+    throw runtime_error("Failed to open MP3 file");
+  if (!my_mp3.isValid())
+    throw runtime_error("File is probably not a valid MPEG stream");
+  if (my_mp3.readOnly())
+    throw runtime_error("Failed to open MP3 file for writing");
 
-    Tag *v1_tag = my_mp3.ID3v1Tag(true);
-    if (v1_tag == NULL)
-      throw runtime_error("Error obtaining ID3v1 tag");
-
-    ID3v2::Tag *v2_tag = my_mp3.ID3v2Tag(true);
-    if (v2_tag == NULL)
-      throw runtime_error("Error obtaining ID3v2 tag");
-
-    if (field == FIELD_PERFORMER)
-    {
-      // v2 only
-      String conv_value(value.utf8(), String::UTF8);
+  Tag *v1_tag = my_mp3.ID3v1Tag(true);
+  if (v1_tag == NULL)
+    throw runtime_error("Error obtaining ID3v1 tag");
   
-      auto_ptr<ID3v2::TextIdentificationFrame> my_frame(
-	new ID3v2::TextIdentificationFrame("TPE4", String::UTF8));
-      my_frame->setText(conv_value);
-      v2_tag->removeFrames("TPE4");
-      v2_tag->addFrame(my_frame.get());
-      my_frame.release();
-    }
-    else
-    {
-      setFieldStringByTaglib(v1_tag, field, value);
-      setFieldStringByTaglib(v2_tag, field, value);
-    }
-
-    my_mp3.save();
+  ID3v2::Tag *v2_tag = my_mp3.ID3v2Tag(true);
+  if (v2_tag == NULL)
+    throw runtime_error("Error obtaining ID3v2 tag");
+  
+  if (field == FIELD_PERFORMER)
+  {
+    // v2 only
+    String conv_value(value.utf8(), String::UTF8);
+    
+    auto_ptr<ID3v2::TextIdentificationFrame> my_frame(
+      new ID3v2::TextIdentificationFrame("TPE4", String::UTF8));
+    my_frame->setText(conv_value);
+    v2_tag->removeFrames("TPE4");
+    v2_tag->addFrame(my_frame.get());
+    my_frame.release();
   }
+  else
+  {
+    setFieldStringByTaglib(v1_tag, field, value);
+    setFieldStringByTaglib(v2_tag, field, value);
+  }
+  
+  my_mp3.save();
 
   readInfo();
 }
@@ -1647,7 +1660,7 @@ void tOggSong::readInfo() const
   Ogg::XiphComment *tag = my_file.tag();
   AudioProperties *props = my_file.audioProperties();
   if (props == NULL)
-    throw runtime_error("Error obtaining MPEG properties");
+    throw runtime_error("Error obtaining Vorbis properties");
 
   CacheValid = true;
   
@@ -1782,15 +1795,15 @@ void tFlacSong::readInfo() const
 
   FLAC::File my_file(filename().c_str());
   if (!my_file.isOpen())
-    throw runtime_error("Failed to open Flac file");
+    throw runtime_error("Failed to open FLAC file");
   if (!my_file.isValid())
-    throw runtime_error("File is probably not a valid Flac stream");
+    throw runtime_error("File is probably not a valid FLAC stream");
 
   Tag *tag = my_file.tag();
   Ogg::XiphComment *xiphc = my_file.xiphComment();
   AudioProperties *props = my_file.audioProperties();
   if (props == NULL)
-    throw runtime_error("Error obtaining MPEG properties");
+    throw runtime_error("Error obtaining FLAC properties");
 
   CacheValid = true;
   
@@ -1855,11 +1868,11 @@ void tFlacSong::setFieldText(tSongField field, QString const &value)
 
   FLAC::File my_file(filename().c_str());
   if (!my_file.isOpen())
-    throw runtime_error("Failed to open Flac file");
+    throw runtime_error("Failed to open FLAC file");
   if (!my_file.isValid())
-    throw runtime_error("File is probably not a valid Flac stream");
+    throw runtime_error("File is probably not a valid FLAC stream");
   if (my_file.readOnly())
-    throw runtime_error("Failed to open Flac file for writing");
+    throw runtime_error("Failed to open FLAC file for writing");
 
   Ogg::XiphComment *tag = my_file.xiphComment();
   if (tag == NULL)
@@ -1886,11 +1899,11 @@ void tFlacSong::stripTagInternal()
 
   FLAC::File my_file(filename().c_str());
   if (!my_file.isOpen())
-    throw runtime_error("Failed to open Flac file");
+    throw runtime_error("Failed to open FLAC file");
   if (!my_file.isValid())
-    throw runtime_error("File is probably not a valid Flac stream");
+    throw runtime_error("File is probably not a valid FLAC stream");
   if (my_file.readOnly())
-    throw runtime_error("Failed to open Vorbis file for writing");
+    throw runtime_error("Failed to open FLAC file for writing");
 
   Ogg::XiphComment *tag = my_file.xiphComment();
   while (tag->fieldListMap().size())
@@ -1902,8 +1915,157 @@ void tFlacSong::stripTagInternal()
 
 
 
-#ifdef WITH_M4A
+// tFlacSong ------------------------------------------------------------------
+#ifdef MADMAN_ENABLE_APE
+class tMusepackSong : public tSong
+{
+  public:
+    QString mimeType() const
+    { return "audio/x-mpc"; }
+
+    void readInfo() const;
+    bool isFieldWritable(tSongField field);
+    void setFieldText(tSongField field, QString const &value);
+
+    void stripTagInternal();
+};
+
+
+
+
+void tMusepackSong::readInfo() const
+{
+  using namespace TagLib;
+
+  MPC::File my_file(filename().c_str());
+  if (!my_file.isOpen())
+    throw runtime_error("Failed to open MPC file");
+  if (!my_file.isValid())
+    throw runtime_error("File is probably not a valid MPC stream");
+
+  Tag *tag = my_file.tag();
+  APE::Tag *ape_tag = my_file.APETag();
+  AudioProperties *props = my_file.audioProperties();
+  if (props == NULL)
+    throw runtime_error("Error obtaining MPC properties");
+
+  CacheValid = true;
+  
+  assignAndCheckForModification(this, SongCollection, 
+				const_cast<tMusepackSong *>(this)->Artist, 
+				getFieldStringByTaglib(FIELD_ARTIST, tag), FIELD_ARTIST);
+  assignAndCheckForModification(this, SongCollection, 
+				const_cast<tMusepackSong *>(this)->Title, 
+				getFieldStringByTaglib(FIELD_TITLE, tag), FIELD_TITLE);
+  assignAndCheckForModification(this, SongCollection, 
+				const_cast<tMusepackSong *>(this)->Album, 
+				getFieldStringByTaglib(FIELD_ALBUM, tag), FIELD_ALBUM);
+  assignAndCheckForModification(this, SongCollection, 
+				const_cast<tMusepackSong *>(this)->TrackNumber, 
+				getFieldStringByTaglib(FIELD_TRACKNUMBER, tag), FIELD_TRACKNUMBER);
+  assignAndCheckForModification(this, SongCollection, 
+				const_cast<tMusepackSong *>(this)->Genre, 
+				getFieldStringByTaglib(FIELD_GENRE, tag), FIELD_GENRE);
+  assignAndCheckForModification(this, SongCollection, 
+				const_cast<tMusepackSong *>(this)->Year,
+				getFieldStringByTaglib(FIELD_YEAR, tag), FIELD_YEAR);
+
+  if (ape_tag && ape_tag->itemListMap().contains("PERFORMER"))
+  {
+    const APE::Item &item = ape_tag->itemListMap()["PERFORMER"];
+    assignAndCheckForModification(this, SongCollection, 
+                                  const_cast<tMusepackSong *>(this)->Performer,
+                                  convertTagLibString(item.toString()), FIELD_PERFORMER);
+  }
+
+  assignAndCheckForModification(this, SongCollection,
+				const_cast<tMusepackSong *>(this)->Duration, 
+				props->length(), FIELD_DURATION);
+  
+  tSong::readInfo();
+}
+
+
+
+
+bool tMusepackSong::isFieldWritable(tSongField field)
+{
+  return
+    tSong::isFieldWritable(field) ||
+    isFieldWritableByTaglib(field) ||
+    field == FIELD_PERFORMER;
+}
+
+
+
+
+void tMusepackSong::setFieldText(tSongField field, QString const &value)
+{
+  if (tSong::isFieldWritable(field))
+  {
+    tSong::setFieldText(field, value);
+    return;
+  }
+
+  using namespace TagLib;
+
+  MPC::File my_file(filename().c_str());
+  if (!my_file.isOpen())
+    throw runtime_error("Failed to open MPC file");
+  if (!my_file.isValid())
+    throw runtime_error("File is probably not a valid MPC stream");
+  if (my_file.readOnly())
+    throw runtime_error("Failed to open MPC file for writing");
+
+  Tag *v1_tag = my_file.ID3v1Tag(true);
+  if (v1_tag == NULL)
+    throw runtime_error("Error obtaining ID3v1 tag");
+
+  APE::Tag *ape_tag = my_file.APETag(true);
+  if (ape_tag == NULL)
+    throw runtime_error("Error obtaining APE tag");
+
+  if (field == FIELD_PERFORMER)
+  {
+    String conv_value(value.utf8(), String::UTF8);
+    ape_tag->addValue("PERFORMER", conv_value);
+  }
+  else
+  {
+    setFieldStringByTaglib(v1_tag, field, value);
+    setFieldStringByTaglib(ape_tag, field, value);
+  }
+
+  my_file.save();
+
+  readInfo();
+}
+
+
+
+
+void tMusepackSong::stripTagInternal()
+{
+  using namespace TagLib;
+
+  MPC::File my_file(filename().c_str());
+  if (!my_file.isOpen())
+    throw runtime_error("Failed to open MPC file");
+  if (!my_file.isValid())
+    throw runtime_error("File is probably not a valid MPC file");
+  if (my_file.readOnly())
+    throw runtime_error("Failed to open MPC file for writing");
+
+  my_file.remove(); // don't worry - only removes tags.
+  my_file.save();
+}
+#endif
+
+
+
+
 //tM4ASong -------------------------------------------------------------------
+#ifdef WITH_M4A
 class tM4ASong : public tSong
 {
   public:
@@ -2217,10 +2379,6 @@ void  tM4ASong::setFieldText(tSongField field, QString const &value)
 void  tM4ASong::stripTagInternal()
 {
 }
-
-
-
-
 #endif
 
 
@@ -2282,6 +2440,14 @@ tSong *makeSong(tFilename const &filename)
     song->setFilename(filename);
     return song;
   }
+#ifdef MADMAN_ENABLE_APE
+  else  if (extension == "mpc")
+  {
+    tSong *song = new tMusepackSong;
+    song->setFilename(filename);
+    return song;
+  }
+#endif
 #ifdef WITH_M4A
   else  if (extension == "m4a")
   {

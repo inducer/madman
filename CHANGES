@@ -63,8 +63,6 @@ future ------------------------------------------------------------------------
   (sugg. by Giuseppe De Michele)
 + Add possibility to store and show album art.
 + Search for duplicates on disk.
-+ Support Musepack.
-  http://www.personal.uni-jena.de/~pfk/mpp/index2.html
 + modularized criterion parser with factories for various criteria.
 * Easier way to rename playlists.
 + Transaction logs to prevent data loss on shutdown. (sugg. by ceno)
@@ -110,7 +108,6 @@ future ------------------------------------------------------------------------
 * See why AutoDJ was wrong with multiple selections from the same score set.
 * Make sure width gets recalculated after adding field.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
-* Support APE.
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -129,6 +126,7 @@ MAJOR CHANGES:
 + Added mood, tempo, custom1-3 fields. (Guido Schlabitz) [done]
 + Continuous AutoDJ from any source.
   (sugg. by Johan Forsberg) [done]
++ Support Musepack with APE tags. (on Taglib >= 1.3.1) [done]
 
 MINOR IMPROVEMENTS:
 + Show configurable string in title bar. [done]
