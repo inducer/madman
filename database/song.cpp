@@ -1964,9 +1964,9 @@ static uint32_t md_seek_callback(void *user_data, uint64_t position)
 static int GetAACTrack(mp4ff_t *infile)
 {
   /* find AAC track */
-  unsigned int i, rc;
+  unsigned int rc;
   int numTracks = mp4ff_total_tracks(infile);
-  for (i = 0; i < numTracks; i++)
+  for (int i = 0; i < numTracks; i++)
   {
     unsigned char *buff = NULL;
     unsigned int buff_size = 0;
@@ -1992,10 +1992,10 @@ void tM4ASong::readInfo() const
 {
   mp4ff_t *infile;
   char *tag_string=NULL;
-  char *tag_item=NULL;
   mp4ff_callback_t *mp4cb;
   unsigned char *buffer;
   unsigned int buffer_size;
+
   mp4AudioSpecificConfig mp4ASC;
   int track = 0;
   
@@ -2197,7 +2197,7 @@ void  tM4ASong::setFieldText(tSongField field, QString const &value)
 
   mp4ff_mdata->count =6;
 
-  for(int i=0;i<mp4ff_mdata->count;i++) if(strcmp(mp4ff_mdata->tags[i].value, "")==0) mp4ff_mdata->tags[i].value = "Unknown";
+  for(unsigned i=0;i<mp4ff_mdata->count;i++) if(strcmp(mp4ff_mdata->tags[i].value, "")==0) mp4ff_mdata->tags[i].value = "Unknown";
     
   mp4ff_meta_update(mp4_cb, mp4ff_mdata);
     

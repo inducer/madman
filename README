@@ -38,8 +38,8 @@ To build madman, you need
   *** Plain TagLib 1.1 will appear to compile, but give you 
       relocation errors later on. 
 
-- libmp4-dev (optional) (http://www.audiocoding.com)
-  [Debian package: libmp4-dev]
+- FAAD (optional) (http://www.audiocoding.com)
+  [Debian package: libfaad2-dev]
 
 First, you need to know that madman does not use the common autoconf/automake 
 build system that many other projects use, mostly for technical reasons.
