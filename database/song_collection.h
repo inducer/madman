@@ -1,6 +1,6 @@
 /*
 madman - a music manager
-Copyright (C) 2003  Andreas Kloeckner <ak@ixion.net>
+Copyright (C) 2003  Andreas Kloeckner
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -133,7 +133,6 @@ class tSongCollectionScopedBulkChange
     {
       Collection.endBulkChange();
     }
-
 };
 
 

@@ -108,10 +108,9 @@ future ------------------------------------------------------------------------
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
 * See why AutoDJ was wrong with multiple selections from the same score set.
-* Fix flow of control for setFieldText to not rely on exceptions.
 * Make sure width gets recalculated after adding field.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
-* File extension scanning needs to stop at closest "/".
+* Support APE.
 
 MAJOR CHANGES:
 * Playlist management button. [done]

@@ -92,7 +92,28 @@ namespace
 
 
 
-  void setFieldString(TagLib::Tag *tag, tSongField field, const QString &value)
+
+  bool isFieldWritableByTaglib(tSongField field)
+  {
+    switch (field)
+    {
+    case FIELD_ARTIST:
+    case FIELD_TITLE:
+    case FIELD_TITLE_OR_FILENAME:
+    case FIELD_ALBUM:
+    case FIELD_TRACKNUMBER:
+    case FIELD_GENRE:
+    case FIELD_YEAR:
+      return true;
+    default:
+      return false;
+    }
+  }
+
+
+
+
+  void setFieldStringByTaglib(TagLib::Tag *tag, tSongField field, const QString &value)
   {
     using namespace TagLib;
 
@@ -120,14 +141,14 @@ namespace
       tag->setYear(value.toUInt());
       break;
     default:
-      throw runtime_error("unhandled field in setFieldString");
+      throw runtime_error("unhandled field in setFieldStringByTaglib");
     }
   }
 
 
 
 
-  QString getFieldString(tSongField field, TagLib::Tag *tag)
+  QString getFieldStringByTaglib(tSongField field, TagLib::Tag *tag)
   {
     if (tag == NULL)
       return QString::null;
@@ -149,20 +170,20 @@ namespace
       else
 	return QString::number(tag->year());
     default:
-      throw runtime_error("unhandled field in getFieldString");
+      throw runtime_error("unhandled field in getFieldStringByTaglib");
     }
   }
 
 
 
 
-  QString getFieldString(tSongField field, TagLib::Tag *tag1, TagLib::Tag *tag2)
+  QString getFieldStringByTaglib(tSongField field, TagLib::Tag *tag1, TagLib::Tag *tag2)
   {
     QString t1_value, t2_value;
     if (tag1)
-      t1_value = getFieldString(field, tag1);
+      t1_value = getFieldStringByTaglib(field, tag1);
     if (tag2)
-      t2_value = getFieldString(field, tag2);
+      t2_value = getFieldStringByTaglib(field, tag2);
     
     if (t1_value.isNull())
       return t2_value;
@@ -1280,6 +1301,25 @@ QString tSong::humanReadableFieldText(tSongField field) const
 
 
 
+bool tSong::isFieldWritable(tSongField field)
+{
+  switch (field)
+  {
+  case FIELD_RATING:
+  case FIELD_MOOD:
+  case FIELD_TEMPO:
+  case FIELD_CUSTOM1:
+  case FIELD_CUSTOM2:
+  case FIELD_CUSTOM3:
+    return true;
+  default:
+    return false;
+  }
+}
+
+
+
+
 void tSong::setFieldText(tSongField field, const QString &new_text)
 {
   switch (field)
@@ -1415,6 +1455,7 @@ class tMP3Song : public tSong
     { return "audio/mpeg"; }
 
     void readInfo() const;
+    bool isFieldWritable(tSongField field);
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal();
@@ -1456,22 +1497,22 @@ void tMP3Song::readInfo() const
   
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tMP3Song *>(this)->Artist, 
-				getFieldString(FIELD_ARTIST, first, second), FIELD_ARTIST);
+				getFieldStringByTaglib(FIELD_ARTIST, first, second), FIELD_ARTIST);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tMP3Song *>(this)->Title, 
-				getFieldString(FIELD_TITLE, first, second), FIELD_TITLE);
+				getFieldStringByTaglib(FIELD_TITLE, first, second), FIELD_TITLE);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tMP3Song *>(this)->Album, 
-				getFieldString(FIELD_ALBUM, first, second), FIELD_ALBUM);
+				getFieldStringByTaglib(FIELD_ALBUM, first, second), FIELD_ALBUM);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tMP3Song *>(this)->TrackNumber, 
-				getFieldString(FIELD_TRACKNUMBER, first, second), FIELD_TRACKNUMBER);
+				getFieldStringByTaglib(FIELD_TRACKNUMBER, first, second), FIELD_TRACKNUMBER);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tMP3Song *>(this)->Genre, 
-				getFieldString(FIELD_GENRE, first, second), FIELD_GENRE);
+				getFieldStringByTaglib(FIELD_GENRE, first, second), FIELD_GENRE);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tMP3Song *>(this)->Year,
-				getFieldString(FIELD_YEAR, first, second), FIELD_YEAR);
+				getFieldStringByTaglib(FIELD_YEAR, first, second), FIELD_YEAR);
 
   if (v2_tag && v2_tag->frameListMap().contains("TPE4"))
   {
@@ -1493,15 +1534,23 @@ void tMP3Song::readInfo() const
 
 
 
+bool tMP3Song::isFieldWritable(tSongField field)
+{
+  return
+    tSong::isFieldWritable(field) ||
+    isFieldWritableByTaglib(field) ||
+    field == FIELD_PERFORMER;
+}
+
+
+
+
 void tMP3Song::setFieldText(tSongField field, QString const &value)
 {
-  try
+  if (tSong::isFieldWritable(field))
   {
     tSong::setFieldText(field, value);
     return;
-  }
-  catch (exception &ex)
-  {
   }
 
   using namespace TagLib;
@@ -1537,8 +1586,8 @@ void tMP3Song::setFieldText(tSongField field, QString const &value)
     }
     else
     {
-      setFieldString(v1_tag, field, value);
-      setFieldString(v2_tag, field, value);
+      setFieldStringByTaglib(v1_tag, field, value);
+      setFieldStringByTaglib(v2_tag, field, value);
     }
 
     my_mp3.save();
@@ -1576,6 +1625,7 @@ class tOggSong : public tSong
     { return "audio/x-ogg"; }
 
     void readInfo() const;
+    bool isFieldWritable(tSongField field);
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal();
@@ -1603,22 +1653,22 @@ void tOggSong::readInfo() const
   
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tOggSong *>(this)->Artist, 
-				getFieldString(FIELD_ARTIST, tag), FIELD_ARTIST);
+				getFieldStringByTaglib(FIELD_ARTIST, tag), FIELD_ARTIST);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tOggSong *>(this)->Title, 
-				getFieldString(FIELD_TITLE, tag), FIELD_TITLE);
+				getFieldStringByTaglib(FIELD_TITLE, tag), FIELD_TITLE);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tOggSong *>(this)->Album, 
-				getFieldString(FIELD_ALBUM, tag), FIELD_ALBUM);
+				getFieldStringByTaglib(FIELD_ALBUM, tag), FIELD_ALBUM);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tOggSong *>(this)->TrackNumber, 
-				getFieldString(FIELD_TRACKNUMBER, tag), FIELD_TRACKNUMBER);
+				getFieldStringByTaglib(FIELD_TRACKNUMBER, tag), FIELD_TRACKNUMBER);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tOggSong *>(this)->Genre, 
-				getFieldString(FIELD_GENRE, tag), FIELD_GENRE);
+				getFieldStringByTaglib(FIELD_GENRE, tag), FIELD_GENRE);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tOggSong *>(this)->Year,
-				getFieldString(FIELD_YEAR, tag), FIELD_YEAR);
+				getFieldStringByTaglib(FIELD_YEAR, tag), FIELD_YEAR);
 
   if (tag && tag->fieldListMap().contains("PERFORMER"))
   {
@@ -1639,15 +1689,23 @@ void tOggSong::readInfo() const
 
 
 
+bool tOggSong::isFieldWritable(tSongField field)
+{
+  return
+    tSong::isFieldWritable(field) ||
+    isFieldWritableByTaglib(field) ||
+    field == FIELD_PERFORMER;
+}
+
+
+
+
 void tOggSong::setFieldText(tSongField field, QString const &value)
 {
-  try
+  if (tSong::isFieldWritable(field))
   {
     tSong::setFieldText(field, value);
     return;
-  }
-  catch (exception &ex)
-  {
   }
 
   using namespace TagLib;
@@ -1670,7 +1728,7 @@ void tOggSong::setFieldText(tSongField field, QString const &value)
     tag->addField("PERFORMER", conv_value);
   }
   else
-    setFieldString(tag, field, value);
+    setFieldStringByTaglib(tag, field, value);
 
   my_file.save();
   readInfo();
@@ -1709,6 +1767,7 @@ class tFlacSong : public tSong
     { return "audio/x-flac"; }
 
     void readInfo() const;
+    bool isFieldWritable(tSongField field);
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal();
@@ -1737,22 +1796,22 @@ void tFlacSong::readInfo() const
   
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tFlacSong *>(this)->Artist, 
-				getFieldString(FIELD_ARTIST, tag), FIELD_ARTIST);
+				getFieldStringByTaglib(FIELD_ARTIST, tag), FIELD_ARTIST);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tFlacSong *>(this)->Title, 
-				getFieldString(FIELD_TITLE, tag), FIELD_TITLE);
+				getFieldStringByTaglib(FIELD_TITLE, tag), FIELD_TITLE);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tFlacSong *>(this)->Album, 
-				getFieldString(FIELD_ALBUM, tag), FIELD_ALBUM);
+				getFieldStringByTaglib(FIELD_ALBUM, tag), FIELD_ALBUM);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tFlacSong *>(this)->TrackNumber, 
-				getFieldString(FIELD_TRACKNUMBER, tag), FIELD_TRACKNUMBER);
+				getFieldStringByTaglib(FIELD_TRACKNUMBER, tag), FIELD_TRACKNUMBER);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tFlacSong *>(this)->Genre, 
-				getFieldString(FIELD_GENRE, tag), FIELD_GENRE);
+				getFieldStringByTaglib(FIELD_GENRE, tag), FIELD_GENRE);
   assignAndCheckForModification(this, SongCollection, 
 				const_cast<tFlacSong *>(this)->Year,
-				getFieldString(FIELD_YEAR, tag), FIELD_YEAR);
+				getFieldStringByTaglib(FIELD_YEAR, tag), FIELD_YEAR);
 
   if (xiphc && xiphc->fieldListMap().contains("PERFORMER"))
   {
@@ -1773,15 +1832,23 @@ void tFlacSong::readInfo() const
 
 
 
+bool tFlacSong::isFieldWritable(tSongField field)
+{
+  return
+    tSong::isFieldWritable(field) ||
+    isFieldWritableByTaglib(field) ||
+    field == FIELD_PERFORMER;
+}
+
+
+
+
 void tFlacSong::setFieldText(tSongField field, QString const &value)
 {
-  try
+  if (tSong::isFieldWritable(field))
   {
     tSong::setFieldText(field, value);
     return;
-  }
-  catch (exception &ex)
-  {
   }
 
   using namespace TagLib;
@@ -1804,7 +1871,7 @@ void tFlacSong::setFieldText(tSongField field, QString const &value)
     tag->addField("PERFORMER", conv_value);
   }
   else
-    setFieldString(tag, field, value);
+    setFieldStringByTaglib(tag, field, value);
 
   my_file.save();
   readInfo();
@@ -1844,6 +1911,7 @@ class tM4ASong : public tSong
     { return "audio/x-m4a"; }
     
     void readInfo() const;
+    bool isFieldWritable(tSongField field);
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal(); 
@@ -1856,7 +1924,7 @@ class tM4ASong : public tSong
 //
 //  C callbacks for metadata reading 
 //
-uint32_t md_read_callback(void *user_data, void *buffer, uint32_t length)
+static uint32_t md_read_callback(void *user_data, void *buffer, uint32_t length)
 {
   mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
   return fread(buffer, 1, length, file_data->file);
@@ -1865,7 +1933,7 @@ uint32_t md_read_callback(void *user_data, void *buffer, uint32_t length)
 
 
 
-uint32_t md_write_callback(void *user_data, void *buffer, uint32_t length)
+static uint32_t md_write_callback(void *user_data, void *buffer, uint32_t length)
 {
   mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
   return fwrite(buffer, 1, length, file_data->file);
@@ -1874,7 +1942,7 @@ uint32_t md_write_callback(void *user_data, void *buffer, uint32_t length)
 
 
 
-uint32_t md_truncate_callback(void *user_data) 
+static uint32_t md_truncate_callback(void *user_data) 
 {
   mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
   ftruncate(file_data->fd, ftello(file_data->file));
@@ -1884,14 +1952,16 @@ uint32_t md_truncate_callback(void *user_data)
 
 
 
-uint32_t md_seek_callback(void *user_data, uint64_t position)
+static uint32_t md_seek_callback(void *user_data, uint64_t position)
 {
   mp4callback_data_t *file_data = (mp4callback_data_t*)user_data;
   return fseek(file_data->file, position, SEEK_SET);
 }
 
 
-int GetAACTrack(mp4ff_t *infile)
+
+
+static int GetAACTrack(mp4ff_t *infile)
 {
   /* find AAC track */
   unsigned int i, rc;
@@ -1980,7 +2050,6 @@ void tM4ASong::readInfo() const
                                
   if ((track = GetAACTrack(infile)) < 0)
   {
-
     mp4ff_close(infile);
     free(mp4cb);
     close(callback_data.fd);
@@ -2022,113 +2091,124 @@ void tM4ASong::readInfo() const
 
 
 
+bool tM4ASong::isFieldWritable(tSongField field)
+{
+  return
+    tSong::isFieldWritable(field) ||
+    isFieldWritableByTaglib(field) ||
+    field == FIELD_PERFORMER;
+}
+
+
+
+
 void  tM4ASong::setFieldText(tSongField field, QString const &value)
 {
-  try
+  if (tSong::isFieldWritable(field))
   {
-    tSong::setFieldText(field,value);
-  }
-  catch(exception ex)
-  {
+    tSong::setFieldText(field, value);
+    return;
   }
 
 
-   mp4callback_data_t callback_data;
+  mp4callback_data_t callback_data;
 
-    callback_data.fd = open(filename().c_str(), O_RDWR);
-    if (callback_data.fd < 0) {
-        return ;
-    }
+  callback_data.fd = open(filename().c_str(), O_RDWR);
+  if (callback_data.fd < 0)
+  {
+    return;
+  }
      
-    callback_data.file = fdopen(callback_data.fd, "r+");
-    if (!callback_data.file)
-    {
-        close(callback_data.fd);
-        return ;
-    }
+  callback_data.file = fdopen(callback_data.fd, "r+");
+  if (!callback_data.file)
+  {
+    close(callback_data.fd);
+    return;
+  }
 
-    //
-    //  Create the callback structure
-    //
+  //
+  //  Create the callback structure
+  //
 
-    mp4ff_callback_t *mp4_cb = (mp4ff_callback_t*) malloc(sizeof(mp4ff_callback_t));
-    if (!mp4_cb) {
-      close(callback_data.fd);
-      fclose(callback_data.file);
-      return;
-    }
-    mp4_cb->read = md_read_callback;
-    mp4_cb->seek = md_seek_callback;
-    mp4_cb->write = md_write_callback;
-    mp4_cb->truncate = md_truncate_callback;
-    mp4_cb->user_data = &callback_data;
+  mp4ff_callback_t *mp4_cb = (mp4ff_callback_t*) malloc(sizeof(mp4ff_callback_t));
+  if (!mp4_cb) 
+  {
+    close(callback_data.fd);
+    fclose(callback_data.file);
+    return;
+  }
+  mp4_cb->read = md_read_callback;
+  mp4_cb->seek = md_seek_callback;
+  mp4_cb->write = md_write_callback;
+  mp4_cb->truncate = md_truncate_callback;
+  mp4_cb->user_data = &callback_data;
 
-    mp4ff_metadata_t * mp4ff_mdata = (mp4ff_metadata_t *)malloc(sizeof(mp4ff_metadata_t));
-    if (!mp4ff_mdata) {
-      free(mp4_cb);
-      close(callback_data.fd);
-      fclose(callback_data.file);
-      return;
-    }
-    mp4ff_mdata->tags = (mp4ff_tag_t*)malloc(7 * sizeof(mp4ff_tag_t));
-    if (!mp4ff_mdata) {
-      free(mp4_cb);
-      free(mp4ff_mdata);
-      close(callback_data.fd);
-      fclose(callback_data.file);
-      return ;
-    }
-
-    //
-    //  Open the mp4 input file  
-    //                   
-
-    mp4ff_t *mp4_ifile = mp4ff_open_read(mp4_cb);
-    if (!mp4_ifile)
-    {
-        free(mp4_cb);
-        free(mp4ff_mdata);
-        close(callback_data.fd);
-        fclose(callback_data.file);
-        return ;
-    } 
-    
-    mp4ff_mdata->tags[0].item = "artist";
-    mp4ff_mdata->tags[0].value = strdup((char*)(FIELD_ARTIST == field ? value.ascii() : artist().ascii()));
-
-    mp4ff_mdata->tags[1].item = "album";
-    mp4ff_mdata->tags[1].value = strdup((char*)(FIELD_ALBUM == field ? value.ascii() : album().ascii()));
-
-    mp4ff_mdata->tags[2].item = "title";
-    mp4ff_mdata->tags[2].value = strdup((char*)(FIELD_TITLE == field ? value.ascii() : title().ascii()));
-
-    mp4ff_mdata->tags[3].item = "genre";
-    mp4ff_mdata->tags[3].value = strdup((char*) (FIELD_GENRE == field ? value.ascii() : genre().ascii()));
-
-    mp4ff_mdata->tags[4].item = "date";
-    mp4ff_mdata->tags[4].value =  (char*)malloc(128);
-    snprintf(mp4ff_mdata->tags[4].value, 128, "%d",(FIELD_YEAR == field ? value.toUInt() : year().toUInt()));
-
-    mp4ff_mdata->tags[5].item = "track";
-    mp4ff_mdata->tags[5].value = (char*)malloc(128);
-    snprintf(mp4ff_mdata->tags[5].value, 128, "%d",  (FIELD_TRACKNUMBER == field ? value.toUInt() : trackNumber().toUInt()));
-
-    mp4ff_mdata->count =6;
-
-    for(int i=0;i<mp4ff_mdata->count;i++) if(strcmp(mp4ff_mdata->tags[i].value, "")==0) mp4ff_mdata->tags[i].value = "Unknown";
-    
-    mp4ff_meta_update(mp4_cb, mp4ff_mdata);
-    
-    mp4ff_close(mp4_ifile);
+  mp4ff_metadata_t * mp4ff_mdata = (mp4ff_metadata_t *)malloc(sizeof(mp4ff_metadata_t));
+  if (!mp4ff_mdata)
+  {
     free(mp4_cb);
     close(callback_data.fd);
     fclose(callback_data.file);
-   
-
-    free(mp4ff_mdata->tags);
+    return;
+  }
+  mp4ff_mdata->tags = (mp4ff_tag_t*)malloc(7 * sizeof(mp4ff_tag_t));
+  if (!mp4ff_mdata) 
+  {
+    free(mp4_cb);
     free(mp4ff_mdata);
-    readInfo();
+    close(callback_data.fd);
+    fclose(callback_data.file);
+    return;
+  }
 
+  //
+  //  Open the mp4 input file  
+  //                   
+
+  mp4ff_t *mp4_ifile = mp4ff_open_read(mp4_cb);
+  if (!mp4_ifile)
+  {
+    free(mp4_cb);
+    free(mp4ff_mdata);
+    close(callback_data.fd);
+    fclose(callback_data.file);
+    return;
+  } 
+    
+  mp4ff_mdata->tags[0].item = "artist";
+  mp4ff_mdata->tags[0].value = strdup((char*)(FIELD_ARTIST == field ? value.ascii() : artist().ascii()));
+  
+  mp4ff_mdata->tags[1].item = "album";
+  mp4ff_mdata->tags[1].value = strdup((char*)(FIELD_ALBUM == field ? value.ascii() : album().ascii()));
+
+  mp4ff_mdata->tags[2].item = "title";
+  mp4ff_mdata->tags[2].value = strdup((char*)(FIELD_TITLE == field ? value.ascii() : title().ascii()));
+
+  mp4ff_mdata->tags[3].item = "genre";
+  mp4ff_mdata->tags[3].value = strdup((char*) (FIELD_GENRE == field ? value.ascii() : genre().ascii()));
+
+  mp4ff_mdata->tags[4].item = "date";
+  mp4ff_mdata->tags[4].value =  (char*)malloc(128);
+  snprintf(mp4ff_mdata->tags[4].value, 128, "%d",(FIELD_YEAR == field ? value.toUInt() : year().toUInt()));
+
+  mp4ff_mdata->tags[5].item = "track";
+  mp4ff_mdata->tags[5].value = (char*)malloc(128);
+  snprintf(mp4ff_mdata->tags[5].value, 128, "%d",  (FIELD_TRACKNUMBER == field ? value.toUInt() : trackNumber().toUInt()));
+
+  mp4ff_mdata->count =6;
+
+  for(int i=0;i<mp4ff_mdata->count;i++) if(strcmp(mp4ff_mdata->tags[i].value, "")==0) mp4ff_mdata->tags[i].value = "Unknown";
+    
+  mp4ff_meta_update(mp4_cb, mp4ff_mdata);
+    
+  mp4ff_close(mp4_ifile);
+  free(mp4_cb);
+  close(callback_data.fd);
+  fclose(callback_data.file);
+   
+  free(mp4ff_mdata->tags);
+  free(mp4ff_mdata);
+  readInfo();
 }
 
 
@@ -2136,8 +2216,11 @@ void  tM4ASong::setFieldText(tSongField field, QString const &value)
 
 void  tM4ASong::stripTagInternal()
 {
-
 }
+
+
+
+
 #endif
 
 

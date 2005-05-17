@@ -810,7 +810,8 @@ tFilename stripPath(const tFilename &fn)
 tFilename stripExtension(const tFilename &fn)
 {
   tFilename::size_type dot_pos = fn.rfind(".");
-  if (dot_pos == tFilename::npos)
+  tFilename::size_type slash_pos = fn.rfind("/");
+  if (dot_pos == tFilename::npos || dot_pos < slash_pos)
     return fn;
   else
     return fn.substr(0,dot_pos);

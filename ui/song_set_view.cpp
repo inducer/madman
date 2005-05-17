@@ -590,37 +590,36 @@ QWidget *tSongListView::createEditor (int row, int col, bool initFromCell) const
   tSongField field = (tSongField) ColumnToField[col];
   tSong *song = SongList[row];
 
-  if (field == FIELD_ARTIST || 
-      field == FIELD_PERFORMER || 
-      field == FIELD_TITLE ||
-      field == FIELD_ALBUM ||
-      field == FIELD_YEAR ||
-      field == FIELD_MOOD ||
-      field == FIELD_TEMPO ||
-      field == FIELD_CUSTOM1 ||
-      field == FIELD_CUSTOM2 ||
-      field == FIELD_CUSTOM3 ||
-      field == FIELD_TRACKNUMBER)
+  if (song->isFieldWritable(field))
   {
-    QLineEdit *e = new QLineEdit(viewport(), "qt_lineeditor_in_qtable");
-    e->setText(song->fieldText(field));
-    e->selectAll();
-    return e;
-  }
-  else if (field == FIELD_GENRE)
-  {
-    QComboBox *cb = new QComboBox(viewport(), "qt_combobox_in_qtable");
-    cb->setEditable(true);
-    for (int i = 0; i < GENRE_COUNT; i++)
-      cb->insertItem(genreIdToString(i));
-    cb->setCurrentText(song->fieldText(field));
-    cb->lineEdit()->selectAll();
-    cb->lineEdit()->setFrame(false);
-    cb->setAutoCompletion(true);
-    return cb;
+    if (field == FIELD_GENRE)
+    {
+      QComboBox *cb = new QComboBox(viewport(), "qt_combobox_in_qtable");
+      cb->setEditable(true);
+      for (int i = 0; i < GENRE_COUNT; i++)
+        cb->insertItem(genreIdToString(i));
+      cb->setCurrentText(song->fieldText(field));
+      cb->lineEdit()->selectAll();
+      cb->lineEdit()->setFrame(false);
+      cb->setAutoCompletion(true);
+      return cb;
+    }
+    else
+    {
+      QLineEdit *e = new QLineEdit(viewport(), "qt_lineeditor_in_qtable");
+      e->setText(song->fieldText(field));
+      e->selectAll();
+      return e;
+    }
   }
   else
+  {
+    QMessageBox::warning(
+      topLevelWidget(), 
+      tr("madman"),
+      tr("This field is not writable on this song."));
     return NULL;
+  }
 }
 
 
