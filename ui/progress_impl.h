@@ -88,43 +88,52 @@ class tCancellableStatusBarProgress : public tCancellableSimpleProgress
 
 class tProgressDialog : public tProgress
 {
-  auto_ptr<QProgressDialog> Progress;
-  public:
-  tProgressDialog(QWidget *widget, bool cancellable)
-    : Progress(new QProgressDialog(widget, "progress", true))
-    {
-      if (!cancellable)
-        Progress->setCancelButtonText(QString::null);
+    auto_ptr<QProgressDialog> Progress;
+    QProgressBar *Bar;
 
-      Progress->setAutoReset(false);
-      Progress->setAutoClose(false);
-      Progress->setMinimumDuration(0);
-      Progress->setProgress(0);
-    }
-  bool wasCancelled()
-  { 
-    return Progress->wasCancelled();
-  }
-  void processEvents() 
-  { 
-    qApp->processEvents(); 
-  }
-  int progress() 
-  { 
-    return Progress->progress();
-  }
-  void setProgress(int p) 
-  { 
-    Progress->setProgress(p);
-  }
-  void setTotalSteps(int p)
-  { 
-    Progress->setTotalSteps(p);
-  }
-  void setWhat(const QString &what) 
-  { 
-    Progress->setLabelText(what);
-  }
+  public:
+    tProgressDialog(QWidget *widget, bool cancellable)
+      : Progress(new QProgressDialog(widget, "progress", true))
+      {
+        if (!cancellable)
+          Progress->setCancelButtonText(QString::null);
+        Bar = new QProgressBar(Progress.get());
+        Bar->show();
+        Progress->setBar(Bar);
+        
+        Progress->setAutoReset(false);
+        Progress->setAutoClose(false);
+        Progress->setMinimumDuration(0);
+        Progress->setProgress(0);
+      }
+    bool wasCancelled()
+      { 
+        return Progress->wasCancelled();
+      }
+    void processEvents() 
+      { 
+        qApp->processEvents(); 
+      }
+    int progress() 
+      { 
+        return Progress->progress();
+      }
+    void setProgress(int p) 
+      { 
+        Progress->setProgress(p);
+      }
+    void setTotalSteps(int p)
+      { 
+        Progress->setTotalSteps(p);
+        if (p == 0)
+          Bar->setPercentageVisible(false);
+        else
+          Bar->setPercentageVisible(true);
+      }
+    void setWhat(const QString &what) 
+      { 
+        Progress->setLabelText(what);
+      }
 };
 
 
