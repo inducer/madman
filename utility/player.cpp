@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <cstdlib>
 #include <stdexcept>
 #include "utility/player_xmms.h"
+#include "utility/player_mpd.h"
 
 
 
@@ -196,6 +197,7 @@ void listPlayers(vector<QString> &players)
 {
   players.clear();
   players.push_back("XMMS");
+  players.push_back("MPD");
 }
 
 
@@ -206,6 +208,10 @@ tPlayer *createPlayer(QString const &name)
   if (name == "XMMS")
   {
     return new tXMMSPlayer;
+  }
+  else if (name == "MPD")
+  {
+    return new tMPDPlayer;
   }
   else
     return NULL;

@@ -1077,9 +1077,18 @@ void tSongSetViewManager::slotEditThisTag()
 
 void tSongSetViewManager::slotPlayNow()
 {
-  tSongList list;
-  ListView.getSelection(list);
-  tProgramBase::preferences().Player.playNow(list);
+  try
+  {
+    tSongList list;
+    ListView.getSelection(list);
+    tProgramBase::preferences().Player.playNow(list);
+  }
+  catch (exception &ex)
+  {
+    QMessageBox::warning(&ListView, tr("madman"),
+	tr("Player encountered an error:\n%1").arg(ex.what()),
+                         QMessageBox::Ok, QMessageBox::NoButton);
+  }
 }
 
 
@@ -1095,10 +1104,19 @@ void tSongSetViewManager::slotPlayNow(tSong *item)
 
 void tSongSetViewManager::slotPlayNext()
 {
-  tSongList list;
-  ListView.getSelection(list);
-
-  tProgramBase::preferences().Player.playNext(list);
+  try
+  {
+    tSongList list;
+    ListView.getSelection(list);
+    
+    tProgramBase::preferences().Player.playNext(list);
+  }
+  catch (exception &ex)
+  {
+    QMessageBox::warning(&ListView, tr("madman"),
+	tr("Player encountered an error:\n%1").arg(ex.what()),
+                         QMessageBox::Ok, QMessageBox::NoButton);
+  }
 }
 
 
@@ -1106,10 +1124,19 @@ void tSongSetViewManager::slotPlayNext()
 
 void tSongSetViewManager::slotPlayEventually()
 {
-  tSongList list;
-  ListView.getSelection(list);
-
-  tProgramBase::preferences().Player.playEventually(list);
+  try
+  {
+    tSongList list;
+    ListView.getSelection(list);
+    
+    tProgramBase::preferences().Player.playEventually(list);
+  }
+  catch (exception &ex)
+  {
+    QMessageBox::warning(&ListView, tr("madman"),
+	tr("Player encountered an error:\n%1").arg(ex.what()),
+                         QMessageBox::Ok, QMessageBox::NoButton);
+  }
 }
 
 
@@ -1170,18 +1197,20 @@ void tSongSetViewManager::restrictViewByCriterion(const QString &crit)
 
 void tSongSetViewManager::playByCriterion(const QString &crit, tPlayWhen when)
 {
-  tPlaylist set;
-  set.setSongCollection(&tProgramBase::database().SongCollection);
-  set.setCriterion(crit);
-  set.reevaluateCriterion();
-
-  tSongList list;
-  set.render(list);
-
-  sortBeforePlay(list);
-
-  switch (when)
+  try
   {
+    tPlaylist set;
+    set.setSongCollection(&tProgramBase::database().SongCollection);
+    set.setCriterion(crit);
+    set.reevaluateCriterion();
+
+    tSongList list;
+    set.render(list);
+
+    sortBeforePlay(list);
+
+    switch (when)
+    {
     case PLAY_NOW:
       tProgramBase::preferences().Player.playNow(list);
       return;
@@ -1191,6 +1220,13 @@ void tSongSetViewManager::playByCriterion(const QString &crit, tPlayWhen when)
     case PLAY_EVENTUALLY:
       tProgramBase::preferences().Player.playEventually(list);
       return;
+    }
+  }
+  catch (exception &ex)
+  {
+    QMessageBox::warning(&ListView, tr("madman"),
+	tr("Player encountered an error:\n%1").arg(ex.what()),
+                         QMessageBox::Ok, QMessageBox::NoButton);
   }
 }
 
@@ -1253,10 +1289,19 @@ void tSongSetViewManager::deleteFromDisk()
 
 void tSongSetViewManager::highlightCurrentSong()
 {
-  tFilename current_song = tProgramBase::preferences().Player.currentFilename();
-  tSong *song = tProgramBase::database().SongCollection.getByFilename(current_song);
-  if (song)
-    highlight(song);
+  try
+  {
+    tFilename current_song = tProgramBase::preferences().Player.currentFilename();
+    tSong *song = tProgramBase::database().SongCollection.getByFilename(current_song);
+    if (song)
+      highlight(song);
+  }
+  catch (exception &ex)
+  {
+    QMessageBox::warning(&ListView, tr("madman"),
+	tr("Player encountered an error:\n%1").arg(ex.what()),
+                         QMessageBox::Ok, QMessageBox::NoButton);
+  }
 }
 
 
@@ -1570,11 +1615,20 @@ void tPlaylistViewManager::removeSelected()
 
 void tPlaylistViewManager::uploadPlaylist()
 {
-  if (Playlist)
+  try
   {
-    tSongList rendering;
-    Playlist->render(rendering);
-    tProgramBase::preferences().Player.setPlayList(rendering);
+    if (Playlist)
+    {
+      tSongList rendering;
+      Playlist->render(rendering);
+      tProgramBase::preferences().Player.setPlayList(rendering);
+    }
+  }
+  catch (exception &ex)
+  {
+    QMessageBox::warning(&ListView, tr("madman"),
+	tr("Player encountered an error:\n%1").arg(ex.what()),
+                         QMessageBox::Ok, QMessageBox::NoButton);
   }
 }
 
@@ -1583,21 +1637,30 @@ void tPlaylistViewManager::uploadPlaylist()
 
 void tPlaylistViewManager::downloadPlaylist()
 {
-  if (Playlist == NULL)
-    return;
-
-  vector<tFilename> playlist;
-  tProgramBase::preferences().Player.getPlayList(playlist);
-
-  FOREACH(first, playlist, vector<tFilename>)
+  try
   {
-    try
-    {
-      Playlist->add(*first);
-    }
-    catch (...)
-    {
-    }
+    if (Playlist == NULL)
+      return;
+    
+    vector<tFilename> playlist;
+    tProgramBase::preferences().Player.getPlayList(playlist);
+    
+    FOREACH(first, playlist, vector<tFilename>)
+      {
+        try
+        {
+          Playlist->add(*first);
+        }
+        catch (...)
+        {
+        }
+      }
+  }
+  catch (exception &ex)
+  {
+    QMessageBox::warning(&ListView, tr("madman"),
+	tr("Player encountered an error:\n%1").arg(ex.what()),
+                         QMessageBox::Ok, QMessageBox::NoButton);
   }
 }
 

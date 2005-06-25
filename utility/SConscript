@@ -9,6 +9,6 @@ myenv.Append( CPPPATH = myenv[ 'QT_CPPPATH' ] )
 myenv.Append( CPPPATH = myenv[ 'XMMS_CPPPATH' ] )
 
 myenv.StaticLibrary( target = "madmanutility",
-  source = [ "base.cpp", "player.cpp", "player_xmms.cpp",
+  source = [ "base.cpp", "player.cpp", "player_xmms.cpp", "player_mpd.cpp",
   "prefs.cpp", "plugin.cpp", "scanner.cpp", 
-  "mt_random.cpp" ] )
+  "mt_random.cpp", "libmpdclient.c" ] )

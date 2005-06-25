@@ -462,18 +462,25 @@ void tOverviewManager::contextMenuRequested (QListViewItem * item, const QPoint 
 
 void tOverviewManager::slotPlayNow()
 {
-  tOverviewItem *my_item = dynamic_cast<tOverviewItem *>(ListView.selectedItem());
-  if (my_item)
+  try
   {
-    tPlaylist set;
-    set.setSongCollection(&tProgramBase::database().SongCollection);
-    set.setCriterion(my_item->criterion());
-    set.reevaluateCriterion();
-
-    tSongList list;
-    set.render(list);
-
-    tProgramBase::preferences().Player.playNow(list);
+    tOverviewItem *my_item = dynamic_cast<tOverviewItem *>(ListView.selectedItem());
+    if (my_item)
+    {
+      tPlaylist set;
+      set.setSongCollection(&tProgramBase::database().SongCollection);
+      set.setCriterion(my_item->criterion());
+      set.reevaluateCriterion();
+      
+      tSongList list;
+      set.render(list);
+      
+      tProgramBase::preferences().Player.playNow(list);
+    }
+  }
+  catch (exception &ex)
+  {
+    // FIXME: error handling
   }
 }
 
@@ -482,18 +489,25 @@ void tOverviewManager::slotPlayNow()
 
 void tOverviewManager::slotPlayNext()
 {
-  tOverviewItem *my_item = dynamic_cast<tOverviewItem *>(ListView.selectedItem());
-  if (my_item)
+  try
   {
-    tPlaylist set;
-    set.setSongCollection(&tProgramBase::database().SongCollection);
-    set.setCriterion(my_item->criterion());
-    set.reevaluateCriterion();
-
-    tSongList list;
-    set.render(list);
-
-    tProgramBase::preferences().Player.playNext(list);
+    tOverviewItem *my_item = dynamic_cast<tOverviewItem *>(ListView.selectedItem());
+    if (my_item)
+    {
+      tPlaylist set;
+      set.setSongCollection(&tProgramBase::database().SongCollection);
+      set.setCriterion(my_item->criterion());
+      set.reevaluateCriterion();
+      
+      tSongList list;
+      set.render(list);
+      
+      tProgramBase::preferences().Player.playNext(list);
+    }
+  }
+  catch (exception &ex)
+  {
+    // FIXME: error handling
   }
 }
 
@@ -502,18 +516,25 @@ void tOverviewManager::slotPlayNext()
 
 void tOverviewManager::slotPlayEventually()
 {
-  tOverviewItem *my_item = dynamic_cast<tOverviewItem *>(ListView.selectedItem());
-  if (my_item)
+  try
   {
-    tPlaylist set;
-    set.setSongCollection(&tProgramBase::database().SongCollection);
-    set.setCriterion(my_item->criterion());
-    set.reevaluateCriterion();
-
-    tSongList list;
-    set.render(list);
-
-    tProgramBase::preferences().Player.playEventually(list);
+    tOverviewItem *my_item = dynamic_cast<tOverviewItem *>(ListView.selectedItem());
+    if (my_item)
+    {
+      tPlaylist set;
+      set.setSongCollection(&tProgramBase::database().SongCollection);
+      set.setCriterion(my_item->criterion());
+      set.reevaluateCriterion();
+      
+      tSongList list;
+      set.render(list);
+      
+      tProgramBase::preferences().Player.playEventually(list);
+    }
+  }
+  catch (exception &ex)
+  {
+    // FIXME: error handling
   }
 }
 

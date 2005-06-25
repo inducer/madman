@@ -861,9 +861,16 @@ void tMainWindow::enableAutoDJ(bool on)
 
 void tMainWindow::doAutoDJ()
 {
-  tSongList songs;
-  ProgramBase.autoDJ().selectSongs(songs, 20);
-  tProgramBase::preferences().Player.playEventually(songs);
+  try
+  {
+    tSongList songs;
+    ProgramBase.autoDJ().selectSongs(songs, 20);
+    tProgramBase::preferences().Player.playEventually(songs);
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 
 
@@ -1004,8 +1011,15 @@ void tMainWindow::connectAutoDJSourceSignals()
 
 void tMainWindow::clearPlaylist()
 {
-  ProgramBase.preferences().Player.clearPlaylist();
-  doContinuousAutoDJ();
+  try
+  {
+    ProgramBase.preferences().Player.clearPlaylist();
+    doContinuousAutoDJ();
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 
 
@@ -1117,14 +1131,21 @@ void tMainWindow::help()
 
 void tMainWindow::playSearchResultNow()
 {
-  tSongList songs;
-  SearchSongSet.render(songs);
-
-  // don't let people add their whole database--takes too long
-  if (songs.size() > 200)
-    songs.erase(songs.begin()+200, songs.end());
-
-  ProgramBase.preferences().Player.playNow(songs);
+  try
+  {
+    tSongList songs;
+    SearchSongSet.render(songs);
+    
+    // don't let people add their whole database--takes too long
+    if (songs.size() > 200)
+      songs.erase(songs.begin()+200, songs.end());
+    
+    ProgramBase.preferences().Player.playNow(songs);
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 
 
@@ -1132,14 +1153,21 @@ void tMainWindow::playSearchResultNow()
 
 void tMainWindow::playSearchResultNext()
 {
-  tSongList songs;
-  SearchSongSet.render(songs);
-
-  // don't let people add their whole database--takes too long
-  if (songs.size() > 200)
-    songs.erase(songs.begin()+200, songs.end());
-
-  ProgramBase.preferences().Player.playNext(songs);
+  try
+  {
+    tSongList songs;
+    SearchSongSet.render(songs);
+    
+    // don't let people add their whole database--takes too long
+    if (songs.size() > 200)
+      songs.erase(songs.begin()+200, songs.end());
+    
+    ProgramBase.preferences().Player.playNext(songs);
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 
 
@@ -1147,14 +1175,21 @@ void tMainWindow::playSearchResultNext()
 
 void tMainWindow::playSearchResultEventually()
 {
-  tSongList songs;
-  SearchSongSet.render(songs);
-
-  // don't let people add their whole database--takes too long
-  if (songs.size() > 200)
-    songs.erase(songs.begin()+200, songs.end());
-
-  ProgramBase.preferences().Player.playEventually(songs);
+  try
+  {
+    tSongList songs;
+    SearchSongSet.render(songs);
+    
+    // don't let people add their whole database--takes too long
+    if (songs.size() > 200)
+      songs.erase(songs.begin()+200, songs.end());
+    
+    ProgramBase.preferences().Player.playEventually(songs);
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 
 
@@ -1162,21 +1197,27 @@ void tMainWindow::playSearchResultEventually()
 
 void tMainWindow::rateCurrentSong(int rating)
 {
-  tFilename song_file = ProgramBase.preferences().Player.currentFilename();
-
-  tSong *new_song = ProgramBase.database().SongCollection.getByFilename(song_file);
-  if (new_song)
+  try
   {
-    if (new_song->rating() == rating)
-      new_song->setRating(-1);
-    else
-      new_song->setRating(rating);
-  }
-  else
-    QMessageBox::warning(this, tr("madman"),
-			 tr("Currently playing song is not in database. Sorry."), QMessageBox::Ok, QMessageBox::NoButton);
-}
+    tFilename song_file = ProgramBase.preferences().Player.currentFilename();
 
+    tSong *new_song = ProgramBase.database().SongCollection.getByFilename(song_file);
+    if (new_song)
+    {
+      if (new_song->rating() == rating)
+        new_song->setRating(-1);
+      else
+        new_song->setRating(rating);
+    }
+    else
+      QMessageBox::warning(this, tr("madman"),
+                           tr("Currently playing song is not in database. Sorry."), QMessageBox::Ok, QMessageBox::NoButton);
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
+}
 
 
 
@@ -1384,11 +1425,18 @@ void tMainWindow::removePlaylist()
 
 void tMainWindow::playPlaylist()
 {
-  if (PlaylistEditor.songSet())
+  try
   {
-    tSongList songs;
-    PlaylistEditor.songSet()->render(songs);
-    ProgramBase.preferences().Player.playNow(songs);
+    if (PlaylistEditor.songSet())
+    {
+      tSongList songs;
+      PlaylistEditor.songSet()->render(songs);
+      ProgramBase.preferences().Player.playNow(songs);
+    }
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
   }
 }
 
@@ -1565,36 +1613,43 @@ namespace
 
 void tMainWindow::followCurrentSongLink(const QString &href)
 {
-  tSong *current_song = NULL;
-  current_song = ProgramBase.database().SongCollection.getByFilename(
-    ProgramBase.preferences().Player.currentFilename());
-  hideLists(false);
-
-  tOverviewItem *item_to_select = NULL;
-
-  if (href == "title")
+  try
   {
-    if (SearchSongSet.criterion() != "")
-      editSearch->setText("");
+    tSong *current_song = NULL;
+    current_song = ProgramBase.database().SongCollection.getByFilename(
+      ProgramBase.preferences().Player.currentFilename());
+    hideLists(false);
 
-    lstAllSongs->setFocus();
-    SearchViewManager.highlightCurrentSong();
-    checkHideLists->setChecked(FALSE);
+    tOverviewItem *item_to_select = NULL;
+
+    if (href == "title")
+    {
+      if (SearchSongSet.criterion() != "")
+        editSearch->setText("");
+
+      lstAllSongs->setFocus();
+      SearchViewManager.highlightCurrentSong();
+      checkHideLists->setChecked(FALSE);
+    }
+    else if (href == "artist" && current_song)
+      item_to_select = findItemInOverview(lstOverview,
+                                          getArtistCriterion(current_song->artist()));
+    else if (href == "album" && current_song)
+      item_to_select = findItemInOverview(lstOverview,
+                                          getAlbumCriterion(current_song->album()));
+
+    if (item_to_select)
+    {
+      lstOverview->ensureItemVisible(item_to_select);
+      lstOverview->setCurrentItem(item_to_select);
+      if (editSearch->text() != item_to_select->criterion())
+        editSearch->setText(item_to_select->criterion());
+      checkHideLists->setChecked(FALSE);
+    }
   }
-  else if (href == "artist" && current_song)
-    item_to_select = findItemInOverview(lstOverview,
-        getArtistCriterion(current_song->artist()));
-  else if (href == "album" && current_song)
-    item_to_select = findItemInOverview(lstOverview,
-        getAlbumCriterion(current_song->album()));
-
-  if (item_to_select)
+  catch (exception &ex)
   {
-    lstOverview->ensureItemVisible(item_to_select);
-    lstOverview->setCurrentItem(item_to_select);
-    if (editSearch->text() != item_to_select->criterion())
-      editSearch->setText(item_to_select->criterion());
-    checkHideLists->setChecked(FALSE);
+    statusBar()->message(string2QString(ex.what()), 2000);
   }
 }
 
@@ -1695,57 +1750,92 @@ void tMainWindow::highlightSong(tSong *song)
 
 void tMainWindow::playPause()
 {
-  tPlayer &player = ProgramBase.preferences().Player;
-  player.ensureValidStatus();
-  if (player.isPaused() || !player.isPlaying())
+  try
   {
-    if (player.getPlayListLength() == 0)
+    tPlayer &player = ProgramBase.preferences().Player;
+    player.ensureValidStatus();
+    if (player.isPaused() || !player.isPlaying())
     {
-      // OK, we have a bad case of stupid user.^W^Wnew user.
-      tSongList songs;
-      SearchSongSet.render(songs);
-
-      if (songs.size() != 0)
+      if (player.getPlayListLength() == 0)
       {
-        // Phew. There's something we can do as a last resort.
-        playSearchResultNow();
+        // OK, we have a bad case of stupid user.^W^Wnew user.
+        tSongList songs;
+        SearchSongSet.render(songs);
+
+        if (songs.size() != 0)
+        {
+          // Phew. There's something we can do as a last resort.
+          playSearchResultNow();
+        }
+        else
+        {
+          // Not very smooth.
+          QMessageBox::information(this,
+                                   tr("madman"),
+                                   tr("madman presently doesn't "
+                                      "know what it is supposed to "
+                                      "play since there is no "
+                                      "search result.\nMaybe you "
+                                      "need to add songs to the "
+                                      "database or try a different "
+                                      "search."),
+                                   QMessageBox::Ok);
+        }
       }
       else
-      {
-        // Not very smooth.
-        QMessageBox::information(this,
-                                 tr("madman"),
-                                 tr("madman presently doesn't "
-                                    "know what it is supposed to "
-                                    "play since there is no "
-                                    "search result.\nMaybe you "
-                                    "need to add songs to the "
-                                    "database or try a different "
-                                    "search."),
-                                 QMessageBox::Ok);
-      }
+        player.play();
     }
     else
-      player.play();
+      player.pause();
   }
-  else
-    player.pause();
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 void tMainWindow::stop()
 {
-  ProgramBase.preferences().Player.stop();
+  try
+  {
+    ProgramBase.preferences().Player.stop();
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 void tMainWindow::skipForward()
 {
-  ProgramBase.preferences().Player.skipForward();
+  try
+  {
+    ProgramBase.preferences().Player.skipForward();
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 void tMainWindow::skipBack()
 {
-  ProgramBase.preferences().Player.skipBack();
+  try
+  {
+    ProgramBase.preferences().Player.skipBack();
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 void tMainWindow::skipTo(int value)
 {
-  ProgramBase.preferences().Player.skipTo(float(value) / 100);
+  try
+  {
+    ProgramBase.preferences().Player.skipTo(float(value) / 100);
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
+  }
 }
 
 
@@ -2011,13 +2101,6 @@ void tMainWindow::loadGeometry(const QString &name)
 
 void tMainWindow::updatePlaylistButtonMenu()
 {
-  tPlayer &player = ProgramBase.preferences().Player;
-  vector<tFilename> plist;
-  player.getPlayList(plist);
-  int playlist_index = player.getPlayListIndex();
-  int start_index = max(0, playlist_index - 4);
-  int end_index = min((int) plist.size(), playlist_index + 5);
-
   if (PlaylistButtonPopup)
     delete PlaylistButtonPopup;
   PlaylistButtonPopup = new QPopupMenu(this);
@@ -2029,41 +2112,55 @@ void tMainWindow::updatePlaylistButtonMenu()
   actionPlaybackDoAutoDJ->addTo(menu);
   actionPlaybackClearPlaylist->addTo(menu);
 
-  menu->insertSeparator();
-
-  for (int i = start_index; i < end_index; i++)
+  try
   {
-    tSong *song = ProgramBase.database().SongCollection.getByFilename(
-      plist[i]);
-    if (!song)
-      continue;
+    tPlayer &player = ProgramBase.preferences().Player;
+    vector<tFilename> plist;
+    player.getPlayList(plist);
+    int playlist_index = player.getPlayListIndex();
+    int start_index = max(0, playlist_index - 4);
+    int end_index = min((int) plist.size(), playlist_index + 5);
 
-    QPopupMenu *submenu = new QPopupMenu(menu);
-    (new tSetPlaylistIndexAction(i, tr("&Play"), submenu))->addTo(submenu);
-    tRemovePlaylistIndexAction *remove_action = new tRemovePlaylistIndexAction(
-      i, tr("&Remove"), submenu);
-    remove_action->addTo(submenu);
-    connect(remove_action, SIGNAL(songRemoved()),
-            this, SLOT(doContinuousAutoDJ()));
-    (new tHighlightAction(this, song->uniqueId(), tr("&Show"), submenu))->addTo(submenu);
-    submenu->insertSeparator();
-    (new tRateAction(song->uniqueId(), -1, tr("Mark &unrated"), submenu))->addTo(submenu);
-    (new tRateAction(song->uniqueId(), 0, tr("Rate - (&0)"), submenu))->addTo(submenu);
-    (new tRateAction(song->uniqueId(), 1, tr("Rate * (&1)"), submenu))->addTo(submenu);
-    (new tRateAction(song->uniqueId(), 2, tr("Rate ** (&2)"), submenu))->addTo(submenu);
-    (new tRateAction(song->uniqueId(), 3, tr("Rate *** (&3)"), submenu))->addTo(submenu);
-    (new tRateAction(song->uniqueId(), 4, tr("Rate **** (&4)"), submenu))->addTo(submenu);
-    (new tRateAction(song->uniqueId(), 5, tr("Rate ***** (&5)"), submenu))->addTo(submenu);
+    menu->insertSeparator();
 
-    QString text = substituteSongFields(ProgramBase.preferences().PlaylistMenuFormat, song, true);
-    text.replace("&", "&&");
-    if (i == playlist_index)
+    for (int i = start_index; i < end_index; i++)
     {
-      QPixmap pm(getStockPixmap("play.png").convertToImage().smoothScale(10,10));
-      menu->insertItem(pm, text, submenu);
+      tSong *song = ProgramBase.database().SongCollection.getByFilename(
+        plist[i]);
+      if (!song)
+        continue;
+
+      QPopupMenu *submenu = new QPopupMenu(menu);
+      (new tSetPlaylistIndexAction(i, tr("&Play"), submenu))->addTo(submenu);
+      tRemovePlaylistIndexAction *remove_action = new tRemovePlaylistIndexAction(
+        i, tr("&Remove"), submenu);
+      remove_action->addTo(submenu);
+      connect(remove_action, SIGNAL(songRemoved()),
+              this, SLOT(doContinuousAutoDJ()));
+      (new tHighlightAction(this, song->uniqueId(), tr("&Show"), submenu))->addTo(submenu);
+      submenu->insertSeparator();
+      (new tRateAction(song->uniqueId(), -1, tr("Mark &unrated"), submenu))->addTo(submenu);
+      (new tRateAction(song->uniqueId(), 0, tr("Rate - (&0)"), submenu))->addTo(submenu);
+      (new tRateAction(song->uniqueId(), 1, tr("Rate * (&1)"), submenu))->addTo(submenu);
+      (new tRateAction(song->uniqueId(), 2, tr("Rate ** (&2)"), submenu))->addTo(submenu);
+      (new tRateAction(song->uniqueId(), 3, tr("Rate *** (&3)"), submenu))->addTo(submenu);
+      (new tRateAction(song->uniqueId(), 4, tr("Rate **** (&4)"), submenu))->addTo(submenu);
+      (new tRateAction(song->uniqueId(), 5, tr("Rate ***** (&5)"), submenu))->addTo(submenu);
+
+      QString text = substituteSongFields(ProgramBase.preferences().PlaylistMenuFormat, song, true);
+      text.replace("&", "&&");
+      if (i == playlist_index)
+      {
+        QPixmap pm(getStockPixmap("play.png").convertToImage().smoothScale(10,10));
+        menu->insertItem(pm, text, submenu);
+      }
+      else
+        menu->insertItem(text, submenu);
     }
-    else
-      menu->insertItem(text, submenu);
+  }
+  catch (exception &ex)
+  {
+    statusBar()->message(string2QString(ex.what()), 2000);
   }
   
   btnPlaylist->setPopup(menu);
@@ -2099,35 +2196,46 @@ void tMainWindow::updateWindowCaption()
 
 void tMainWindow::updatePlayerStatus()
 {
-  float current_time = ProgramBase.preferences().Player.currentTime();
-  float total_time = ProgramBase.preferences().Player.totalTime();
-  if (total_time == 0)
-    sliderSongPosition->setValue (0);
-  else
-    sliderSongPosition->setValue (int(10000 * current_time / total_time));
-
-  QString current,total_duration;
-  current.sprintf("%d:%02d", int(current_time) / 60, int (current_time) % 60);
-  total_duration.sprintf("%d:%02d", int(total_time) / 60, int (total_time) % 60);
-
-  labelPlayTime->setText(QString("%1 / %2").arg(current).arg(total_duration));
-
-  bool paused_now = ProgramBase.preferences().Player.isPaused() || !ProgramBase.preferences().Player.isPlaying();
-  if (PreviouslyPaused != paused_now)
+  try
   {
-    if (paused_now)
-    {
-      setStockIcon(btnPlayPause, "play.png");
-      setStockIcon(actionPlaybackPlayPause, "play.png");
-    }
+    float current_time = ProgramBase.preferences().Player.currentTime();
+    float total_time = ProgramBase.preferences().Player.totalTime();
+    if (total_time == 0)
+      sliderSongPosition->setValue (0);
     else
-    {
-      setStockIcon(btnPlayPause, "pause.png");
-      setStockIcon(actionPlaybackPlayPause, "pause.png");
-    }
-  }
+      sliderSongPosition->setValue (int(10000 * current_time / total_time));
 
-  PreviouslyPaused = paused_now;
+    QString current,total_duration;
+    current.sprintf("%d:%02d", int(current_time) / 60,
+                    int (current_time) % 60);
+    total_duration.sprintf("%d:%02d", int(total_time) / 60,
+                           int (total_time) % 60);
+
+    labelPlayTime->setText(QString("%1 / %2").arg(current).arg(total_duration));
+
+    bool paused_now = ProgramBase.preferences().Player.isPaused()
+      || !ProgramBase.preferences().Player.isPlaying();
+    if (PreviouslyPaused != paused_now)
+    {
+      if (paused_now)
+      {
+        setStockIcon(btnPlayPause, "play.png");
+        setStockIcon(actionPlaybackPlayPause, "play.png");
+      }
+      else
+      {
+        setStockIcon(btnPlayPause, "pause.png");
+        setStockIcon(actionPlaybackPlayPause, "pause.png");
+      }
+    }
+
+    PreviouslyPaused = paused_now;
+  }
+  catch (exception &ex)
+  {
+    labelPlayTime->setText(QString(""));
+    sliderSongPosition->setValue (0);
+  }
 }
 
 

@@ -112,8 +112,9 @@ future ------------------------------------------------------------------------
 MAJOR CHANGES:
 * Playlist management button. [done]
 * Continuous AutoDJ. (Shawn, Adam Ward) [done]
++ Support for the Music Player Daemon (musicpd.org) (patch by Pauli Virtanen) [done]
 + Support FLAC. [done]
-+ Support M4A. [done] (Walter King)
++ Support M4A. [done] (patch by Walter King)
 * Switched to Scott Wheeler's Taglib. [done]
 + New UI for current song, imitating Rhythmbox.
   I guess imitation is the sincerest form of flattery. [done]
@@ -236,6 +237,8 @@ BUGS FIXED:
 * Fixed/revived RESCANAFTER in plugins? (Duke/Matt)
 * In SAX error handling, just skip the song if we catch an
   exception in its creation, instead of aborting. (Reported by "Anarcat".)
+* Catch more exceptions before they go into Qt, causing damage.
+  (patch by Pauli Virtanen) [done]
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>

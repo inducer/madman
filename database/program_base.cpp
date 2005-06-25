@@ -81,14 +81,22 @@ tSong *tProgramBase::currentSong()
 
 void tProgramBase::noticeStateChanged()
 {
-  time_t now = time(NULL);
-  if (WasPlaying)
+  try
   {
-    AccumulatedPlayTime += now - PlayStartTime;
-    PlayStartTime = now;
+    time_t now = time(NULL);
+    if (WasPlaying)
+    {
+      AccumulatedPlayTime += now - PlayStartTime;
+      PlayStartTime = now;
+    }
+    
+    WasPlaying = preferences().Player.isPlaying()
+             && !preferences().Player.isPaused();
   }
-
-  WasPlaying = preferences().Player.isPlaying() && !preferences().Player.isPaused();
+  catch (exception &ex)
+  {
+    WasPlaying = false;
+  }
 }
 
 
@@ -96,31 +104,42 @@ void tProgramBase::noticeStateChanged()
 
 void tProgramBase::noticeSongChanged()
 {
-  // bring accumulated play time up to date
-  noticeStateChanged();
-
-  if (preferences().CollectHistory)
+  try
   {
-    tSong *prev_song = database().SongCollection.getByFilename(CurrentSongFilename);
-    if (prev_song)
+    // bring accumulated play time up to date
+    noticeStateChanged();
+    
+    if (preferences().CollectHistory)
     {
-      prev_song->played(time(NULL), AccumulatedPlayTime > 0.6 * prev_song->duration());
-      database().History.played(prev_song->uniqueId(), 
-				time(NULL), AccumulatedPlayTime);
+      tSong *prev_song = database().SongCollection.getByFilename(CurrentSongFilename);
+      if (prev_song)
+      {
+        prev_song->played(time(NULL), AccumulatedPlayTime > 0.6 * prev_song->duration());
+        database().History.played(prev_song->uniqueId(), 
+                                  time(NULL), AccumulatedPlayTime);
+      }
     }
-  }
 
-  CurrentSongFilename = preferences().Player.currentFilename();
-  tFilename::size_type idx;
-  while ((idx = CurrentSongFilename.find("//")) != tFilename::npos)
+    try
+    {
+      CurrentSongFilename = preferences().Player.currentFilename();
+    } catch (...) {}
+    
+    tFilename::size_type idx;
+    while ((idx = CurrentSongFilename.find("//")) != tFilename::npos)
+    {
+      CurrentSongFilename.replace(idx, 2, "/");
+    }
+    
+    emit songChanged();
+    
+    PlayStartTime = time(NULL);
+    AccumulatedPlayTime = 0;
+  }
+  catch (exception &ex)
   {
-    CurrentSongFilename.replace(idx, 2, "/");
+    // FIXME: error handling
   }
-
-  emit songChanged();
-
-  PlayStartTime = time(NULL);
-  AccumulatedPlayTime = 0;
 }
 
 
