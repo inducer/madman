@@ -331,6 +331,7 @@ void tSongListView::setup()
   update();
   viewport()->update();
   horizontalHeader()->update();
+  updateScrollBars();
 }
 
 
@@ -650,8 +651,9 @@ void tSongListView::setCellContentFromEditor (int row, int col)
 
 void tSongListView::paintCell (QPainter *p, int row, int col, const QRect & cr, bool selected, const QColorGroup & cg)
 {
-  tSongField field = (tSongField) ColumnToField[ col ];
-  tSong *song = SongList[ row ];
+  p->save();
+  tSongField field = (tSongField) ColumnToField[col];
+  tSong *song = SongList[row];
 
   QString field_text = song->humanReadableFieldText(field);
 
@@ -679,15 +681,11 @@ void tSongListView::paintCell (QPainter *p, int row, int col, const QRect & cr, 
   else
     p->setPen(cg.text());
 
-  bool do_restore_font = false;
-  QFont previous_font;
   if (song == tProgramBase::currentSong())
   {
-    previous_font = p->font();
-    QFont bold_font = previous_font;
+    QFont bold_font = p->font();
     bold_font.setBold(true);
     p->setFont(bold_font);
-    do_restore_font = true;
   }
 
   QFontMetrics metrics = p->fontMetrics();
@@ -699,8 +697,7 @@ void tSongListView::paintCell (QPainter *p, int row, int col, const QRect & cr, 
   }
 
   p->drawText(1, 1, w - 2, h, Qt::AlignLeft, field_text);
-  if (do_restore_font)
-    p->setFont(previous_font);
+  p->restore();
 }
 
 
@@ -720,7 +717,7 @@ void tSongListView::noticeSongModified(const tSong *song, tSongField field)
 
 
 
-bool tSongListView::eventFilter (QObject * watched, QEvent * e)
+bool tSongListView::eventFilter (QObject *watched, QEvent *e)
 {
   if (watched == horizontalHeader() && e->type() == QEvent::MouseButtonPress)
   {

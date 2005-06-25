@@ -44,29 +44,29 @@ struct tNoGuiProgram : public tProgramBase
 
 
 
-int main(int argc, char **argv)
+int main(int arg_c, char **arg_v)
 {
   srand(time(NULL));
 
   try
   {
-    if (argc >= 2 
-        && (strcmp(argv[1], "--help") == 0 
-            || strcmp(argv[1], "-h") == 0 ))
+    if (arg_c >= 2 
+        && (strcmp(arg_v[1], "--help") == 0 
+            || strcmp(arg_v[1], "-h") == 0 ))
     {
       cout << "madman " << STRINGIFY(MADMAN_VERSION) << endl;
-      cout << "usage: " << argv[0] << " [--nogui [--readonly]] [filename_to_open]" << endl << endl;
+      cout << "usage: " << arg_v[0] << " [--nogui [--readonly]] [filename_to_open]" << endl << endl;
       cout << "options:" << endl;
       cout << "  --nogui: run without GUI" << endl;
       return 1;
     }
-    if (argc >= 2 && strcmp(argv[1], "--nogui") == 0)
+    if (arg_c >= 2 && strcmp(arg_v[1], "--nogui") == 0)
     {
-      QApplication app(argc, argv, /* GUIEnabled */ false);
+      QApplication app(arg_c, arg_v, /* GUIEnabled */ false);
 
       int file_index = 2;
-      bool readonly = argc >= 3 
-        && strcmp(argv[2], "--readonly") == 0;
+      bool readonly = app.argc() >= 3 
+        && strcmp(app.argv()[2], "--readonly") == 0;
       if (readonly)
         file_index++;
 
@@ -83,9 +83,9 @@ int main(int argc, char **argv)
       bool filename_valid = false;
       QString filename;
       
-      if (argc > file_index)
+      if (app.argc() > file_index)
       {
-	filename = argv[file_index];
+	filename = app.argv()[file_index];
 	filename_valid = true;
       }
       if (!filename_valid) 
@@ -111,15 +111,15 @@ int main(int argc, char **argv)
     }
     else
     {
-      QApplication app(argc, argv);
+      QApplication app(arg_c, arg_v);
 
       QTranslator translator(0);
       translator.load(QString("madman_") + QTextCodec::locale(), ".");
       app.installTranslator(&translator);
 
       QString filename_to_open;
-      if (argc >= 2)
-	filename_to_open = argv[ 1 ];
+      if (app.argc() >= 2)
+	filename_to_open = app.argv()[ 1 ];
       tMainWindow mwin;
       mwin.initialize(filename_to_open);
       mwin.show();

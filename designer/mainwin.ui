@@ -779,6 +779,12 @@
         <action name="actionPlaybackSkipForward"/>
         <separator/>
         <action name="actionPlaybackEnableAutoDJ"/>
+        <actiongroup name="agAutoDJSource"/>
+        <item text="AutoDJ Source" name="popupMenu_24" accel="">
+            <action name="actionAutoDJSourceAll"/>
+            <action name="actionAutoDJSourceSearch"/>
+            <action name="actionAutoDJSourcePlaylist"/>
+        </item>
         <action name="actionPlaybackDoAutoDJ"/>
         <action name="actionPlaybackClearPlaylist"/>
     </item>
