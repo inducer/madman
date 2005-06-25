@@ -1,6 +1,7 @@
 /*
 madman - a music manager
-Copyright (C) 2003  Andreas Kloeckner <ak@ixion.net>
+Music Player Daemon support
+Copyright (C) 2005  Pauli Virtanen <pauli.virtanen@hut.fi>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,8 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* player_mpd - Music Player Daemon back end
- * Pauli Virtanen <pauli.virtanen@hut.fi>
+/* 
  *
  * TODO:
  *
@@ -411,8 +411,6 @@ tFilename tMPDPlayer::currentFilename()
 {
   try
   {
-    if (!Conn) throw tMPDNoConnectionError();
-
     tMPDStatus status(Conn);
     
     if (status.state() == MPD_STATUS_STATE_PLAY
@@ -452,8 +450,6 @@ QString tMPDPlayer::currentTitle()
 {
   try
   {
-    if (!Conn) throw tMPDNoConnectionError();
-
     tMPDStatus status(Conn);
 
     if (status.state() == MPD_STATUS_STATE_PLAY
