@@ -23,11 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "database/database.h"
 #include "utility/progress.h"
 
-#include "expat/expat.h"
-
 #include <qregexp.h>
 #include <qfile.h>
 #include <qdom.h>
+#include <qxml.h>
 #include <qapplication.h>
 
 #include <stdexcept>
@@ -36,8 +35,74 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
+// tXMLErrorHandler -----------------------------------------------------------
+class tXMLErrorHandler : public QXmlErrorHandler
+{
+    QString LastWarning;
+    QString LastError;
+
+  public:
+    bool warning(const QXmlParseException & exception);
+    bool error(const QXmlParseException & exception);
+    bool fatalError(const QXmlParseException & exception);
+    QString errorString();
+
+    QString lastWarning() const
+      {
+        return LastWarning;
+      }
+    QString lastError() const
+      {
+        return LastError;
+      }
+};
+
+
+
+
+bool tXMLErrorHandler::warning(const QXmlParseException &exception)
+{
+  LastWarning = QString("line %1: %2")
+    .arg(exception.lineNumber()).arg(exception.message());
+  cerr << "*** XML Warning: " << LastWarning << endl;
+  return true;
+}
+
+
+
+
+bool tXMLErrorHandler::error(const QXmlParseException & exception)
+{
+  LastError = QString("line %1: %2")
+    .arg(exception.lineNumber()).arg(exception.message());
+  cerr << "*** XML Error: " << LastError << endl;
+  return true;
+}
+
+
+
+
+bool tXMLErrorHandler::fatalError(const QXmlParseException & exception)
+{
+  LastError = QString("line %1: %2")
+    .arg(exception.lineNumber()).arg(exception.message());
+  cerr << "*** XML Error: " << LastError << endl;
+  return true;
+}
+
+
+
+
+QString tXMLErrorHandler::errorString()
+{
+  return QString();
+}
+
+
+
+
 // tSAXDatabaseHandler --------------------------------------------------------
-class tSAXDatabaseHandler
+class tSAXDatabaseHandler : public QXmlDefaultHandler
 {
     enum tMode {
       NONE,
@@ -51,9 +116,8 @@ class tSAXDatabaseHandler
       SONG_SET_NEGATIVE_SET
     } CurrentMode;
 
-    tDatabase &Database;
-    tProgress	*Progress;
-    XML_Parser		Parser;
+    tDatabase      &Database;
+    tProgress      *Progress;
 
     typedef vector<tPlaylistNode *> tPlaylistNodeStack;
     tPlaylistNodeStack	PlaylistNodeStack;
@@ -61,19 +125,18 @@ class tSAXDatabaseHandler
     tUniqueIdList	UniqueIdList;
 
   public:
-    tSAXDatabaseHandler(tDatabase &database, tProgress *progress,
-	XML_Parser parser);
+    tSAXDatabaseHandler(tDatabase &database, tProgress *progress);
 
-    void startElement(const XML_Char *name, const XML_Char **attributes);
-    void endElement(const XML_Char *name);
+    bool startElement(const QString &namespace_uri, const QString &name, 
+                      const QString &qname, const QXmlAttributes &attributes);
+    bool endElement(const QString &namespace_uri, const QString &name, const QString &qname);
 };
 
 
 
 
-tSAXDatabaseHandler::tSAXDatabaseHandler(tDatabase &database, tProgress *progress,
-    XML_Parser parser)
-  : CurrentMode(NONE), Database(database), Progress(progress), Parser(parser)
+tSAXDatabaseHandler::tSAXDatabaseHandler(tDatabase &database, tProgress *progress)
+  : CurrentMode(NONE), Database(database), Progress(progress)
 {
 }
 
@@ -81,17 +144,19 @@ tSAXDatabaseHandler::tSAXDatabaseHandler(tDatabase &database, tProgress *progres
 
 
 
-void tSAXDatabaseHandler::startElement(const XML_Char *name, const XML_Char **attributes)
+bool tSAXDatabaseHandler::startElement(const QString &namespaceURI, const QString &name, 
+                                       const QString &qname, const QXmlAttributes &attributes)
 {
-  if (Progress) 
+  static unsigned counter = 0;
+  counter++;
+  if (counter > 30)
   {
-    int current_progress = XML_GetCurrentByteIndex(Parser);
-    if (current_progress - Progress->progress() > 100000)
-      Progress->setProgress(current_progress);
+    Progress->setProgress(Progress->progress()+1);
+    counter = 0;
   }
 
   // items --------------------------------------------------------------------
-  if (strcmp(name, "song") == 0)
+  if (name == "song")
   {
     switch (CurrentMode)
     {
@@ -108,55 +173,55 @@ void tSAXDatabaseHandler::startElement(const XML_Char *name, const XML_Char **at
             << ex.what() << endl
             << "Skipping this song." << endl;
         }
-	return;
+	return true;
       case SONG_SET_RENDERING:
       case SONG_SET_NEGATIVE_SET:
       case SONG_SET_POSITIVE_SET:
 	UniqueIdList.push_back(lookupAttribute("unique_id", attributes).toUInt());
-	return;
+	return true;
       default:
 	;
     }
   }
-  if (strcmp(name, "directory") == 0 && CurrentMode == DIRECTORIES)
+  if (name == "directory" && CurrentMode == DIRECTORIES)
   {
-    string dir = lookupAttributeUtf8("name", attributes);
+    string dir = lookupAttribute("name", attributes).latin1();
     if (dir.substr(0, 7) == "base64:")
       Database.DirectoryList.push_back(decodeBase64(dir.substr(7)));
     else
       Database.DirectoryList.push_back(dir.c_str());
 
-    return;
+    return true;
   }
-  if (strcmp(name, "playedsong") == 0 && CurrentMode == HISTORY)
+  if (name == "playedsong" && CurrentMode == HISTORY)
   {
     Database.History.played(
 	lookupAttribute("uniqueid", attributes).toUInt(),
 	lookupAttribute("time", attributes).toUInt(),
 	lookupAttribute("playduration", attributes).toDouble()
 	);
-    return;
+    return true;
   }
 
   // mode changes -------------------------------------------------------------
-  if (strcmp(name, "madmandb") == 0 && CurrentMode == NONE)
-    return;
-  if (strcmp(name, "songs") == 0 && CurrentMode == NONE)
+  if (name == "madmandb" && CurrentMode == NONE)
+    return true;
+  if (name == "songs" && CurrentMode == NONE)
   {
     CurrentMode = SONGS;
-    return;
+    return true;
   }
-  if (strcmp(name, "directories") == 0 && CurrentMode == NONE)
+  if (name == "directories" && CurrentMode == NONE)
   {
     CurrentMode = DIRECTORIES;
-    return;
+    return true;
   }
-  if (strcmp(name, "history") == 0 && CurrentMode == NONE)
+  if (name == "history" && CurrentMode == NONE)
   {
     CurrentMode = HISTORY;
-    return;
+    return true;
   }
-  if (strcmp(name, "song_set_node") == 0 && (CurrentMode == NONE || CurrentMode == SONG_SET_NODE))
+  if (name == "song_set_node" && (CurrentMode == NONE || CurrentMode == SONG_SET_NODE))
   {
     CurrentMode = SONG_SET_NODE;
     tPlaylistNode *my_node = new tPlaylistNode(&Database, NULL);
@@ -172,9 +237,9 @@ void tSAXDatabaseHandler::startElement(const XML_Char *name, const XML_Char **at
     }
 
     PlaylistNodeStack.push_back(my_node);
-    return;
+    return true;
   }
-  if (strcmp(name, "song_set") == 0 && (CurrentMode == SONG_SET_NODE))
+  if (name == "song_set" && (CurrentMode == SONG_SET_NODE))
   {
     CurrentMode = SONG_SET;
     tPlaylist *my_set = new tPlaylist;
@@ -202,55 +267,56 @@ void tSAXDatabaseHandler::startElement(const XML_Char *name, const XML_Char **at
       // Then, set the new commented-out criterion.
       my_set->setCriterion(QString("{ COMPILE FAILURE ON LOAD, COMMENTED OUT: %1 }").arg(criterion_string));
     }
-    return;
+    return true;
   }
-  if (strcmp(name, "rendering") == 0 && (CurrentMode == SONG_SET))
+  if (name == "rendering" && (CurrentMode == SONG_SET))
   {
     CurrentMode = SONG_SET_RENDERING;
     UniqueIdList.clear();
-    return;
+    return true;
   }
-  if (strcmp(name, "positiveset") == 0 && (CurrentMode == SONG_SET))
+  if (name == "positiveset" && (CurrentMode == SONG_SET))
   {
     CurrentMode = SONG_SET_POSITIVE_SET;
     UniqueIdList.clear();
-    return;
+    return true;
   }
-  if (strcmp(name, "negativeset") == 0 && (CurrentMode == SONG_SET))
+  if (name == "negativeset" && (CurrentMode == SONG_SET))
   {
     CurrentMode = SONG_SET_NEGATIVE_SET;
     UniqueIdList.clear();
-    return;
+    return true;
   }
 
   // error condition ----------------------------------------------------------
-  cerr << "error: " << QString::fromUtf8(name, strlen(name)) << endl;
-  throw tRuntimeError(qApp->translate("ErrorMessages", "Invalid database structure" ));
+  cerr << "database structure error: " << QString::fromUtf8(name, strlen(name)) 
+       << " in mode " << CurrentMode << endl;
+  return false;
 }
 
 
 
 
-void tSAXDatabaseHandler::endElement(const XML_Char *name)
+bool tSAXDatabaseHandler::endElement(const QString &namespace_uri, const QString &name, const QString &qname)
 {
-  if (strcmp(name, "madmandb") == 0 && CurrentMode == NONE)
-    return;
-  if (strcmp(name, "songs") == 0 && CurrentMode == SONGS)
+  if (name == "madmandb" && CurrentMode == NONE)
+    return true;
+  if (name == "songs" && CurrentMode == SONGS)
   {
     CurrentMode = NONE;
-    return;
+    return true;
   }
-  if (strcmp(name, "directories") == 0 && CurrentMode == DIRECTORIES)
+  if (name == "directories" && CurrentMode == DIRECTORIES)
   {
     CurrentMode = NONE;
-    return;
+    return true;
   }
-  if (strcmp(name, "history") == 0 && CurrentMode == HISTORY)
+  if (name == "history" && CurrentMode == HISTORY)
   {
     CurrentMode = NONE;
-    return;
+    return true;
   }
-  if (strcmp(name, "song_set_node") == 0 && CurrentMode == SONG_SET_NODE)
+  if (name == "song_set_node" && CurrentMode == SONG_SET_NODE)
   {
     PlaylistNodeStack.pop_back();
     if (PlaylistNodeStack.size() == 0)
@@ -258,73 +324,33 @@ void tSAXDatabaseHandler::endElement(const XML_Char *name)
     else
       CurrentMode = SONG_SET_NODE;
 
-    return;
+    return true;
   }
-  if (strcmp(name, "song_set") == 0 && (CurrentMode == SONG_SET))
+  if (name == "song_set" && (CurrentMode == SONG_SET))
   {
     CurrentMode = SONG_SET_NODE;
-    return;
+    return true;
   }
-  if (strcmp(name, "rendering") == 0 && (CurrentMode == SONG_SET_RENDERING))
+  if (name == "rendering" && (CurrentMode == SONG_SET_RENDERING))
   {
     CurrentMode = SONG_SET;
     PlaylistNodeStack.back()->data()->setRendering(UniqueIdList);
-    return;
+    return true;
   }
-  if (strcmp(name, "positiveset") == 0 && (CurrentMode == SONG_SET_POSITIVE_SET))
+  if (name == "positiveset" && (CurrentMode == SONG_SET_POSITIVE_SET))
   {
     CurrentMode = SONG_SET;
     PlaylistNodeStack.back()->data()->setPositiveSet(UniqueIdList);
-    return;
+    return true;
   }
-  if (strcmp(name, "negativeset") == 0 && (CurrentMode == SONG_SET_NEGATIVE_SET))
+  if (name == "negativeset" && (CurrentMode == SONG_SET_NEGATIVE_SET))
   {
     CurrentMode = SONG_SET;
     PlaylistNodeStack.back()->data()->setNegativeSet(UniqueIdList);
-    return;
+    return true;
   }
+  return true;
 }
-
-
-
-
-// expat parsing code ---------------------------------------------------------
-void startExpatElement(void *data, const XML_Char *el, const XML_Char **attr)
-{
-  try
-  {
-    reinterpret_cast<tSAXDatabaseHandler *>(data)->startElement(el, attr);
-  }
-  catch (exception &ex)
-  {
-    cerr 
-      << "*** WHOOPS" << endl
-      << "The sax start element handler for " << el << " threw an exception:" << endl
-      << ex.what() << endl
-      << "Cannot continue. This is probably a bug." << endl;
-    abort();
-  }
-}
-
-
-
-
-void endExpatElement(void *data, const XML_Char *el) 
-{
-  try
-  {
-    reinterpret_cast<tSAXDatabaseHandler *>(data)->endElement(el);
-  }
-  catch (exception &ex)
-  {
-    cerr 
-      << "*** WHOOPS" << endl
-      << "The sax end element handler for " << el << " threw an exception:" << endl
-      << ex.what() << endl
-      << "Cannot continue, sorry. This is probably a bug." << endl;
-    abort();
-  }
-} 
 
 
 
@@ -432,36 +458,23 @@ void tDatabase::load(const QString &filename, bool break_lock, tProgress *progre
   {
     if (progress)
     {
-      progress->setTotalSteps(dbfile.size());
+      progress->setTotalSteps(0);
       progress->setProgress(0);
     }
 
     tSongCollectionScopedBulkChange bulkchange(SongCollection);
+    
+    QXmlSimpleReader reader;
+    QXmlInputSource input_source(dbfile);
+    tSAXDatabaseHandler db_handler(*this, progress);
+    tXMLErrorHandler error_handler;
+    reader.setContentHandler(&db_handler);
+    reader.setErrorHandler(&error_handler);
 
-    XML_Parser parser = XML_ParserCreate(NULL);
-    if (parser == NULL)
-      throw runtime_error("expat: unable to create parser");
+    if (!reader.parse(&input_source))
+      throw tRuntimeError(qApp->translate("ErrorMessages", "XML file invalid: %1: %2")
+                          .arg(filename).arg(error_handler.lastError()));
 
-    tSAXDatabaseHandler handler(*this, progress, parser);
-
-    XML_SetUserData(parser, &handler);
-    XML_SetElementHandler(parser, startExpatElement, endExpatElement);
-
-    char buffer[1<<8];
-    while (!dbfile.atEnd())
-    {
-      Q_LONG read_bytes = dbfile.readBlock(buffer, sizeof(buffer));
-      if (XML_Parse(parser, buffer, read_bytes, dbfile.atEnd()) == 0)
-      {
-	throw tRuntimeError(tr("Error in XML Parser: %1 - line %2")
-                            .arg(QString::fromUtf8(
-                                   XML_ErrorString(
-                                     XML_GetErrorCode(parser))))
-                            .arg(XML_GetCurrentLineNumber(parser)));
-      }
-    }
-
-    XML_ParserFree(parser);
     dbfile.close();
     FileLock = my_new_lock;
   }

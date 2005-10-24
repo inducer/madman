@@ -18,7 +18,7 @@ if myenv[ 'with_m4a' ]:
   myenv.Append(LIBS = 'mp4ff')
   myenv.Append(LIBS = 'faad')
 
-for component in [ "ui", "designer", "ui", "httpd",  "database", "expat", "utility" ]:
+for component in [ "ui", "designer", "ui", "httpd",  "database", "utility" ]:
   myenv.Append(LIBPATH = "../"+component)
   myenv.Append(LIBS = "madman" + component)
 

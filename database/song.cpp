@@ -910,7 +910,7 @@ QDomNode tSong::serialize(QDomDocument &doc) const
 
 
 
-void tSong::deserialize(const char **attributes)
+void tSong::deserialize(const QXmlAttributes &attributes)
 {
   tFilename fn;
   fn = decodeFilename(lookupAttribute("filename", attributes));
@@ -2479,7 +2479,7 @@ tSong *makeSong(tFilename const &filename)
 
 
 
-tSong *deserializeSong(const char **attributes)
+tSong *deserializeSong(const QXmlAttributes &attributes)
 {
   tFilename filename;
   filename = decodeFilename(lookupAttribute("filename", attributes));

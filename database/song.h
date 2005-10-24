@@ -173,7 +173,7 @@ class tSong
     virtual QString mimeType() const = 0 ;
 
     virtual QDomNode serialize(QDomDocument &doc) const;
-    virtual void deserialize(const char **attributes);
+    virtual void deserialize(const QXmlAttributes &attributes);
 
     void setUniqueId(tUniqueId id);
     void setFilename(tFilename const &filename);
@@ -219,7 +219,7 @@ class tSong
 
 // song factories -------------------------------------------------------------
 tSong *makeSong(const tFilename &filename);
-tSong *deserializeSong(const char **attributes);
+tSong *deserializeSong(const QXmlAttributes &attributes);
 
 
 

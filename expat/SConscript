@@ -1,5 +1,0 @@
-Import( "env" )
-myenv = env.Copy()
-myenv[ 'CPPPATH' ].append("#")
-myenv.StaticLibrary( target = "madmanexpat",
-  source = [ "xmlparse.c", "xmlrole.c", "xmltok.c" ] )

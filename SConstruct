@@ -346,7 +346,7 @@ env.Install("$install_to/share/pixmaps", "designer/images/madman.png")
 env.Install("$install_to/share/applications", "madman.desktop")
 
 # call subfiles --------------------------------------------
-for dir in ["expat", "utility", "database", 
+for dir in ["utility", "database", 
             "httpd/webdata", "httpd", 
             "designer/images", "designer",
             "ui", "main"]:

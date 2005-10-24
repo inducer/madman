@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qstringlist.h>
 #include <qobject.h>
 #include <qdatetime.h>
+#include <qxml.h>
 
 #include <vector>
 #if __GNUC__ >= 3 
@@ -125,9 +126,9 @@ class tFileLock
 
 
 
-bool hasAttribute(const char *name, const char **attributes);
-const char *lookupAttributeUtf8(const char *name, const char **attributes);
-QString lookupAttribute(const char *name, const char **attributes);
+bool hasAttribute(const char *name, const QXmlAttributes &attributes);
+//const char *lookupAttributeUtf8(const char *name, QXmlAttributes &attributes);
+QString lookupAttribute(const char *name, const QXmlAttributes &attributes);
 
 string QString2string(QString const &str);
 QString string2QString(string const &str);

@@ -71,35 +71,20 @@ tFileLock::~tFileLock()
 
 
 // utility routines ---------------------------------------------
-bool hasAttribute(const char *name, const char **attributes)
+bool hasAttribute(const char *name, const QXmlAttributes &attributes)
 {
-  while (*attributes && strcmp(name, *attributes) != 0)
-    attributes += 2;
-
-  if (*attributes == 0)
-    return false;
-  return true;
+  return attributes.index(name) != -1;
 }
 
 
 
 
-const char *lookupAttributeUtf8(const char *name, const char **attributes)
+QString lookupAttribute(const char *name, const QXmlAttributes &attributes)
 {
-  while (*attributes && strcmp(name, *attributes) != 0)
-    attributes += 2;
-
-  if (*attributes == 0)
-    throw runtime_error(QString2string("Attribute not found: " + QString::fromUtf8(name, strlen(name))));
-  return attributes[1];
-}
-
-
-
-
-QString lookupAttribute(const char *name, const char **attributes)
-{
-  return QString::fromUtf8(lookupAttributeUtf8(name, attributes));
+  QString result = attributes.value(name);
+  if (result.isNull())
+    throw tRuntimeError("Attribute not found: " + QString::fromUtf8(name, strlen(name)));
+  return result;
 }
 
 
