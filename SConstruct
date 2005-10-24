@@ -314,8 +314,8 @@ if env["maintainer_mode"]:
   madman_sources.extend(glob.glob("*/*.cpp"))
   #env.Command("tags", madman_sources, "ctags -R || true")
 
-  env["CCFLAGS"] += " -fmessage-length=0 -g -Wall"
-  env["CXXFLAGS"] += " -fmessage-length=0 -g -Wall"
+  env["CCFLAGS"] += " -fmessage-length=0 -g -Wall -Wno-non-virtual-dtor"
+  env["CXXFLAGS"] += " -fmessage-length=0 -g -Wall -Wno-non-virtual-dtor"
   env["CPPDEFINES"].append(("MADMAN_DEBUG", "1"))
 else:
   builddir_name = ",build/release"

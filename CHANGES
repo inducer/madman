@@ -109,6 +109,25 @@ future ------------------------------------------------------------------------
 * Make sure width gets recalculated after adding field.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
 
+CLEANUPS:
+
+UI for MPD
+FIXMEs
+Now, Next, Evtl -> Parameter
+Duration Display f*cked up (Moonlight shadow)
+Translation de_DE german
+reimplement pprefs
+SpyMP: typo?
+transations: can't inst...?
+MPD? prefs?
+
+Plugin: Cancel doesn't cancel.
+erase "~rating(>=4)" from criterion takes too friggin' long
+2x Write file list
+Backtick in Song name form Plugin Execution
+
+Shoalin->Shaolin=Crash (Taglib bug)
+
 MAJOR CHANGES:
 * Playlist management button. [done]
 * Continuous AutoDJ. (Shawn, Adam Ward) [done]

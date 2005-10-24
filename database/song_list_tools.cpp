@@ -32,7 +32,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // comparison helpers ---------------------------------------------------------
 struct tLessBase 
 {
-  virtual bool operator()(tSong *song1, tSong *song2) = 0;
+  public:
+    virtual ~tLessBase() {}
+    virtual bool operator()(tSong *song1, tSong *song2) = 0;
 };
 
 

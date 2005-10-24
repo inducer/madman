@@ -39,6 +39,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
+class tPluginExecutionCancelled : public exception { };
+
+
+
+
 // tPlugin --------------------------------------------------------------------
 tPlugin::tPlugin()
   : Confirm(false), RescanAfter(false)
@@ -169,7 +174,9 @@ namespace
       QString prompt = ask_re.cap(1);
       bool ok;
       QString input = QInputDialog::getText(qApp->translate("tPlugin", "madman Plugin"),
-	  prompt, QLineEdit::Normal, QString::null, &ok );
+	  prompt, QLineEdit::Normal, QString::null, &ok, qApp->mainWidget());
+      if (!ok)
+	throw tPluginExecutionCancelled();
 
       result.replace(where, ask_re.matchedLength(), QString("\"%1\"").arg(input));
     }
@@ -199,7 +206,7 @@ namespace
 						      qApp->mainWidget(), "plugin_filedlg",
 						      askfile_open_re.cap(1));
       if (filename.isNull())
-	throw tRuntimeError(qApp->translate("tPlugin", "No filename chosen"));
+	throw tPluginExecutionCancelled();
 
       result.replace(where, askfile_open_re.matchedLength(), QString("\"%1\"").arg(filename));
     }
@@ -213,7 +220,7 @@ namespace
 						      qApp->mainWidget(), "plugin_filedlg",
 						      askfile_save_re.cap(1));
       if (filename.isNull())
-	throw tRuntimeError(qApp->translate("tPlugin", "No filename chosen"));
+	throw tPluginExecutionCancelled();
 
       result.replace(where, askfile_save_re.matchedLength(), QString("\"%1\"").arg(filename));
     }
@@ -243,43 +250,47 @@ namespace
 
 void tPlugin::run(QSettings &settings, const tSongList &songs)
 {
-  QString myargs = Arguments;
-  QRegExp repeat_re("%repeat%(.*)%endrepeat%");
-  bool hasrepeat = repeat_re.search(myargs) >= 0;
-  if (hasrepeat)
+  try
   {
-    QString repeat_section = repeat_re.cap(1);
-    myargs = myargs.replace(repeat_re, "%REPEAT%");
-
-    myargs = expand(Filename, settings, myargs, NULL);
-    if (myargs.isNull())
-      return;
-
-    QString repeatargs;
-    FOREACH_CONST(first, songs, tSongList)
+    QString myargs = Arguments;
+    QRegExp repeat_re("%repeat%(.*)%endrepeat%");
+    bool hasrepeat = repeat_re.search(myargs) >= 0;
+    if (hasrepeat)
     {
-      QString expansion = expand(Filename, settings, repeat_section, *first);
-      if (expansion.isNull())
-	return;
-      repeatargs += " " + expansion;
-    }
+      QString repeat_section = repeat_re.cap(1);
+      myargs = myargs.replace(repeat_re, "%REPEAT%");
 
-    myargs.replace("%REPEAT%", repeatargs);
+      myargs = expand(Filename, settings, myargs, NULL);
+      if (myargs.isNull())
+        return;
 
-    QString command = Filename + " " + myargs;
-    mySystem(command);
-  }
-  else
-  {
-    FOREACH_CONST(first, songs, tSongList)
-    {
-      QString expansion = expand(Filename, settings, myargs, *first);
-      if (expansion.isNull())
-	return;
-      QString command = Filename + " " + expansion;
+      QString repeatargs;
+      FOREACH_CONST(first, songs, tSongList)
+      {
+        QString expansion = expand(Filename, settings, repeat_section, *first);
+        if (expansion.isNull())
+          return;
+        repeatargs += " " + expansion;
+      }
+
+      myargs.replace("%REPEAT%", repeatargs);
+
+      QString command = Filename + " " + myargs;
       mySystem(command);
     }
+    else
+    {
+      FOREACH_CONST(first, songs, tSongList)
+      {
+        QString expansion = expand(Filename, settings, myargs, *first);
+        if (expansion.isNull())
+          return;
+        QString command = Filename + " " + expansion;
+        mySystem(command);
+      }
+    }
   }
+  catch (tPluginExecutionCancelled) { }
 }
 
 
