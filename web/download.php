@@ -23,12 +23,16 @@
   <b>NetBSD</b> packages may be downloaded from 
   <a href="ftp://ftp.netbsd.org/pub/NetBSD/packages/pkgsrc/audio/madman/README.html">pkgsrc</a>.<p/>
 
+  <b>FreeBSD</b> has added madman to its 
+  <a href="http://www.freshports.org/audio/madman">ports collection</a>.<p/>
+
   <b>SuSE</b> packages can be found 
   <a href="http://ftp.gwdg.de/pub/linux/suse/apt/SuSE/9.1-i386/RPMS.suser-rbos/">here</a>.<p/>
 
   Packages for madman were contributed by
   <ul>
-    <li> Jaako H Kyro (Fedora Core 1) </li>
+    <li> Daniel Roethlisberger (FreeBSD)</li>
+    <li> Jaako H Kyro (Fedora Core 1)</li>
     <li> Christian Hammers (Debian package maintainer)</li>
     <li> SlackCare (Slackware i686) </li>
     <li> Adam Ward (Slackware) - his packages were removed from SF because they had
