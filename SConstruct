@@ -324,9 +324,10 @@ else:
 if env["with_m4a"]:
   env["CPPDEFINES"].append(("WITH_M4A","1"))
 
-plugin_list = glob.glob(os.path.join("plugins", "[a-z]*"))
-plugin_list = filter(lambda x: x.find("example") == -1, plugin_list)
-env.Install("$install_to/lib/madman/plugins", plugin_list)
+if env["QT_LIBRARY_NAME"] == "qt-mt":
+  env["CCFLAGS"] += " -pthread"
+  env["CXXFLAGS"] += " -pthread"
+  env["LINKFLAGS"] += " -pthread"
 
 # install a menu entry -------------------------------------
 def replace_installdir(target, source, env):
@@ -338,12 +339,18 @@ desktop_builder = Builder(action = replace_installdir)
 env.Append(BUILDERS = { "DesktopFile": desktop_builder })
 env.DesktopFile("madman.desktop", "madman.desktop.in")
 
+# install everything else ----------------------------------
 env.Alias("install", "$install_to/bin")
 env.Alias("install", "$install_to/lib/madman/plugins")
 env.Alias("install", "$install_to/share/pixmaps")
 env.Alias("install", "$install_to/share/applications")
 env.Install("$install_to/share/pixmaps", "designer/images/madman.png")
 env.Install("$install_to/share/applications", "madman.desktop")
+
+plugin_list = glob.glob(os.path.join("plugins", "[a-z]*"))
+plugin_list = filter(lambda x: x.find("example") == -1, plugin_list)
+env.Install("$install_to/lib/madman/plugins", plugin_list)
+
 
 # call subfiles --------------------------------------------
 for dir in ["utility", "database", 

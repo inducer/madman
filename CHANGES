@@ -121,7 +121,6 @@ SpyMP: typo?
 transations: can't inst...?
 MPD? prefs?
 
-Plugin: Cancel doesn't cancel.
 erase "~rating(>=4)" from criterion takes too friggin' long
 2x Write file list
 Backtick in Song name form Plugin Execution
@@ -185,6 +184,7 @@ MINOR IMPROVEMENTS:
 + Added an XDG compliant desktop file. (Jaako H Kyro)
 * Fixed proper quoting/unicode issues in remote.
 * Proper Qt argv/argc handling.
+* Removed built-in expat because of FreeBSD problems. (D. Roethlisberger)
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
@@ -258,6 +258,10 @@ BUGS FIXED:
   exception in its creation, instead of aborting. (Reported by "Anarcat".)
 * Catch more exceptions before they go into Qt, causing damage.
   (patch by Pauli Virtanen) [done]
+* Hitting "Cancel" in a question resulting from plugin invocation will 
+  actually cancel the invocation now. [done]
+* Specify -pthread on compile and link if using qt-mt library.
+  (reported by Daniel Roethlisberger)
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>
