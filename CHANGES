@@ -187,6 +187,8 @@ MINOR IMPROVEMENTS:
 * Fixed proper quoting/unicode issues in remote.
 * Proper Qt argv/argc handling.
 * Removed built-in expat because of FreeBSD problems. (D. Roethlisberger)
++ Added possibility to specify a criterion when calling AutoDJ from the
+  command line. (Patch by Evan Felix)
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.

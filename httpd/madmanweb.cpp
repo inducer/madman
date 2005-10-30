@@ -278,8 +278,11 @@ void getSongSelection(const QUrl &url, tSongList &list)
   else if (type == "autodj")
   {
     auto_ptr<tSearchSongSet> set(new tSearchSongSet);
+    QString criterion = getOptionalQueryValue(url, "criterion");
+    if (criterion == QString::null)
+       criterion = QString("~all");
     set->setSongCollection(&tProgramBase::database().SongCollection);
-    set->setCriterion("~all");
+    set->setCriterion(criterion);
     set->reevaluateCriterion();
 
     tAutoDJ dj(tProgramBase::preferences().AutoDJPreferences, set.get());

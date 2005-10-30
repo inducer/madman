@@ -71,10 +71,11 @@ class tCurrentSongSelection(tSelection):
     self.Fields = urllib.urlencode(fields, 1)
 
 class tAutoDJSelection(tSelection):
-  def __init__(self, number = 20):
+  def __init__(self, number = 20, criterion='~all'):
     fields = [ 
       ("song_count", str(number)), 
-      ("selection_type", "autodj") 
+      ("selection_type", "autodj"),
+      ("criterion", unicode(criterion).encode("utf8")) 
       ]
     self.Fields = urllib.urlencode(fields, 1)
 

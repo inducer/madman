@@ -48,7 +48,7 @@ def printUsage():
   print "  current_playlist"
   print "  playlist <fully_qualified_name>"
   print "  current_song"
-  print "  auto_dj [<song_count>]"
+  print "  auto_dj [<song_count>] [<criterion_text>]"
   print
   print "where <fully_qualified_name> is a slash-separated playlist"
   print "  path, like so: 'Systematic Playlists/Never been listened to'"
@@ -91,6 +91,8 @@ def parseSelection(arguments):
       return madmanremote.tAutoDJSelection()
     elif len(arguments) == 2:
       return madmanremote.tAutoDJSelection(int(arguments[1]))
+    elif len(arguments) == 3:
+      return madmanremote.tAutoDJSelection(int(arguments[1]), arguments[2])
     else:
       raise Exception, "Invalid number of parameters for auto_dj selection"
   else:
