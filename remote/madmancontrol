@@ -17,6 +17,7 @@ def printUsage():
   print "  quit"
   print "  play"
   print "  pause"
+  print "  play_pause"
   print "  stop"
   print "  next"
   print "  previous"
@@ -114,6 +115,11 @@ elif command == "play":
   remote.play()
 elif command == "pause":
   remote.pause()
+elif command == "play_pause":
+  if remote.isPlaying() and not remote.isPaused():
+    remote.pause()
+  else:
+    remote.play()
 elif command == "stop":
   remote.stop()
 elif command == "next":

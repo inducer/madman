@@ -108,6 +108,8 @@ future ------------------------------------------------------------------------
 * See why AutoDJ was wrong with multiple selections from the same score set.
 * Make sure width gets recalculated after adding field.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
+* Resort even if minor sorting criterion changed.
+* Option to prevent re-sorting of main view. (suggested by Bart Alewijnse)
 
 CLEANUPS:
 
@@ -262,6 +264,8 @@ BUGS FIXED:
   actually cancel the invocation now. [done]
 * Specify -pthread on compile and link if using qt-mt library.
   (reported by Daniel Roethlisberger)
+* Fixed "Partial Play Count = Full Play Count + 1".
+  (Patch by Pauli Virtanen) [done]
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>

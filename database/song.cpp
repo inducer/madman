@@ -1436,7 +1436,7 @@ void tSong::played(time_t when, bool full)
   if (full)
     setFullPlayCount(fullPlayCount() + 1);
   else
-    setPartialPlayCount(fullPlayCount() + 1);
+    setPartialPlayCount(partialPlayCount() + 1);
 
   setLastPlayed(when);
 }
