@@ -138,7 +138,7 @@ class tSongListView : public tAcceleratorTable
 
   public slots:
     void slotContextMenuRequested (int row, int col, const QPoint & pos);
-    void currentSongChanged();
+    void currentSongChanged(tFilename last_song, float play_time);
 
   public:
     // sparse QTable implementation -------------------------------------------

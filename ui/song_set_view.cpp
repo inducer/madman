@@ -169,8 +169,9 @@ void tSongListView::initialize()
 {
   setup();
 
-  connect(&tProgramBase::preferences().Player, SIGNAL(currentSongChanged()),
-      this, SLOT(currentSongChanged()));
+  connect(&tProgramBase::preferences().Player,
+      SIGNAL(currentSongChanged(tFilename,float)),
+      this, SLOT(currentSongChanged(tFilename,float)));
 
   // Fields menu --------------------------------------------------------------
   FieldVisibilityMenu = new QPopupMenu(this);
@@ -516,7 +517,7 @@ void tSongListView::slotContextMenuRequested (int row, int col, const QPoint & p
 
 
 
-void tSongListView::currentSongChanged()
+void tSongListView::currentSongChanged(tFilename last_song, float play_time)
 {
   updateContents();
 }

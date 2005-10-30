@@ -1,6 +1,7 @@
 /*
 madman - a music manager
 Copyright (C) 2003  Andreas Kloeckner <ak@ixion.net>
+              2005 Pauli Virtanen <pauli.virtanen@hut.fi>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +23,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifndef HEADER_SEEN_PLAYER_H
 #define HEADER_SEEN_PLAYER_H
+
+
+
+
+#include <qtimer.h>
 #include "utility/base.h"
 
 
@@ -65,8 +71,40 @@ class tPlayer : public QObject
     void skipTo(float percentage);
 
   signals:
-    void currentSongChanged();
+    void currentSongChanged(tFilename last_song, float play_time);
     void stateChanged();
+};
+
+
+
+
+class tPollingPlayer : public tPlayer
+{
+    Q_OBJECT
+
+    bool LastPaused, LastPlaying;
+    tFilename LastFilename;
+    float LastSongTime;
+    int LastPlaylistIndex;
+    
+    float AccumulatedPlayTime;
+    time_t PlayStartTime;
+
+    QTimer Timer;
+
+  public:
+    tPollingPlayer();
+
+  protected slots:
+    virtual void timer();
+
+  protected:
+    void resetState();
+
+  private:
+    void checkForStateChange();
+    void checkForSongChange();
+    void updatePlayTime();
 };
 
 
@@ -110,7 +148,7 @@ class tPlayerFacade : public tPlayer
     void skipToSeconds(float seconds);
 
   protected slots:
-    void slotCurrentSongChanged();
+    void slotCurrentSongChanged(tFilename last_song, float play_time);
     void slotStateChanged();
 };
 

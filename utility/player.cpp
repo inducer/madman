@@ -1,6 +1,7 @@
 /*
 madman - a music manager
 Copyright (C) 2003  Andreas Kloeckner <ak@ixion.net>
+              2005 Pauli Virtanen <pauli.virtanen@hut.fi>    
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,7 +59,7 @@ void tPlayerFacade::setBackend(tPlayer *backend)
   Backend = be;
   if (Backend.get())
   {
-    connect(Backend.get(), SIGNAL(currentSongChanged()), this, SLOT(slotCurrentSongChanged()));
+    connect(Backend.get(), SIGNAL(currentSongChanged(tFilename,float)), this, SLOT(slotCurrentSongChanged(tFilename,float)));
     connect(Backend.get(), SIGNAL(stateChanged()), this, SLOT(slotStateChanged()));
   }
 }
@@ -180,14 +181,117 @@ void tPlayerFacade::skipToSeconds(float seconds)
 {
   if (Backend.get()) Backend->skipToSeconds(seconds);
 }
-void tPlayerFacade::slotCurrentSongChanged()
+void tPlayerFacade::slotCurrentSongChanged(tFilename last_song,
+                                           float play_time)
 {
-  emit currentSongChanged();
+  emit currentSongChanged(last_song, play_time);
 }
 void tPlayerFacade::slotStateChanged()
 {
   emit stateChanged();
 }
+
+
+
+
+// tPollingPlayer -------------------------------------------------------------
+tPollingPlayer::tPollingPlayer()
+  : LastPlaylistIndex(-1),
+    AccumulatedPlayTime(0),
+    PlayStartTime(time(NULL))
+{
+  Timer.start(500);
+  connect(&Timer, SIGNAL(timeout()),
+      this, SLOT(timer()));
+}
+
+
+
+
+void tPollingPlayer::timer()
+{
+  checkForStateChange();
+  checkForSongChange();
+}
+
+
+
+
+void tPollingPlayer::resetState()
+{
+  LastPaused = isPaused();
+  LastPlaying = isPlaying();
+  LastFilename = currentFilename();
+  LastSongTime = currentTime();
+  LastPlaylistIndex = getPlayListIndex();
+  AccumulatedPlayTime = 0;
+  PlayStartTime = time(NULL);
+}
+
+
+
+
+void tPollingPlayer::checkForStateChange()
+{
+  updatePlayTime();
+
+  bool playing = isPlaying();
+  bool paused = isPaused();
+
+  if (playing != LastPlaying
+      || paused != LastPaused)
+  {
+    LastPlaying = playing;
+    LastPaused = paused;
+    emit stateChanged();
+  }
+}
+
+
+
+    
+void tPollingPlayer::checkForSongChange()
+{
+  updatePlayTime();
+
+  float song_time = currentTime();
+  tFilename song_file = currentFilename();
+  int playlist_idx = getPlayListIndex();
+
+  QString last_song = LastFilename;
+  float play_time = AccumulatedPlayTime;
+
+  bool song_changed = (song_file != LastFilename
+                       || (playlist_idx != LastPlaylistIndex
+                           && song_time < LastSongTime));
+
+  LastSongTime = song_time;
+  LastPlaylistIndex = playlist_idx;
+  LastFilename = song_file;
+
+  if (song_changed) 
+  {
+    PlayStartTime = time(NULL);
+    AccumulatedPlayTime = 0;
+  }
+
+  if (song_changed)
+    emit currentSongChanged(last_song, play_time);
+}
+
+
+
+
+void tPollingPlayer::updatePlayTime()
+{
+  time_t now = time(NULL);
+  if (LastPlaying && !LastPaused)
+  {
+    AccumulatedPlayTime += now - PlayStartTime;
+    PlayStartTime = now;
+  }
+}
+
 
 
 

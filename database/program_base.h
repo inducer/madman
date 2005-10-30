@@ -46,9 +46,6 @@ class tProgramBase : public QObject, public tSingleton<tProgramBase>
     auto_ptr<tDatabase> Database;
 
     tFilename CurrentSongFilename;
-    double AccumulatedPlayTime;
-    time_t PlayStartTime;
-    bool WasPlaying;
 
     tAutoDJ AutoDJ;
 
@@ -61,7 +58,7 @@ class tProgramBase : public QObject, public tSingleton<tProgramBase>
 
   protected slots:
     void noticeStateChanged();
-    void noticeSongChanged();
+    void noticeSongChanged(tFilename last_song, float play_time);
 
   signals:
     void songChanged();

@@ -32,18 +32,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
-
-class tXMMSPlayer : public tPlayer
+class tXMMSPlayer : public tPollingPlayer
 {
     Q_OBJECT
 
     int Session;
-    bool PreviousPaused,PreviousPlaying;
 
     bool CurrentSongValid;
-    tFilename CurrentSongFilename;
-
-    QTimer Timer;
 
   public:
     tXMMSPlayer();
@@ -105,7 +100,6 @@ class tXMMSPlayer : public tPlayer
     void skipToSeconds(float seconds);
 
   private slots:
-    void timer();
     bool haveValidPlaylistPosition();
     bool isValidPlaylistPosition(int i);
     int enqueue(const tSongList &songlist);

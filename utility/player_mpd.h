@@ -36,7 +36,7 @@
 
 
 
-class tMPDPlayer : public tPlayer
+class tMPDPlayer : public tPollingPlayer
 {
     Q_OBJECT
 
@@ -45,12 +45,7 @@ class tMPDPlayer : public tPlayer
     QString Host;
     int Port;
 
-    bool PreviousPaused, PreviousPlaying;
-    tFilename CurrentSongFilename;
-
-    QTimer Timer;
-
-    mpd_Connection* Conn;
+    mpd_Connection *Conn;
 
   public:
     tMPDPlayer();

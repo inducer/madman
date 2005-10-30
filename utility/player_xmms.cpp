@@ -32,14 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 tXMMSPlayer::tXMMSPlayer()
 {
   Session = 0;
-  PreviousPaused = isPaused();
-  PreviousPlaying = isPlaying();
 
   CurrentSongValid = false;
-
-  Timer.start(500);
-  connect(&Timer, SIGNAL(timeout()),
-      this, SLOT(timer()));
 }
 
 
@@ -283,35 +277,6 @@ void tXMMSPlayer::skipToSeconds(float seconds)
 
 
 
-void tXMMSPlayer::timer()
-{
-  bool state_changed = false;
-
-  if (isPlaying() != PreviousPlaying)
-  {
-    PreviousPlaying = isPlaying();
-    state_changed = true;
-  }
-
-  if (isPaused() != PreviousPaused)
-  {
-    PreviousPaused = isPaused();
-    state_changed = true;
-  }
-
-  if (state_changed)
-    emit stateChanged();
-
-  tFilename song_file = currentFilename();
-  if (song_file != CurrentSongFilename)
-  {
-    CurrentSongFilename = song_file;
-    emit currentSongChanged();
-  }
-}
-
-
-
 bool tXMMSPlayer::haveValidPlaylistPosition()
 {
   return isValidPlaylistPosition(xmms_remote_get_playlist_pos(Session));
@@ -337,8 +302,10 @@ int tXMMSPlayer::enqueue(const tSongList &songlist)
   gint previous_playlist_length = xmms_remote_get_playlist_length(Session);
   gint playlist_pos = xmms_remote_get_playlist_pos(Session);
   gint start_pos = playlist_pos;
+
   if (xmms_remote_get_playlist_length(Session) == 0)
     playlist_pos = -1;
+
   FOREACH_CONST(first, songlist, tSongList)
   {
     xmms_remote_playlist_ins_url_string(Session, 

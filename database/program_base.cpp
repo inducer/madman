@@ -36,13 +36,10 @@ tProgramBase::tProgramBase()
 {
   setDatabase(new tDatabase());
 
-  connect(&preferences().Player, SIGNAL(currentSongChanged()), 
-      this, SLOT(noticeSongChanged()));
+  connect(&preferences().Player, SIGNAL(currentSongChanged(tFilename, float)), 
+      this, SLOT(noticeSongChanged(tFilename,float)));
   connect(&preferences().Player, SIGNAL(stateChanged()), 
       this, SLOT(noticeStateChanged()));
-
-  WasPlaying = false;
-  AccumulatedPlayTime = 0;
 }
 
 
@@ -81,28 +78,12 @@ tSong *tProgramBase::currentSong()
 
 void tProgramBase::noticeStateChanged()
 {
-  try
-  {
-    time_t now = time(NULL);
-    if (WasPlaying)
-    {
-      AccumulatedPlayTime += now - PlayStartTime;
-      PlayStartTime = now;
-    }
-    
-    WasPlaying = preferences().Player.isPlaying()
-             && !preferences().Player.isPaused();
-  }
-  catch (exception &ex)
-  {
-    WasPlaying = false;
-  }
 }
 
 
 
 
-void tProgramBase::noticeSongChanged()
+void tProgramBase::noticeSongChanged(tFilename last_song, float play_time)
 {
   try
   {
@@ -114,9 +95,9 @@ void tProgramBase::noticeSongChanged()
       tSong *prev_song = database().SongCollection.getByFilename(CurrentSongFilename);
       if (prev_song)
       {
-        prev_song->played(time(NULL), AccumulatedPlayTime > 0.6 * prev_song->duration());
+        prev_song->played(time(NULL), play_time > 0.6*prev_song->duration());
         database().History.played(prev_song->uniqueId(), 
-                                  time(NULL), AccumulatedPlayTime);
+                                  time(NULL), play_time);
       }
     }
 
@@ -132,10 +113,7 @@ void tProgramBase::noticeSongChanged()
     }
     
     emit songChanged();
-    
-    PlayStartTime = time(NULL);
-    AccumulatedPlayTime = 0;
-  }
+}
   catch (exception &ex)
   {
     // FIXME: error handling

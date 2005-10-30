@@ -189,6 +189,8 @@ MINOR IMPROVEMENTS:
 * Removed built-in expat because of FreeBSD problems. (D. Roethlisberger)
 + Added possibility to specify a criterion when calling AutoDJ from the
   command line. (Patch by Evan Felix)
++ Better player state tracking/polling--deal with playing the same song
+  several time in a row. (reported by Michael Bueker, patch by Pauli Virtanen)
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
@@ -267,7 +269,7 @@ BUGS FIXED:
 * Specify -pthread on compile and link if using qt-mt library.
   (reported by Daniel Roethlisberger)
 * Fixed "Partial Play Count = Full Play Count + 1".
-  (Patch by Pauli Virtanen) [done]
+  (reported by Michael Bueker, patched by Pauli Virtanen) [done]
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>

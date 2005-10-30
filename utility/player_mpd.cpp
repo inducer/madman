@@ -38,7 +38,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "database/song.h"
   
 // MPD classes ----------------------------------------------------------------
-
 class tMPDError : public tRuntimeError
 {
   public:
@@ -62,6 +61,9 @@ class tMPDError : public tRuntimeError
     int At;
     std::string Error;
 };
+
+
+
 
 class tMPDNoConnectionError : public tMPDError
 {
@@ -142,24 +144,24 @@ tMPDPlayer::tMPDPlayer() : Conn(0)
   try
   {
     ensureConnection();
-    PreviousPaused = isPaused();
-    PreviousPlaying = isPlaying();
+    resetState();
   }
   catch (tMPDError const& e)
   {
     // Failed ... but initialize still, we can connect later.
   }
-
-
-  Timer.start(500);
-  connect(&Timer, SIGNAL(timeout()),
-          this, SLOT(timer()));
 }
+
+
+
 
 tFilename tMPDPlayer::convertFileFromMPD(tFilename const& file)
 {
   return MusicPath + file;
 }
+
+
+
 
 tFilename tMPDPlayer::convertFileToMPD(tFilename const& file)
 {
@@ -174,6 +176,9 @@ tFilename tMPDPlayer::convertFileToMPD(tFilename const& file)
     return file;
   }
 }
+
+
+
 
 void tMPDPlayer::ensureConnection()
 {
@@ -207,6 +212,9 @@ void tMPDPlayer::ensureConnection()
   spyMusicPath();
 }
 
+
+
+
 void tMPDPlayer::closeConnection()
 {
   if (Conn)
@@ -215,6 +223,8 @@ void tMPDPlayer::closeConnection()
     Conn = 0;
   }
 }
+
+
 
 
 void tMPDPlayer::finishCommand()
@@ -228,6 +238,8 @@ void tMPDPlayer::finishCommand()
     throw err;
   }
 }
+
+
 
 
 void tMPDPlayer::playNow(tSongList const &songlist)
@@ -817,42 +829,13 @@ void tMPDPlayer::timer()
 {
   try
   {
-    ensureConnection();
-    spyMusicPath();
-    
-    bool state_changed = false;
-
-    tMPDStatus status(Conn);
-
-    bool is_playing = (status.state() == MPD_STATUS_STATE_PLAY);
-    bool is_paused = (status.state() == MPD_STATUS_STATE_PAUSE);
-
-    if (is_playing != PreviousPlaying)
-    {
-      PreviousPlaying = is_playing;
-      state_changed = true;
-    }
-    
-    if (is_paused != PreviousPaused)
-    {
-      PreviousPaused = is_paused;
-      state_changed = true;
-    }
-    
-    if (state_changed)
-      emit stateChanged();
-    
-    tFilename song_file = currentFilename();
-    if (song_file != CurrentSongFilename)
-    {
-      CurrentSongFilename = song_file;
-      emit currentSongChanged();
-    }
+    tPollingPlayer::timer();
   }
   catch (tMPDError const& e)
   {
     closeConnection();
-    // No, we do not want to throw exceptions to QT, since it will die.
+    // No, we do not want to throw exceptions to Qt, 
+    // since it will die.
   }
 }
 
@@ -925,8 +908,8 @@ int tMPDPlayer::enqueue(const tSongList &songlist)
 }
 
 
-// Spy MPD music path: assume it is the same as madman's first path ----------
 
+// Spy MPD music path: assume it is the same as madman's first path ----------
 #include "database/program_base.h"
 
 void tMPDPlayer::spyMusicPath()

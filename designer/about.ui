@@ -150,7 +150,7 @@ madman is a digital music management library management application in the vein 
 with plenty of help from:
 &lt;ul&gt;
 &lt;li&gt; Shawn Willden (Auto DJ rewrite)
-&lt;li&gt; Pauli Virtanen (MPD support, exception catching, Finnish translation)
+&lt;li&gt; Pauli Virtanen (MPD support, exception catching, Finnish translation, bunches of patches)
 &lt;li&gt; Walter King (M4A support, tagless songs, various patches)
 &lt;li&gt; Guido Schlabitz (bunch'o'patches :-)
 &lt;li&gt; Christian Plagemann (new artwork)
