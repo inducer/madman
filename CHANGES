@@ -270,6 +270,8 @@ BUGS FIXED:
   (reported by Daniel Roethlisberger)
 * Fixed "Partial Play Count = Full Play Count + 1".
   (reported by Michael Bueker, patched by Pauli Virtanen) [done]
+* Fixed Play Now logic to always append if stopped.
+  (patch by Michael Bueker)
 
 Patch credits (if not mentioned above): 
 - Benjamin Montgomery <bmontgom@gmail.com>

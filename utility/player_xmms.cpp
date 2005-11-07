@@ -63,7 +63,11 @@ void tXMMSPlayer::playNow(tSongList const &songlist)
   if (songlist.size() == 0)
     return;
 
-  gint start_playlist_pos = enqueue(songlist);
+  gint start_playlist_pos;
+  if (isPlaying() || isPaused())
+    start_playlist_pos = enqueue(songlist);
+  else
+    start_playlist_pos = enqueueAtEnd(songlist);
 
   xmms_remote_set_playlist_pos(Session, start_playlist_pos);
   if (!xmms_remote_is_playing(Session))
@@ -93,11 +97,7 @@ void tXMMSPlayer::playEventually(tSongList const &songlist)
   if (songlist.size() == 0)
     return;
 
-  gint playlist_pos = xmms_remote_get_playlist_length(Session);
-  FOREACH_CONST(first, songlist, tSongList)
-  {
-    xmms_remote_playlist_ins_url_string(Session, const_cast<char *>((*first)->filename().c_str()), playlist_pos++);
-  }
+  enqueueAtEnd(songlist);
 }
 
 
@@ -299,27 +299,36 @@ bool tXMMSPlayer::isValidPlaylistPosition(int pos)
 
 int tXMMSPlayer::enqueue(const tSongList &songlist)
 {
-  gint previous_playlist_length = xmms_remote_get_playlist_length(Session);
-  gint playlist_pos = xmms_remote_get_playlist_pos(Session);
-  gint start_pos = playlist_pos;
-
-  if (xmms_remote_get_playlist_length(Session) == 0)
-    playlist_pos = -1;
-
-  FOREACH_CONST(first, songlist, tSongList)
-  {
-    xmms_remote_playlist_ins_url_string(Session, 
-        const_cast<char *>((*first)->filename().c_str()), ++playlist_pos);
-  }
-  if (previous_playlist_length == 0)
-    return start_pos;
-  else
-    return start_pos + 1;
+  if (xmms_remote_get_playlist_length(Session) == 0) 
+    return enqueueAt(songlist, 0);
+  else 
+    return enqueueAt(songlist, 
+                     xmms_remote_get_playlist_pos(Session) + 1);
 }
 
 
 
 
+int tXMMSPlayer::enqueueAtEnd(const tSongList &songlist)
+{
+  if (xmms_remote_get_playlist_length(Session) == 0) 
+    return enqueueAt(songlist, 0);
+  else 
+    return enqueueAt(songlist, 
+                     xmms_remote_get_playlist_length(Session));
+}
+
+
+
+
+int tXMMSPlayer::enqueueAt(const tSongList &songlist, gint insert_pos)
+{
+  gint start_pos = insert_pos;
+  FOREACH_CONST(first, songlist, tSongList)
+    xmms_remote_playlist_ins_url_string(Session, 
+        const_cast<char *>((*first)->filename().c_str()), insert_pos++);
+  return start_pos;
+}
 
 
 

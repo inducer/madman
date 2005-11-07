@@ -103,6 +103,8 @@ class tXMMSPlayer : public tPollingPlayer
     bool haveValidPlaylistPosition();
     bool isValidPlaylistPosition(int i);
     int enqueue(const tSongList &songlist);
+    int enqueueAtEnd(const tSongList &songlist);
+    int enqueueAt(const tSongList &songlist, gint insert_pos);
 };
 
 

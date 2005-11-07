@@ -17,9 +17,6 @@
   please note that you need a new Qt (>=3.3, I take it) from the 
   <a href="http://kde-redhat.sf.net">KDE-Redhat</a> project.<p>
 
-  <b>Slackware</b> packages may be downloaded from
-  <a href="http://www.slackcare.com/">SlackCare</a>.<p/>
-
   <b>NetBSD</b> packages may be downloaded from 
   <a href="ftp://ftp.netbsd.org/pub/NetBSD/packages/pkgsrc/audio/madman/README.html">pkgsrc</a>.<p/>
 
@@ -34,7 +31,7 @@
     <li> Daniel Roethlisberger (FreeBSD)</li>
     <li> Jaako H Kyro (Fedora Core 1)</li>
     <li> Christian Hammers (Debian package maintainer)</li>
-    <li> SlackCare (Slackware i686) </li>
+    <li> SlackCare (Slackware i686, defunct) </li>
     <li> Adam Ward (Slackware) - his packages were removed from SF because they had
     some permission problem, and are thus superseded by the Slackcare ones.</li>
     <li> Ove Sorensen (NetBSD)</li>
