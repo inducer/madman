@@ -87,6 +87,8 @@ future ------------------------------------------------------------------------
 + Threshold for Overview/Do not show below n songs. (suggested by Duke/Matt)
 * Autosaving, with a definable interval. (QApplication::loopLevel())
 * Tag rereading should no longer stop on error.
++ Don't automatically forget about songs, instead mark them "inactive" (including
+  a criterion for that) and provide a right-click way to find them.
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -110,6 +112,7 @@ future ------------------------------------------------------------------------
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
 * Resort even if minor sorting criterion changed.
 * Option to prevent re-sorting of main view. (suggested by Bart Alewijnse)
++ Ability to rescan from the command line. (suggested by Henry Baxter)
 
 CLEANUPS:
 
