@@ -70,31 +70,34 @@ enum tPassivePopupMode
 
 struct tAutoDJScoringRule
 {
-  QString Comment;
-  QString Criterion;
+    QString Comment;
+    QString Criterion;
 
-  static const int ScorePlayNever = -10;
-  static const int ScoreMinimum = -9;
-  static const int ScoreMaximum = 30;
-  int ScoreAdjustment;
+    static const int ScorePlayNever = -10;
+    static const int ScoreMinimum = -9;
+    static const int ScoreMaximum = 30;
+    int ScoreAdjustment;
 };
 
 typedef vector<tAutoDJScoringRule> tAutoDJScoringRuleList;
 
 struct tAutoDJPreferences 
 {
-  tAutoDJScoringRuleList ScoringRuleList;
+    tAutoDJScoringRuleList ScoringRuleList;
+    unsigned BasedOnRulesetVersion;
+    static const unsigned CurrentRulesetVersion = 1;
 
-  void resetToDefault();
+    void resetToDefault();
+    void appendDefault();
 };
 
 struct tSortingPreferences
 {
-  typedef tSongField tSortFieldList[FIELD_COUNT];
-  tSortFieldList SecondarySortField;
-  tSortFieldList TertiarySortField;
+    typedef tSongField tSortFieldList[FIELD_COUNT];
+    tSortFieldList SecondarySortField;
+    tSortFieldList TertiarySortField;
 
-  void resetToDefault();
+    void resetToDefault();
 };
 
 struct tPreferences

@@ -51,6 +51,14 @@ namespace
 void tAutoDJPreferences::resetToDefault()
 {
   ScoringRuleList.clear();
+  appendDefault();
+}
+
+
+
+
+void tAutoDJPreferences::appendDefault()
+{
   addAutoDJScoringRule("Baseline score", "~all", 5, *this);
   addAutoDJScoringRule("Unrated", "~unrated", 5, *this);
   addAutoDJScoringRule("Rated '*****'", "~rating(5)", 15, *this);
@@ -71,6 +79,8 @@ void tAutoDJPreferences::resetToDefault()
   addAutoDJScoringRule("Less than a week old", "~existed_for_days(<= 7)", 10, *this);
   addAutoDJScoringRule("Less than two weeks old", "~existed_for_days(<= 14)", 5, *this);
   addAutoDJScoringRule("Less than three weeks old", "~existed_for_days(<= 21)", 3, *this);
+
+  BasedOnRulesetVersion = CurrentRulesetVersion;
 }
 
 
@@ -150,6 +160,9 @@ void tPreferences::save(QSettings &settings)
 	adj.ScoreAdjustment);
     i++;
   }
+  settings.writeEntry("/madman/auto_dj/based_on_ruleset_version", 
+                      (int) AutoDJPreferences.BasedOnRulesetVersion);
+
 
   settings.writeEntry("/madman/ui/sorting/field_count", FIELD_COUNT);
   for (int i = 0; i < FIELD_COUNT;i++)
@@ -249,6 +262,9 @@ void tPreferences::load(QSettings &settings)
       AutoDJPreferences.ScoringRuleList.push_back(adj);
     }
   }
+  AutoDJPreferences.BasedOnRulesetVersion = settings.readNumEntry(
+    "/madman/auto_dj/based_on_ruleset_version", 
+    tAutoDJPreferences::CurrentRulesetVersion - 1);
 
   // sorting ------------------------------------------------------------------
   int supposed_field_count = settings.readNumEntry("/madman/ui/sorting/field_count", -1);

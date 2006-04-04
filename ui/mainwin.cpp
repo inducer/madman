@@ -371,6 +371,37 @@ void tMainWindow::initialize(const QString &filename_to_open)
   PlaylistButtonPopup = new QPopupMenu(this);
   btnPlaylist->setPopup(PlaylistButtonPopup);
 
+  // check for newer auto dj rule set -----------------------------------------
+  if (ProgramBase.preferences().AutoDJPreferences.BasedOnRulesetVersion <
+      tAutoDJPreferences::CurrentRulesetVersion)
+  {
+    tAutoDJPreferences &adp = ProgramBase.preferences().AutoDJPreferences;
+    QStringList choices;
+    choices
+      << tr("Overwrite my rules with the new rules")
+      << tr("Keep my rules")
+      << tr("Keep my rules, but ask again")
+      << tr("Append the new rules to my rule set (requires interaction)");
+
+    bool ok;
+    QString result = QInputDialog::getItem(
+      "madman",
+      tr("A more recent set of AutoDJ rules is now available.\n"
+         "What do you want to do?"),
+      choices, 0, false, &ok, this);
+
+    if (ok)
+    {
+      int choice = choices.findIndex(result);
+      if (choice == 0)
+        adp.resetToDefault();
+      else if (choice == 1)
+        adp.BasedOnRulesetVersion = adp.CurrentRulesetVersion;
+      else if (choice == 3)
+        adp.appendDefault();
+    }
+  }
+
   // load auto dj status ------------------------------------------------------
   actionPlaybackEnableAutoDJ->setOn(
     ProgramBase.settings().readNumEntry("/madman/enable_auto_dj", 0) != 0);

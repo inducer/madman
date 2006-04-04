@@ -94,15 +94,13 @@ future ------------------------------------------------------------------------
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 
-0.94 --------------------------------------------------------------------------
+0.95 --------------------------------------------------------------------------
 + Make the web server more visible. 
   (document on web site)
 * Convey the killer features: Web server, remote control, AutoDJ.
 
-* Add AutoDJ presets versioning.
-
 * Revived l10n.
-* Track order for playing albums. (from overview and play like songs)
+Translation de_DE german
 
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
@@ -110,22 +108,23 @@ future ------------------------------------------------------------------------
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
 * Option to prevent re-sorting of main view. (suggested by Bart Alewijnse)
 + Ability to rescan from the command line. (suggested by Henry Baxter)
+* Now, Next, Evtl -> Parameter
+
+0.94 --------------------------------------------------------------------------
 
 CLEANUPS:
 
-UI for MPD
-
-FIXMEs
-Now, Next, Evtl -> Parameter
-Translation de_DE german
-reimplement pprefs
+* reimplement pprefs
+* UI for MPD
+* Review MPD code wrt
 SpyMP: typo?
 transations: can't inst...?
 MPD? prefs?
 
-erase "~rating(>=4)" from criterion takes too friggin' long
-2x Write file list
-Backtick in Song name form Plugin Execution
+* erase "~rating(>=4)" from criterion takes too friggin' long
+* Backtick in Song name form Plugin Execution
+
+?? 2x Write file list
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -192,6 +191,7 @@ MINOR IMPROVEMENTS:
 * Be able to parse relative M3U files. (sugg. by Jon Burgess)
 * Resort even if minor sorting criterion changed.
 * Major speedup for resorts after song modification.
+* Add AutoDJ presets versioning. (done)
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
