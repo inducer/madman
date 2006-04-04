@@ -30,34 +30,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 // comparison helpers ---------------------------------------------------------
-struct tLessBase 
-{
-  public:
-    virtual ~tLessBase() {}
-    virtual bool operator()(tSong *song1, tSong *song2) = 0;
-};
-
-
-
 class tMultilevelLess : public tLessBase
 {
-    tLessBase *Primary, *Secondary, *Tertiary;
+    refcnt_ptr<tLessBase> Primary, Secondary, Tertiary;
 
   public:
-    tMultilevelLess(tLessBase *primary, tLessBase *secondary,
-        tLessBase *tertiary)
+    tMultilevelLess(auto_ptr<tLessBase> primary, 
+                    auto_ptr<tLessBase> secondary,
+                    auto_ptr<tLessBase> tertiary)
     : Primary(primary), Secondary(secondary), Tertiary(tertiary)
     { }
-    virtual ~tMultilevelLess() { }
 
-    bool operator()(tSong *song1, tSong *song2)
+    bool operator()(const tSong *song1, const tSong *song2)
     {
       if ((*Primary)(song1, song2))
         return true;
       else if ((*Primary)(song2, song1))
         return false;
 
-      if (Secondary == NULL)
+      if (Secondary.get() == NULL)
         return false;
 
       if ((*Secondary)(song1, song2))
@@ -65,7 +56,7 @@ class tMultilevelLess : public tLessBase
       else if ((*Secondary)(song2, song1))
         return false;
 
-      if (Tertiary == NULL)
+      if (Tertiary.get() == NULL)
         return false;
 
       if ((*Tertiary)(song1, song2))
@@ -83,7 +74,7 @@ class tMultilevelLess : public tLessBase
 #define MAKE_STRING_SONG_LESS(CLASSNAME, FIELD) \
 struct CLASSNAME : public tLessBase \
 { \
-  bool operator()(tSong *song1, tSong *song2) \
+  bool operator()(const tSong *song1, const tSong *song2) \
   { \
     return song1->FIELD().lower().localeAwareCompare(song2->FIELD().lower()) < 0; \
   } \
@@ -92,7 +83,7 @@ struct CLASSNAME : public tLessBase \
 #define MAKE_CXX_STRING_SONG_LESS(CLASSNAME, FIELD) \
 struct CLASSNAME : public tLessBase \
 { \
-  bool operator()(tSong *song1, tSong *song2) \
+  bool operator()(const tSong *song1, const tSong *song2) \
   { \
     return QString::fromUtf8(song1->FIELD().c_str()).lower().localeAwareCompare( \
         QString::fromUtf8(song2->FIELD().c_str()).lower()) < 0; \
@@ -102,7 +93,7 @@ struct CLASSNAME : public tLessBase \
 #define MAKE_NUMERIC_SONG_LESS(CLASSNAME, FIELD) \
 struct CLASSNAME : public tLessBase \
 { \
-  bool operator()(tSong *song1, tSong *song2) \
+  bool operator()(const tSong *song1, const tSong *song2) \
   { \
     return song1->FIELD() < song2->FIELD(); \
   } \
@@ -138,7 +129,7 @@ namespace
 
   struct tTrackNumberLess : public tLessBase
   {
-    bool operator()(tSong *song1, tSong *song2)
+    bool operator()(const tSong *song1, const tSong *song2)
     {
       QRegExp extract_numbers("^\\s*([0-9]+)");
 
@@ -212,7 +203,7 @@ static void sortSingle(tSongList &list, tSongField field)
 
 
 
-static tLessBase *getLess(tSongField field)
+static tLessBase *getBasicLess(tSongField field)
 {
   switch (field)
   {
@@ -253,6 +244,26 @@ static tLessBase *getLess(tSongField field)
 
 
 
+tLessContainer getLess(tSongField field, tSongField secondary, tSongField tertiary)
+{
+  if (secondary == FIELD_INVALID && tertiary == FIELD_INVALID)
+    return tLessContainer(getBasicLess(field));
+  else
+  {
+    auto_ptr<tLessBase> 
+      primary_less(getBasicLess(field)),
+      secondary_less(getBasicLess(secondary)),
+      tertiary_less(getBasicLess(tertiary));
+
+    return tLessContainer(new tMultilevelLess(primary_less, 
+                                              secondary_less,
+                                              tertiary_less));
+  }
+}
+
+
+
+
 void sort(tSongList &list, tSongField field, tSongField secondary, tSongField tertiary)
 {
   if (secondary == FIELD_INVALID && tertiary == FIELD_INVALID)
@@ -260,12 +271,14 @@ void sort(tSongList &list, tSongField field, tSongField secondary, tSongField te
   else
   {
     auto_ptr<tLessBase> 
-      primary_less(getLess(field)), \
-      secondary_less(getLess(secondary)), \
-      tertiary_less(getLess(tertiary));
+      primary_less(getBasicLess(field)), \
+      secondary_less(getBasicLess(secondary)), \
+      tertiary_less(getBasicLess(tertiary));
 
-    tMultilevelLess my_less(primary_less.get(), secondary_less.get(),
-        tertiary_less.get());
+    tMultilevelLess my_less(
+      primary_less, 
+      secondary_less,
+      tertiary_less);
 
     stable_sort(list.begin(), list.end(), my_less);
   }

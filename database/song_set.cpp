@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qinputdialog.h>
 #include <qregexp.h>
 #include <qapplication.h>
+#include <qdir.h>
 
 #include "database/song_set.h"
 #include "database/criterion.h"
@@ -265,6 +266,7 @@ void tSearchSongSet::initialize()
   DoSort = false;
   SAUDirty = true;
   CollectionBulkChangeLevel = 0;
+  ResortOnModification = true;
 }
 
 
@@ -345,6 +347,16 @@ void tSearchSongSet::setSort(bool do_sort,  bool ascending,
 
 
 
+void tSearchSongSet::setSortOnModification(bool value)
+{
+  if (value && ! ResortOnModification)
+    reevaluateCriterion();
+  ResortOnModification = value;
+}
+
+
+
+
 void tSearchSongSet::rebuildSortedAndUnrestricted()
 {
   if (!SongCollection)
@@ -415,13 +427,24 @@ void tSearchSongSet::noticeCollectionEndBulkChange()
 
 
 
-void tSearchSongSet::noticeCollectionAddition(const tSong * /*song*/)
+void tSearchSongSet::noticeCollectionAddition(const tSong *song)
 {
   if (CollectionBulkChangeLevel == 0)
   {
-    SAUDirty = true;
-    reevaluateCriterion();
-    hasChanged(false);
+    bool is_in = ParsedCriterion->matchDegree(song) > 0.5;
+
+    addSongToSortedSongList(SortedAndUnrestricted, song);
+    if (is_in)
+    {
+      // only rely on the sortedness of the rendering if it is being maintained
+      if (ResortOnModification)
+      {
+        addSongToSortedSongList(Rendering, song);
+        hasChanged(false);
+      }
+      else
+        reevaluateCriterion();
+    }
   }
 }
 
@@ -468,33 +491,63 @@ void tSearchSongSet::noticeSongModified(const tSong *song, tSongField field)
 {
   if (CollectionBulkChangeLevel == 0)
   {
-    if (field == SortField)
-    {
-      SAUDirty = true;
-      reevaluateCriterion();
-    }
-    else
-    {
-      tSongList::iterator it = find(Rendering.begin(), Rendering.end(), song);
-      bool was_in = it != Rendering.end();
-      bool is_in = ParsedCriterion->matchDegree(song) > 0.5;
+    tSongList::iterator it = find(Rendering.begin(), Rendering.end(), song);
+    bool was_in = it != Rendering.end();
+    bool is_in = ParsedCriterion->matchDegree(song) > 0.5;
 
-      if (was_in && !is_in)
-      {
-	Rendering.erase(it);
-	hasChanged(false);
-      }
-      else if (is_in && !was_in)
-      {
-	// FIXME this could be optimized by inserting the song directly into SAU.
-	SAUDirty = true;
-	reevaluateCriterion();
-	hasChanged(false);
-      }
+    bool take_out = (was_in && !is_in);
+    bool put_in = (is_in && !was_in);
+
+    if (ResortOnModification &&
+        is_in && (field == SortField || 
+                  field == SecondarySortField || 
+                  field == TertiarySortField))
+    {
+      take_out = was_in;
+      put_in = true;
     }
+
+    removeSongFromSongList(SortedAndUnrestricted, song);
+    addSongToSortedSongList(SortedAndUnrestricted, song);
+
+    if (take_out)
+      Rendering.erase(it);
+    if (put_in)
+      addSongToSortedSongList(Rendering, song);
+    
+    if (take_out || put_in)
+      hasChanged(false);
   }
 
   emit notifySongModified(song, field);
+}
+
+
+
+
+void tSearchSongSet::addSongToSortedSongList(tSongList &sl, const tSong *song)
+{
+  tLessContainer less(getLess(SortField, 
+                              SecondarySortField,
+                              TertiarySortField));
+  
+  tSongList::iterator at = lower_bound(sl.begin(), sl.end(), 
+                                       const_cast<tSong *>(song), less);
+  sl.insert(at, const_cast<tSong *>(song));
+}
+
+
+
+
+void tSearchSongSet::removeSongFromSongList(tSongList &sl, const tSong *song)
+{
+  tSongList::iterator it = find(sl.begin(),
+                                sl.end(),
+                                song);
+  if (it == sl.end())
+    throw tRuntimeError(qApp->translate("ErrorMessages",
+                                        "Song assumed to be in songlist, but not found."));
+  sl.erase(it);
 }
 
 
@@ -937,20 +990,26 @@ void importM3UIntoPlaylist(tPlaylist *song_set, const QString &filename)
     return;
 
   // FIXME encodings unclear
-  QFile dbfile(filename);
-  if (dbfile.open(IO_ReadOnly))
+  QFile m3ufile(filename);
+  QDir m3udir = QFileInfo(filename).dir(true);
+  
+  if (m3ufile.open(IO_ReadOnly))
   {
-    QTextStream textstr(&dbfile);
+    QTextStream textstr(&m3ufile);
     
     while (!textstr.atEnd())
     {
-      QString line = textstr.readLine();
-      if (line[ 0 ] == '#')
+      QString song_fn = textstr.readLine().stripWhiteSpace();
+      if (song_fn[0] == '#')
 	continue;
+
+      QFileInfo fi(song_fn);
+      if (fi.isRelative())
+        song_fn = m3udir.absFilePath(song_fn, true);
 
       try
       {
-	song_set->add(string(line.utf8()));
+	song_set->add(string(song_fn.utf8()));
       }
       catch (...)
       {

@@ -81,86 +81,91 @@
  * general, just assume that a refcnt_ptr uses three times as much
  * space as a regular pointer.
  */
-template <typename T> class refcnt_ptr
-    {
-public:
+
+
+
+
+template <typename T> 
+class refcnt_ptr
+{
+  public:
     explicit refcnt_ptr(T* obj = 0) throw()
-	{
+      {
 	object = obj;
 	if (object)
-	    refCnt = new int(1);
+          refCnt = new int(1);
 #ifndef NDEBUG
 	else
-	    refCnt = 0;
+          refCnt = 0;
 #endif // NDEBUG
-	}
+      }
 
     // Copy ctor.
     refcnt_ptr(const refcnt_ptr<T>& rhs) throw()
-	{
+      {
 	object = rhs.object;
 	refCnt = rhs.refCnt;
 	increaseCount();
-	}
+      }
 
     // Allow creation of a refcnt_ptr from a compatible but different
     // refcnt_ptr type.
     template<typename T2> 
     refcnt_ptr(const refcnt_ptr<T2>& rhs) throw()
-	{
+      {
 	object = rhs.object;
 	refCnt = rhs.refCnt;
 	increaseCount();
-	}
+      }
 
     // Allow creation of a refcnt_ptr from a compatible but different
     // auto_ptr type.
     template<typename T2> 
     refcnt_ptr(std::auto_ptr<T2>& rhs) throw ()
-	{
+      {
 	object = rhs.release();
 	refCnt = new int(1);
-	}
+      }
 
     // Dtor.  May throw if the T dtor throws.
     ~refcnt_ptr()
-	{
+      {
 	reduceCount();
-	}
+      }
 
     // Assignment operator.  May throw if the T dtor throws.
     refcnt_ptr& operator=(const refcnt_ptr& rhs)
-	{
+      {
 	reduceCount();
 	object = rhs.object;
 	refCnt = rhs.refCnt;
 	increaseCount();
 
 	return *this;
-	}
+      }
 
     // Assignment operator for assigning from a compatible but
     // different refcnt_ptr type. May throw if the T dtor throws.
     template <typename T2> refcnt_ptr& operator=(const refcnt_ptr<T2> rhs)
-	{
+      {
 	reduceCount();
 	object = rhs.object;
 	refCnt = rhs.refCnt;
 	increaseCount();
 
 	return *this;
-	}
+      }
 
     // Assignment operator for assigning from a compatible but
     // different auto_ptr type.  May throw if the T dtor throws.
     template <typename T2> refcnt_ptr& operator=(std::auto_ptr<T2> rhs)
-	{
+      {
 	reduceCount();
 	object = rhs.release();
 	refCnt = new int(1);
 	
 	return *this;
-	}
+      }
        
     // Pointer dereference.  Don't do this if the refcnt_ptr is null
     // (i.e. 'object' is null).
@@ -184,27 +189,27 @@ public:
 
 private:
     void reduceCount()
-	{
+      {
 	if (object)
-	    {
-	    assert(*refCnt > 0);
-	    if ((--*refCnt) == 0)
-		{
-		delete object;
-		delete refCnt;
-		}
-	    }
-	}
+        {
+          assert(*refCnt > 0);
+          if ((--*refCnt) == 0)
+          {
+            delete object;
+            delete refCnt;
+          }
+        }
+      }
     
     void increaseCount()
-	{
+      {
 	if (object)
-	    ++*refCnt;
-	}
+          ++*refCnt;
+      }
 
     T*   object;
     int* refCnt;
-    };
+};
 
 
 
@@ -217,7 +222,6 @@ private:
 
 // EMACS-FORMAT-TAG
 //
-// Local Variables:
 // mode: C++
 // eval: (c-set-style "stroustrup")
 // eval: (c-set-offset 'access-label -2)

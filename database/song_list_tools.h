@@ -26,14 +26,37 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
+#include "utility/refcnt_ptr.h"
 #include "database/song.h"
 
 
 
 
+struct tLessBase 
+{
+  public:
+    virtual ~tLessBase() {}
+    virtual bool operator()(const tSong *song1, const tSong *song2) = 0;
+};
+
+class tLessContainer
+{
+    refcnt_ptr<tLessBase> Contents;
+  public:
+    tLessContainer(tLessBase *lb)
+      : Contents(lb)
+      { }
+    bool operator()(const tSong *song1, const tSong *song2)
+      {
+        return (*Contents)(song1, song2);
+      }
+};
+
+tLessContainer getLess(tSongField field, tSongField secondary = FIELD_INVALID, tSongField tertiary = FIELD_INVALID);
+void sort(tSongList &list, tSongField field, tSongField secondary = FIELD_INVALID, tSongField tertiary = FIELD_INVALID);
+
 class tPreferences;
 
-void sort(tSongList &list, tSongField field, tSongField secondary = FIELD_INVALID, tSongField tertiary = FIELD_INVALID);
 void sort(tSongList &list, tSongField field, tPreferences &prefs);
 
 struct tSongListSummary

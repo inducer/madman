@@ -1316,7 +1316,7 @@ QString tSong::humanReadableFieldText(tSongField field) const
 
 
 
-bool tSong::isFieldWritable(tSongField field)
+bool tSong::isFieldWritable(tSongField field) const
 {
   switch (field)
   {
@@ -1470,7 +1470,7 @@ class tMP3Song : public tSong
     { return "audio/mpeg"; }
 
     void readInfo() const;
-    bool isFieldWritable(tSongField field);
+    bool isFieldWritable(tSongField field) const;
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal();
@@ -1491,10 +1491,6 @@ void tMP3Song::readInfo() const
 
   Tag *v1_tag = my_mp3.ID3v1Tag();
   ID3v2::Tag *v2_tag = my_mp3.ID3v2Tag();
-
-  AudioProperties *props = my_mp3.audioProperties();
-  if (props == NULL)
-    throw runtime_error("Error obtaining MPEG properties");
 
   Tag *first, *second;
   if (tProgramBase::preferences().ID3ReadPreference == ID3_READ_PREFER_V2)
@@ -1539,6 +1535,10 @@ void tMP3Song::readInfo() const
 				    FIELD_PERFORMER);
   }
 
+  AudioProperties *props = my_mp3.audioProperties();
+  if (props == NULL)
+    throw runtime_error("Error obtaining MPEG properties");
+
   assignAndCheckForModification(this, SongCollection,
 				const_cast<tMP3Song *>(this)->Duration, 
 				props->length(), FIELD_DURATION);
@@ -1549,7 +1549,7 @@ void tMP3Song::readInfo() const
 
 
 
-bool tMP3Song::isFieldWritable(tSongField field)
+bool tMP3Song::isFieldWritable(tSongField field) const
 {
   return
     tSong::isFieldWritable(field) ||
@@ -1638,7 +1638,7 @@ class tOggSong : public tSong
     { return "audio/x-ogg"; }
 
     void readInfo() const;
-    bool isFieldWritable(tSongField field);
+    bool isFieldWritable(tSongField field) const;
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal();
@@ -1702,7 +1702,7 @@ void tOggSong::readInfo() const
 
 
 
-bool tOggSong::isFieldWritable(tSongField field)
+bool tOggSong::isFieldWritable(tSongField field) const
 {
   return
     tSong::isFieldWritable(field) ||
@@ -1780,7 +1780,7 @@ class tFlacSong : public tSong
     { return "audio/x-flac"; }
 
     void readInfo() const;
-    bool isFieldWritable(tSongField field);
+    bool isFieldWritable(tSongField field) const;
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal();
@@ -1845,7 +1845,7 @@ void tFlacSong::readInfo() const
 
 
 
-bool tFlacSong::isFieldWritable(tSongField field)
+bool tFlacSong::isFieldWritable(tSongField field) const
 {
   return
     tSong::isFieldWritable(field) ||
@@ -1924,7 +1924,7 @@ class tMusepackSong : public tSong
     { return "audio/x-mpc"; }
 
     void readInfo() const;
-    bool isFieldWritable(tSongField field);
+    bool isFieldWritable(tSongField field) const;
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal();
@@ -1988,7 +1988,7 @@ void tMusepackSong::readInfo() const
 
 
 
-bool tMusepackSong::isFieldWritable(tSongField field)
+bool tMusepackSong::isFieldWritable(tSongField field) const
 {
   return
     tSong::isFieldWritable(field) ||
@@ -2073,7 +2073,7 @@ class tM4ASong : public tSong
     { return "audio/x-m4a"; }
     
     void readInfo() const;
-    bool isFieldWritable(tSongField field);
+    bool isFieldWritable(tSongField field) const;
     void setFieldText(tSongField field, QString const &value);
 
     void stripTagInternal(); 
@@ -2253,7 +2253,7 @@ void tM4ASong::readInfo() const
 
 
 
-bool tM4ASong::isFieldWritable(tSongField field)
+bool tM4ASong::isFieldWritable(tSongField field) const
 {
   return
     tSong::isFieldWritable(field) ||

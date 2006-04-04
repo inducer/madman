@@ -125,6 +125,8 @@ class tSearchSongSet : public tSongSet
     bool		SAUDirty;
     int 		CollectionBulkChangeLevel;
 
+    bool                ResortOnModification;
+
   public:
     tSearchSongSet();
     tSearchSongSet(const tSearchSongSet &src);
@@ -146,6 +148,7 @@ class tSearchSongSet : public tSongSet
         tSongField secondary = FIELD_INVALID,
         tSongField tertiary = FIELD_INVALID
         );
+    void setSortOnModification(bool value);
     void rebuildSortedAndUnrestricted();
 
     bool containsSong(tUniqueId uid) const;
@@ -158,6 +161,10 @@ class tSearchSongSet : public tSongSet
     void noticeCollectionSubstitution(const tSong *song, const tSong *old);
     void noticeCollectionDeletion(const tSong *song);
     void noticeSongModified(const tSong *tSong, tSongField field);
+
+  private:
+    void addSongToSortedSongList(tSongList &sl, const tSong *song);
+    static void removeSongFromSongList(tSongList &sl, const tSong *song);
 };
 
 

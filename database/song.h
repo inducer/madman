@@ -193,7 +193,7 @@ class tSong
 
     QString fieldText(tSongField field) const;
     QString humanReadableFieldText(tSongField field) const;
-    virtual bool isFieldWritable(tSongField field);
+    virtual bool isFieldWritable(tSongField field) const;
     virtual void setFieldText(tSongField field, const QString &new_text);
 
     void stripTag();

@@ -89,6 +89,10 @@ future ------------------------------------------------------------------------
 * Tag rereading should no longer stop on error.
 + Don't automatically forget about songs, instead mark them "inactive" (including
   a criterion for that) and provide a right-click way to find them.
++ M3U export wizard. (Consider: relative paths, "/" path delimiter,
+  DOS line endings.) (Jon Burgess)
+
+* Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 
 0.94 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -100,26 +104,19 @@ future ------------------------------------------------------------------------
 * Revived l10n.
 * Track order for playing albums. (from overview and play like songs)
 
-* Be able to parse relative M3U files. (sugg. by Jon Burgess)
-+ M3U export wizard. (Consider: relative paths, "/" path delimiter,
-  DOS line endings.) (Jon Burgess)
-
-* Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
 * Avoid automatic window resize on very long song titles.
   (sugg. by Johan Forsberg)
 * See why AutoDJ was wrong with multiple selections from the same score set.
-* Make sure width gets recalculated after adding field.
 * Don't stop rescanning at faulty files. (reported by Bart Alewijnse)
-* Resort even if minor sorting criterion changed.
 * Option to prevent re-sorting of main view. (suggested by Bart Alewijnse)
 + Ability to rescan from the command line. (suggested by Henry Baxter)
 
 CLEANUPS:
 
 UI for MPD
+
 FIXMEs
 Now, Next, Evtl -> Parameter
-Duration Display f*cked up (Moonlight shadow)
 Translation de_DE german
 reimplement pprefs
 SpyMP: typo?
@@ -129,8 +126,6 @@ MPD? prefs?
 erase "~rating(>=4)" from criterion takes too friggin' long
 2x Write file list
 Backtick in Song name form Plugin Execution
-
-Shoalin->Shaolin=Crash (Taglib bug)
 
 MAJOR CHANGES:
 * Playlist management button. [done]
@@ -194,6 +189,9 @@ MINOR IMPROVEMENTS:
   command line. (Patch by Evan Felix)
 + Better player state tracking/polling--deal with playing the same song
   several time in a row. (reported by Michael Bueker, patch by Pauli Virtanen)
+* Be able to parse relative M3U files. (sugg. by Jon Burgess)
+* Resort even if minor sorting criterion changed.
+* Major speedup for resorts after song modification.
 
 BUGS FIXED:
 * Fixed "_lib" -> "_library" in SConstruct error output.
