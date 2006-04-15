@@ -53,8 +53,8 @@
     These three commands suffice to get you a version:
     <pre>
       $ tla my-id "I. R. Baboon &lt;irbaboon@cow-n-chicken.net&gt;"
-      $ tla register-archive http://tiker.net/archives/2005-public
-      $ tla get inform@tiker.net--2005-public/madman--production--1.0 madman
+      $ tla register-archive http://tiker.net/archives/2006-public
+      $ tla get inform@tiker.net--2006-public/madman--production--1.0 madman
     </pre>
     A simple
     <pre>
