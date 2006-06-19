@@ -18,7 +18,6 @@ function cp_keep_layout()
 
 function findsource()
 {
-  find expat "$@"
   find utility "$@"
   find database "$@"
   find httpd "$@"
