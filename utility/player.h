@@ -28,7 +28,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 #include <qtimer.h>
+#include <qsettings.h>
 #include "utility/base.h"
+
+
+
+
+class tPlayerPreferences
+{
+    virtual void loadYourself(QSettings &settings) = 0;
+    virtual void saveYourself(QSettings &settings) = 0;
+    virtual void showUI(QWidget *parent) = 0;
+};
 
 
 
@@ -69,6 +80,16 @@ class tPlayer : public QObject
     virtual void skipBack() = 0;
     virtual void skipToSeconds(float seconds) = 0;
     void skipTo(float percentage);
+
+    /** Return a tPlayerPreferences instance.
+
+    The instance is assumed to be a member of the tPlayer and is not
+    destroyed by the caller.
+
+    May return NULL to indicate that there is nothing to configure.
+    */
+    
+    virtual tPlayerPreferences *preferences() = 0;
 
   signals:
     void currentSongChanged(tFilename last_song, float play_time);
@@ -146,6 +167,8 @@ class tPlayerFacade : public tPlayer
     void skipForward();
     void skipBack();
     void skipToSeconds(float seconds);
+
+    tPlayerPreferences *preferences();
 
   protected slots:
     void slotCurrentSongChanged(tFilename last_song, float play_time);

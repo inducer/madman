@@ -99,6 +99,7 @@ class tPreferencesDialog : public tPreferencesDialogBase
     bool 			MediaDirectoriesChanged;
 
     tSortingPreferences         &SortingPreferences;
+    // auto_ptr<tPlayer>           
 
   public:
     tPreferencesDialog(QWidget* parent, tDirectoryList &media_dir_list, 
@@ -115,6 +116,8 @@ class tPreferencesDialog : public tPreferencesDialogBase
     void moveDownAutoDJScoringRule();
     void resetAutoDJScoringRules();
     void showAutoDJPreferences(tAutoDJPreferences &adjp);
+    void noticePlayerChanged(int idx);
+    void configurePlayer();
 
     void selectedInListWhenSorting(int index);
     void selectedInListSort2(int index);
@@ -203,6 +206,10 @@ tPreferencesDialog::tPreferencesDialog(QWidget* parent, tDirectoryList &media_di
   PluginDirectoryListManager(this, plugin_dir_list, lstPluginDirectories, btnAddPluginDirectory, btnRemovePluginDirectory),
   Settings(settings), SortingPreferences(sort_prefs)
 {
+  connect(comboPlayer, SIGNAL(highlighted(int)),
+      this, SLOT(noticePlayerChanged(int)));
+  connect(btnConfigurePlayer, SIGNAL(clicked()),
+      this, SLOT(configurePlayer()));
   connect(&PluginDirectoryListManager, SIGNAL(changed()),
       this, SLOT(updatePluginList()));
   connect(&MediaDirectoryListManager, SIGNAL(changed()),
@@ -285,9 +292,9 @@ void tPreferencesDialog::updateSelectedPluginInfo(int index)
 
   if (index < (int) plugins.size())
   {
-    SelectedPlugin = plugins[ index ].Filename;
-    lblPluginName->setText(plugins[ index ].Name);
-    lblPluginDescription->setText(plugins[ index ].Description);
+    SelectedPlugin = plugins[index].Filename;
+    lblPluginName->setText(plugins[index].Name);
+    lblPluginDescription->setText(plugins[index].Description);
   }
 }
 
@@ -391,6 +398,24 @@ void tPreferencesDialog::showAutoDJPreferences(tAutoDJPreferences &adjp)
 	  *labelAutoDJStatus));
     index++;
   }
+}
+
+
+
+
+void tPreferencesDialog::noticePlayerChanged(int idx)
+{
+  auto_ptr<tPlayer> temp_player(createPlayer(
+    comboPlayer->currentText()));
+  btnConfigurePlayer->setEnabled(temp_player->preferences() != NULL);
+}
+
+
+
+
+void tPreferencesDialog::configurePlayer()
+{
+
 }
 
 

@@ -96,7 +96,7 @@ class tMPDPlayer : public tPollingPlayer
     void finishCommand();
     void closeConnection();
 
-   
+    tPlayerPreferences *preferences();
   private slots:
     void timer();
 };

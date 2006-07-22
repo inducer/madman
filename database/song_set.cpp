@@ -498,17 +498,20 @@ void tSearchSongSet::noticeSongModified(const tSong *song, tSongField field)
     bool take_out = (was_in && !is_in);
     bool put_in = (is_in && !was_in);
 
-    if (ResortOnModification &&
-        is_in && (field == SortField || 
-                  field == SecondarySortField || 
-                  field == TertiarySortField))
+    if (DoSort && ResortOnModification)
     {
-      take_out = was_in;
-      put_in = true;
+      removeSongFromSongList(SortedAndUnrestricted, song);
+      addSongToSortedSongList(SortedAndUnrestricted, song);
+
+      if (is_in && (field == SortField || 
+            field == SecondarySortField || 
+            field == TertiarySortField))
+      {
+        take_out = was_in;
+        put_in = true;
+      }
     }
 
-    removeSongFromSongList(SortedAndUnrestricted, song);
-    addSongToSortedSongList(SortedAndUnrestricted, song);
 
     if (take_out)
       Rendering.erase(it);
@@ -527,13 +530,18 @@ void tSearchSongSet::noticeSongModified(const tSong *song, tSongField field)
 
 void tSearchSongSet::addSongToSortedSongList(tSongList &sl, const tSong *song)
 {
-  tLessContainer less(getLess(SortField, 
-                              SecondarySortField,
-                              TertiarySortField));
-  
-  tSongList::iterator at = lower_bound(sl.begin(), sl.end(), 
-                                       const_cast<tSong *>(song), less);
-  sl.insert(at, const_cast<tSong *>(song));
+  if (DoSort)
+  {
+    tLessContainer less(getLess(SortField, 
+          SecondarySortField,
+          TertiarySortField));
+
+    tSongList::iterator at = lower_bound(sl.begin(), sl.end(), 
+        const_cast<tSong *>(song), less);
+    sl.insert(at, const_cast<tSong *>(song));
+  }
+  else
+    sl.push_back(const_cast<tSong *>(song));
 }
 
 

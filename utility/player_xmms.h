@@ -99,6 +99,8 @@ class tXMMSPlayer : public tPollingPlayer
 
     void skipToSeconds(float seconds);
 
+    tPlayerPreferences *preferences();
+
   private slots:
     bool haveValidPlaylistPosition();
     bool isValidPlaylistPosition(int i);

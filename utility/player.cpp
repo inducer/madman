@@ -181,6 +181,13 @@ void tPlayerFacade::skipToSeconds(float seconds)
 {
   if (Backend.get()) Backend->skipToSeconds(seconds);
 }
+tPlayerPreferences *tPlayerFacade::preferences()
+{
+  if (Backend.get()) 
+    return Backend->preferences();
+  else
+    return NULL;
+}
 void tPlayerFacade::slotCurrentSongChanged(tFilename last_song,
                                            float play_time)
 {

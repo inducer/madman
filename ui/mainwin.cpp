@@ -909,6 +909,9 @@ void tMainWindow::doAutoDJ()
 
 void tMainWindow::setAutoDJSourceAll(bool on)
 {
+  if (!on)
+    return;
+
   auto_ptr<tSearchSongSet> adjss(new tSearchSongSet());
   adjss->setSongCollection(&ProgramBase.database().SongCollection);
   adjss->setCriterion("~all");

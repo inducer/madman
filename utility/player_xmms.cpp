@@ -277,6 +277,15 @@ void tXMMSPlayer::skipToSeconds(float seconds)
 
 
 
+tPlayerPreferences *tXMMSPlayer::preferences()
+{
+  return 0;
+}
+
+
+
+
+// private stuf ---------------------------------------------------------------
 bool tXMMSPlayer::haveValidPlaylistPosition()
 {
   return isValidPlaylistPosition(xmms_remote_get_playlist_pos(Session));
