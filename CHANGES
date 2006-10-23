@@ -93,6 +93,7 @@ future ------------------------------------------------------------------------
   DOS line endings.) (Jon Burgess)
 
 * Fixed problems with doubly drawn list content / Fixed BadMatch X errors.
++ Be able to exclude directories. (Suggested by Ben Dietze)
 
 0.95 --------------------------------------------------------------------------
 + Make the web server more visible. 
@@ -125,6 +126,8 @@ MPD? prefs?
 * Backtick in Song name form Plugin Execution
 
 ?? 2x Write file list
+
+* Playcount incremented when entering prefs?
 
 MAJOR CHANGES:
 * Playlist management button. [done]

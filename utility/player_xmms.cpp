@@ -20,10 +20,44 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 #include <unistd.h>
+#include <qinputdialog.h>
+#include <qapplication.h>
+#include <limits.h>
 
 #include "utility/base.h"
 #include "utility/player_xmms.h"
 #include "database/song.h"
+
+
+
+
+// tXMMSPlayerPreferences -----------------------------------------------------
+void tXMMSPlayerPreferences::loadYourself(QSettings &settings)
+{
+  Session = settings.readNumEntry("/madman/xmms/session_number", 0);
+}
+
+
+
+
+void tXMMSPlayerPreferences::saveYourself(QSettings &settings)
+{
+  settings.writeEntry("/madman/xmms/session_number", Session);
+}
+
+
+
+
+void tXMMSPlayerPreferences::showUI(QWidget *parent)
+{
+  bool ok;
+  int result = QInputDialog::getInteger(
+      qApp->translate("tXMMSPlayerPreferences", "madman - XMMS Player"),
+      qApp->translate("tXMMSPlayerPreferences", "Session Number"),
+      Session, 0, INT_MAX, 1, &ok, parent);
+  if (ok)
+    Session = result;
+}
 
 
 
@@ -279,13 +313,13 @@ void tXMMSPlayer::skipToSeconds(float seconds)
 
 tPlayerPreferences *tXMMSPlayer::preferences()
 {
-  return 0;
+  return &Preferences;
 }
 
 
 
 
-// private stuf ---------------------------------------------------------------
+// private stuff --------------------------------------------------------------
 bool tXMMSPlayer::haveValidPlaylistPosition()
 {
   return isValidPlaylistPosition(xmms_remote_get_playlist_pos(Session));

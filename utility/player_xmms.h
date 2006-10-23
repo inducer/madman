@@ -32,6 +32,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
+
+class tXMMSPlayerPreferences : public tPlayerPreferences
+{
+    int Session;
+
+  public:
+    void loadYourself(QSettings &settings);
+    void saveYourself(QSettings &settings);
+    void showUI(QWidget *parent);
+
+  friend class tXMMSPlayer;
+};
+
+
+
+
 class tXMMSPlayer : public tPollingPlayer
 {
     Q_OBJECT
@@ -39,6 +55,8 @@ class tXMMSPlayer : public tPollingPlayer
     int Session;
 
     bool CurrentSongValid;
+
+    tXMMSPlayerPreferences Preferences;
 
   public:
     tXMMSPlayer();

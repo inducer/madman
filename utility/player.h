@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class tPlayerPreferences
 {
+  public:
     virtual void loadYourself(QSettings &settings) = 0;
     virtual void saveYourself(QSettings &settings) = 0;
     virtual void showUI(QWidget *parent) = 0;
@@ -86,10 +87,11 @@ class tPlayer : public QObject
     The instance is assumed to be a member of the tPlayer and is not
     destroyed by the caller.
 
-    May return NULL to indicate that there is nothing to configure.
+    May return NULL to indicate that there is nothing to configure,
+    which is what the default implementation does.
     */
     
-    virtual tPlayerPreferences *preferences() = 0;
+    virtual tPlayerPreferences *preferences() { return 0; }
 
   signals:
     void currentSongChanged(tFilename last_song, float play_time);

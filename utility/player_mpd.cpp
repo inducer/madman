@@ -724,14 +724,6 @@ void tMPDPlayer::skipToSeconds(float seconds)
 
 
 
-tPlayerPreferences *tMPDPlayer::preferences()
-{
-  return 0;
-}
-
-
-
-
 bool tMPDPlayer::isPlaying()
 {
   try
