@@ -1,0 +1,10 @@
+scons.py
+sconsign.py
+scons-local-0.96.1
+my_options.py
+config.log
+.scon*
+build
+madman.desktop
+,build
+scons-[LR]*
