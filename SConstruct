@@ -285,7 +285,7 @@ if not CheckForTagLib():
   print "*********************************************************"
   Exit(1)
 
-if env["with_m4a"] and not CheckForMP4FF(serious = False) and not CheckForFAAD(serious = False):
+if env["with_m4a"] and (not CheckForMP4FF(serious = False) or CheckForFAAD(serious = False)):
   print "*** WARNING *** Disabling m4a support."
   env["with_m4a"] = 0
 

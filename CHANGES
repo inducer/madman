@@ -115,6 +115,7 @@ Translation de_DE german
 
 CLEANUPS:
 
+* xmms executable configurable
 * reimplement pprefs
 * UI for MPD
 * Review MPD code wrt
@@ -128,6 +129,8 @@ MPD? prefs?
 ?? 2x Write file list
 
 * Playcount incremented when entering prefs?
+
+* Files touched during rescan?
 
 MAJOR CHANGES:
 * Playlist management button. [done]
