@@ -67,7 +67,7 @@ void tSongCollection::readTags(tProgress *progress,
     {
       (*first)->ensureInfoIsThere();
     }
-    catch (runtime_error &ex)
+    catch (exception &ex)
     {
       cerr 
         << "*** error while reading tags from " << (*first)->filename() << ":"<< endl
@@ -101,7 +101,7 @@ void tSongCollection::rereadTags(tProgress *progress)
       (*first)->invalidateCache();
       (*first)->ensureInfoIsThere();
     }
-    catch (runtime_error &ex)
+    catch (exception &ex)
     {
       cerr 
         << "*** error while reading tags from " << (*first)->filename() << ":"<< endl
@@ -180,37 +180,48 @@ void tSongCollection::scan(tDirectoryList const &dl, tProgress *progress)
   {
     bool deorphanized = false;
     tSongList::iterator first_n = New.begin(), last_n = New.end();
-    while (first_n != last_n)
+    try 
     {
-      if ((*first_n)->album() == (*first_o)->album()
-           && (*first_n)->artist() == (*first_o)->artist()
-           && (*first_n)->title() == (*first_o)->title())
+      while (first_n != last_n)
       {
-        cerr 
-	  << "move: " << (*first_o)->filename() << " -> " << (*first_n)->filename() << endl;
-	moves_detected++;
+        if ((*first_n)->album() == (*first_o)->album()
+            && (*first_n)->artist() == (*first_o)->artist()
+            && (*first_n)->title() == (*first_o)->title())
+        {
+          cerr 
+            << "move: " << (*first_o)->filename() << " -> " << (*first_n)->filename() << endl;
+          moves_detected++;
 
-	(*first_n)->setUniqueId((*first_o)->uniqueId());
-	(*first_n)->setExistsSince((*first_o)->existsSince());
-	// lastModified kept from new song.
-	(*first_n)->setLastPlayed((*first_o)->lastPlayed());
-	(*first_n)->setFullPlayCount((*first_o)->fullPlayCount());
-	(*first_n)->setPartialPlayCount((*first_o)->partialPlayCount());
-	(*first_n)->setRating((*first_o)->rating());
+          (*first_n)->setUniqueId((*first_o)->uniqueId());
+          (*first_n)->setExistsSince((*first_o)->existsSince());
+          // lastModified kept from new song.
+          (*first_n)->setLastPlayed((*first_o)->lastPlayed());
+          (*first_n)->setFullPlayCount((*first_o)->fullPlayCount());
+          (*first_n)->setPartialPlayCount((*first_o)->partialPlayCount());
+          (*first_n)->setRating((*first_o)->rating());
 
-	substitute(*first_n, *first_o);
-        New.erase(first_n);
+          substitute(*first_n, *first_o);
+          New.erase(first_n);
 
-	Garbage.push_back(*first_o);
+          Garbage.push_back(*first_o);
 
-	first_o = orphans.erase(first_o);
-	last_o = orphans.end();
+          first_o = orphans.erase(first_o);
+          last_o = orphans.end();
 
-	deorphanized = true;
-        break;
+          deorphanized = true;
+          break;
+        }
+        first_n++;
       }
-      first_n++;
     }
+    catch (exception &ex)
+    {
+      // FIXME : This try/catch should not be necessary
+      cerr 
+        << "*** error while detecting move for" << (*first_o)->filename() << ":"<< endl
+        << "    " << ex.what() << endl;
+    }
+
     if (!deorphanized)
       first_o++;
 
@@ -284,9 +295,20 @@ void tSongCollection::scan(tDirectoryList const &dl, tProgress *progress)
         cerr 
 	  << "changed: " << (*first) ->filename() << endl;
 
-        (*first)->invalidateCache();
-        (*first)->ensureInfoIsThere();
-	tags_reread++;
+        try
+        {
+          (*first)->invalidateCache();
+          (*first)->ensureInfoIsThere();
+          tags_reread++;
+        }
+        catch (exception &ex)
+        {
+          cerr 
+            << "*** exception while re-reading" << endl
+            << "*** " <<(*first)->filename() << ":" << endl
+            << "*** " << ex.what() << endl;
+          delete *first;
+        }
       }
     }
 
