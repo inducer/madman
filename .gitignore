@@ -8,3 +8,6 @@ build
 madman.desktop
 ,build
 scons-[LR]*
+*~
+.*.sw[op]
+*.pyc
