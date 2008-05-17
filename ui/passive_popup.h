@@ -58,7 +58,7 @@ class tPassivePopup : public QObject
     QTime                       StateTime;
     int				TotalStateMilliseconds;
     tPassivePopupMode           Mode;
-    int				XPos, YPos, YEnd;
+    int				XPos, YRetracted, YExtended;
     bool                        StartAnew;
 
     QWidget                     *Widget;

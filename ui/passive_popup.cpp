@@ -42,7 +42,7 @@ static tPassivePopup *CurrentPopup = NULL;
 tPassivePopup::tPassivePopup(const QString &text, unsigned msec, 
                              tPassivePopupMode mode, 
                              bool show_instantaneously)
-  : ShownMilliseconds(msec), Mode(mode), XPos(0), YPos(0), YEnd(0)
+  : ShownMilliseconds(msec), Mode(mode), XPos(0), YRetracted(0), YExtended(0)
 {
   QVBox *vbox = new QVBox(NULL, "passive_popup", Qt::WStyle_NoBorder | Qt::WX11BypassWM | Qt::WStyle_StaysOnTop);
   vbox->setSpacing(5);
@@ -99,13 +99,13 @@ tPassivePopup::tPassivePopup(const QString &text, unsigned msec,
   // calculate start and end positions for y
   if (Mode < POPUP_FIRST_BOTTOM)
   {      
-    YPos =- sizehint.height();
-    YEnd = 0;
+    YRetracted = 1-sizehint.height();
+    YExtended = 0;
   }
   else
   {
-    YPos = d->height() + sizehint.height();
-    YEnd = d->height() - sizehint.height();
+    YRetracted = d->height() + sizehint.height()-1;
+    YExtended = d->height() - sizehint.height();
   }
   
   // calculate x position
@@ -117,9 +117,9 @@ tPassivePopup::tPassivePopup(const QString &text, unsigned msec,
     XPos = (d->width() - sizehint.width()) / 2;
       
   if (State == SHOWING)
-    Widget->move(XPos, YEnd);
+    Widget->move(XPos, YExtended);
   else
-    Widget->move(XPos, YPos);
+    Widget->move(XPos, YRetracted);
     
   // show
   Widget->show();
@@ -141,6 +141,16 @@ tPassivePopup::~tPassivePopup()
 
 
 
+static int bound_by(int value, int bound1, int bound2)
+{
+  int low = std::min(bound1, bound2);
+  int high = std::max(bound1, bound2);
+  return std::max(low, std::min(high, value));
+}
+
+
+
+
 void tPassivePopup::timer()
 {
   if (StartAnew)
@@ -157,34 +167,46 @@ void tPassivePopup::timer()
     {
       case APPEARING:
 	State = SHOWING;	
-	Widget->move(XPos, YEnd);
+	Widget->move(XPos, YExtended);
 	TotalStateMilliseconds = ShownMilliseconds;
+        elapsed = 0;
 	break;
       case SHOWING:
 	State = DISAPPEARING;
 	TotalStateMilliseconds = 500;
+        elapsed = 0;
 	break;
       case DISAPPEARING:
-	Widget->hide();
+	//Widget->hide();
 	deleteLater();
     }
-    elapsed = 0;
   }
+
+  float time_frac = float(elapsed)/TotalStateMilliseconds;
+  bool do_set = false;
+  float extend_frac;
+
   switch (State)
   {       
     case APPEARING:
-      Widget->move(XPos, 
-                   (YPos - YEnd) * (TotalStateMilliseconds-elapsed) 
-                   / TotalStateMilliseconds + YEnd);
+      do_set = true;
+      extend_frac = time_frac;
       break;
     case DISAPPEARING:
-      Widget->move(XPos,
-                   (YPos - YEnd) * elapsed 
-                   / TotalStateMilliseconds + YEnd);
+      do_set = true;
+      extend_frac = 1-time_frac;
       break;
     default:
       break;
   }
+
+  if (do_set)
+  {
+    int ypos = bound_by(int(YRetracted + extend_frac*(YExtended-YRetracted)),
+          YExtended, YRetracted);
+    Widget->move(XPos, ypos);
+  }
+
 }
 
 
