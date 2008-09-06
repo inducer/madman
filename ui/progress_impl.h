@@ -93,7 +93,8 @@ class tProgressDialog : public tProgress
 
   public:
     tProgressDialog(QWidget *widget, bool cancellable)
-      : Progress(new QProgressDialog(widget, "progress", true))
+      : Progress(new QProgressDialog(widget, "progress", true,
+            Qt::WType_Popup))
       {
         if (!cancellable)
           Progress->setCancelButtonText(QString::null);
