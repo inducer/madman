@@ -1440,7 +1440,7 @@ void tSongSetViewManager::pluginActivated(int id)
   {
     tPluginList plugins;
     enumeratePlugins(tProgramBase::preferences().PluginDirectories, plugins);
-    hash_map<int,QString>::iterator it = MenuIdToPluginFilenameMap.find(id);
+    tr1::unordered_map<int,QString>::iterator it = MenuIdToPluginFilenameMap.find(id);
     if (it != MenuIdToPluginFilenameMap.end())
     {
       QString name = it->second;

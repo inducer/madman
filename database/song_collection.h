@@ -46,8 +46,8 @@ class tSongCollection : public QObject
 {
     Q_OBJECT
 
-    typedef hash_map<tUniqueId, tSong *> tUniqueIdMap;
-    typedef hash_map<tFilename, tSong *, hash_string> tFilenameMap;
+    typedef std::tr1::unordered_map<tUniqueId, tSong *> tUniqueIdMap;
+    typedef std::tr1::unordered_map<tFilename, tSong *, hash_string> tFilenameMap;
 
     tSongList SongList;
     tSongList New;

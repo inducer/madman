@@ -187,7 +187,7 @@ namespace
 // text criteria --------------------------------------------------------------
   class tFuzzyCriterion : public tTextCriterion
   {
-      typedef hash_map<QString, int, hash_QString> tnGramTable;
+      typedef tr1::unordered_map<QString, int, hash_QString> tnGramTable;
 
       tnGramTable		SmallNGramTable;
       tnGramTable		BigNGramTable;

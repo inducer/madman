@@ -197,7 +197,7 @@ class tSongSetViewManager : public QObject
 
     QString PreferencesPrefix;
 
-    hash_map<int,QString> MenuIdToPluginFilenameMap;
+    tr1::unordered_map<int,QString> MenuIdToPluginFilenameMap;
 
     enum tPlayWhen {
       PLAY_NOW, PLAY_NEXT, PLAY_EVENTUALLY

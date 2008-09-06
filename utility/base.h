@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
+#include <memory>
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -36,22 +37,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <qxml.h>
 
 #include <vector>
-#if __GNUC__ >= 3 
-#include <ext/hash_map>
-#include <ext/hash_set>
-#else
-#include <hash_map>
-#include <hash_set>
-#endif
+#include <tr1/unordered_map>
+#include <tr1/unordered_set>
 
 
 
 
 using namespace std;
-#if __GNUC__ >= 3 
-using __gnu_cxx::hash_map;
-using __gnu_cxx::hash_set;
-#endif
+
 
 
 
@@ -67,7 +60,7 @@ typedef vector<tFilename> tDirectoryList;
 typedef vector<tSong *> tSongList;
 typedef vector<const tSong *> tConstSongList;
 typedef vector<tUniqueId> tUniqueIdList;
-typedef hash_set<tUniqueId> tUniqueIdSet;
+typedef tr1::unordered_set<tUniqueId> tUniqueIdSet;
 
 
 

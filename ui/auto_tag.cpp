@@ -168,7 +168,7 @@ namespace
 
       tDatabase &Database;
 
-      typedef hash_map<QString, unsigned, hash_QString> tComponentCounts;
+      typedef tr1::unordered_map<QString, unsigned, hash_QString> tComponentCounts;
       tComponentCounts	DirComponentCounts, NameComponentCounts;
 
     public:
